@@ -1,0 +1,54 @@
+{
+  "version": "0.0.1",
+  "timeout": 60,
+  "tasks": [
+    {
+      "id": "smoke-01",
+      "description": "Brainstorm ideas for improving employee onboarding at a mid-size tech company with multi-framework ideation and feasibility assessment",
+      "input": "Brainstorm creative solutions to improve the employee onboarding experience at a mid-size tech company (200 employees). Current onboarding takes 2 weeks and new hires report feeling lost and disconnected. Budget is limited. I need diverse ideas with feasibility ratings.",
+      "rubric": [
+        {
+          "criterion": "Idea Quantity & Diversity",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Generates 15+ ideas spanning 3+ distinct categories (technology, culture, process, mentorship, etc.); uses multiple creativity frameworks; includes cross-domain ideas",
+            "3": "Generates 8-14 ideas across 2 categories; uses at least one framework; mostly same-domain thinking",
+            "1": "Generates fewer than 8 ideas; all ideas are from the same category or approach",
+            "0": "Fewer than 3 ideas or no structured ideation"
+          }
+        },
+        {
+          "criterion": "Framework Application",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Visibly applies 2+ creativity frameworks (SCAMPER, Six Hats, TRIZ, lateral thinking); framework application drives idea diversity",
+            "3": "References a framework but applies it superficially; ideas don't clearly derive from structured methods",
+            "1": "No recognizable framework usage; ideas appear free-associated",
+            "0": "No structured approach at all"
+          }
+        },
+        {
+          "criterion": "Feasibility Assessment",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Each idea has explicit feasibility scoring (technical viability, resources, time, impact); ideas are classified as viable/promising/speculative; 40%+ are viable or promising",
+            "3": "Some ideas have feasibility notes but scoring is informal or incomplete; viability is mentioned but not systematically assessed",
+            "1": "Feasibility is mentioned for 1-2 ideas only; no systematic assessment",
+            "0": "No feasibility assessment provided"
+          }
+        },
+        {
+          "criterion": "Output Structure",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Ideas are clustered by theme, ranked by priority; top ideas have concrete first steps; includes executive summary and wild cards section",
+            "3": "Ideas are grouped but ranking is informal; some actionable detail but not consistently",
+            "1": "Flat list of ideas with no clustering or prioritization",
+            "0": "Unstructured dump of ideas"
+          }
+        }
+      ],
+      "passThreshold": 60
+    }
+  ]
+}

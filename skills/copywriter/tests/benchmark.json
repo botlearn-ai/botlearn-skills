@@ -1,0 +1,506 @@
+{
+  "version": "0.0.1",
+  "dimension": "creative-generation",
+  "tasks": [
+    {
+      "id": "bench-easy-01",
+      "difficulty": "easy",
+      "description": "Write a simple email subject line and CTA for a product launch",
+      "input": "Write 3 email subject line variants and a CTA button text for a product launch email. The product is a new AI-powered grammar checker called 'ProseAI' targeted at freelance writers. The email should drive clicks to the product page. Keep subject lines under 50 characters each.",
+      "rubric": [
+        {
+          "criterion": "Subject Line Quality",
+          "weight": 0.35,
+          "scoring": {
+            "5": "All 3 subject lines are under 50 chars, use distinct angles (curiosity, benefit, urgency), include power words, and are specific to freelance writers",
+            "3": "Subject lines are decent but generic (could apply to any writing tool); at least 2 under character limit",
+            "1": "Subject lines are vague or exceed character limits; no variety in approach",
+            "0": "No subject lines or completely irrelevant"
+          }
+        },
+        {
+          "criterion": "CTA Effectiveness",
+          "weight": 0.3,
+          "scoring": {
+            "5": "CTA uses action + benefit format, is specific to the product, and creates motivation to click (e.g., 'See ProseAI in Action' or 'Try It Free — Write Better Today')",
+            "3": "CTA is relevant but generic ('Learn More', 'Check It Out')",
+            "1": "CTA is vague or misaligned with the goal",
+            "0": "No CTA provided"
+          }
+        },
+        {
+          "criterion": "Audience Fit",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Copy clearly speaks to freelance writers' specific needs (speed, quality, client impressions, editing time); uses language they'd relate to",
+            "3": "Copy addresses writers generally but doesn't specifically target freelancers",
+            "1": "Copy is generic and could apply to any audience",
+            "0": "Copy is mismatched to the audience"
+          }
+        }
+      ],
+      "expectedScoreWithout": 35,
+      "expectedScoreWith": 75
+    },
+    {
+      "id": "bench-easy-02",
+      "difficulty": "easy",
+      "description": "Write a short social media ad for an e-commerce product",
+      "input": "Write a Facebook ad (primary text, headline, and description) for a premium ergonomic office chair priced at $599. Target audience: remote workers aged 28-45 who spend 8+ hours at their desk and experience back pain. Emphasize the 30-day money-back guarantee. Primary text should be under 125 characters visible (can be longer with 'See More').",
+      "rubric": [
+        {
+          "criterion": "Pain Point Targeting",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Opens with a specific pain point remote workers experience (back pain, discomfort, fatigue from long hours); makes the reader feel seen immediately",
+            "3": "Mentions comfort or ergonomics but doesn't connect to the reader's specific daily experience",
+            "1": "Focuses on chair features without connecting to pain",
+            "0": "No pain point addressed"
+          }
+        },
+        {
+          "criterion": "Ad Format Compliance",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Correct Facebook ad structure (primary text, headline, description); first 125 chars of primary text hook the reader; headline under 40 chars; description under 30 chars",
+            "3": "Has the basic structure but character limits are not respected or hook is buried",
+            "1": "Format doesn't match Facebook ad specs",
+            "0": "No recognizable ad format"
+          }
+        },
+        {
+          "criterion": "Persuasion & Risk Reversal",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Prominently features the 30-day guarantee as risk reversal; balances benefit-driven copy with a compelling CTA; price is positioned against value (cost of back pain vs. $599)",
+            "3": "Mentions the guarantee but doesn't use it strategically; CTA is present but generic",
+            "1": "Guarantee mentioned as an afterthought; weak persuasion",
+            "0": "No persuasive elements or guarantee missing"
+          }
+        }
+      ],
+      "expectedScoreWithout": 35,
+      "expectedScoreWith": 80
+    },
+    {
+      "id": "bench-easy-03",
+      "difficulty": "easy",
+      "description": "Write a product description with benefit-led bullet points",
+      "input": "Write an e-commerce product description for a portable Bluetooth speaker called 'SoundPeak Mini' priced at $49.99. Key features: 12-hour battery life, IPX7 waterproof rating, 360-degree sound, weighs 280g, pairs with 2 speakers for stereo. Target: outdoor enthusiasts and travelers aged 20-35. Include a 2-3 sentence description and 5 benefit-led bullet points.",
+      "rubric": [
+        {
+          "criterion": "Benefit-Led Writing",
+          "weight": 0.4,
+          "scoring": {
+            "5": "All 5 bullet points lead with the benefit/outcome before mentioning the feature; e.g., 'Play music all weekend without recharging (12-hour battery)' instead of '12-hour battery life'",
+            "3": "Mix of benefit-led and feature-led bullets; some connect features to outcomes",
+            "1": "Bullet points are pure feature lists with no benefits",
+            "0": "No bullet points or completely off-topic"
+          }
+        },
+        {
+          "criterion": "Audience & Lifestyle Fit",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Description evokes outdoor/travel scenarios the audience relates to (beach, hiking, camping, road trips); language is casual and energetic; matches 20-35 lifestyle",
+            "3": "Mentions outdoor use but doesn't paint a vivid scenario or match the audience's energy",
+            "1": "Generic product description with no lifestyle connection",
+            "0": "Mismatched audience or tone"
+          }
+        },
+        {
+          "criterion": "Description Quality",
+          "weight": 0.3,
+          "scoring": {
+            "5": "2-3 sentence description is engaging, highlights the core value prop (portable + powerful sound), and creates desire to own the product",
+            "3": "Description is accurate but reads like a spec sheet summary",
+            "1": "Description is too short, too long, or doesn't convey value",
+            "0": "No description or irrelevant content"
+          }
+        }
+      ],
+      "expectedScoreWithout": 35,
+      "expectedScoreWith": 80
+    },
+    {
+      "id": "bench-med-01",
+      "difficulty": "medium",
+      "description": "Write landing page copy using the AIDA framework for a SaaS product",
+      "input": "Write full landing page copy for 'MetricBot', an analytics dashboard SaaS that consolidates data from Google Analytics, Mixpanel, and Stripe into one unified view. Target audience: growth marketers at Series A-B startups ($2M-$20M ARR) who are tired of switching between 5+ tabs to build weekly reports. Price: $99/month with 14-day free trial. Use the AIDA framework explicitly. Include: headline, subheadline, 4 body sections (one per AIDA stage), social proof section, FAQ (3 questions), and primary CTA.",
+      "rubric": [
+        {
+          "criterion": "AIDA Framework Execution",
+          "weight": 0.3,
+          "scoring": {
+            "5": "All 4 AIDA stages clearly present and correctly ordered; Attention grabs with a compelling hook; Interest builds with relevant details; Desire amplifies with transformation/proof; Action has a strong CTA. Each stage flows naturally into the next",
+            "3": "AIDA structure visible but stages are weak or transitions are abrupt; one stage may be underdeveloped",
+            "1": "Mentions AIDA but execution doesn't follow the framework properly",
+            "0": "No recognizable framework structure"
+          }
+        },
+        {
+          "criterion": "Audience Specificity",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Copy specifically targets growth marketers at Series A-B startups; references their world (weekly reports, board decks, tab-switching, tool consolidation); uses growth marketing terminology naturally",
+            "3": "Targets marketers generally but misses the startup-specific context or seniority level",
+            "1": "Generic SaaS copy that could apply to any analytics tool audience",
+            "0": "Audience mismatch"
+          }
+        },
+        {
+          "criterion": "Completeness & Structure",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Includes all requested elements: headline, subheadline, 4 AIDA body sections, social proof, 3 FAQs, primary CTA; well-formatted for web readability",
+            "3": "Most elements present but 1-2 are missing or underdeveloped",
+            "1": "Missing multiple requested elements; poor structure",
+            "0": "Incomplete output"
+          }
+        },
+        {
+          "criterion": "Persuasiveness & Conversion Focus",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Copy drives toward free trial signup with clear value prop; includes social proof, addresses price objection in FAQ, uses risk reversal (14-day trial); multiple CTA placements",
+            "3": "Some persuasive elements but missing social proof or objection handling",
+            "1": "Informational rather than persuasive; reads like a product overview",
+            "0": "Not persuasive; no conversion focus"
+          }
+        }
+      ],
+      "expectedScoreWithout": 30,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-02",
+      "difficulty": "medium",
+      "description": "Write PAS-framework ad copy with multiple variants for A/B testing",
+      "input": "Write 3 Google Ads variants (each with 3 headlines and 2 descriptions) for a project management tool called 'TeamSync' competing against Asana and Monday.com. Target: engineering managers at companies with 50-500 employees who are frustrated with overcomplicated PM tools. Key differentiator: simplicity — TeamSync takes 5 minutes to set up vs. weeks for competitors. Use the PAS framework for each variant but with different angles: emotional, rational, and social proof. Respect Google Ads character limits (headlines: 30 chars each, descriptions: 90 chars each).",
+      "rubric": [
+        {
+          "criterion": "PAS Framework per Variant",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Each variant clearly maps Problem-Agitate-Solve across the headlines and descriptions; the framework is adapted to the constraint of Google Ads format intelligently",
+            "3": "PAS structure is visible in 2 of 3 variants; one variant doesn't clearly follow the framework",
+            "1": "Framework is vaguely present but not clearly executed",
+            "0": "No framework structure in the ads"
+          }
+        },
+        {
+          "criterion": "Variant Differentiation",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Three distinct angles are clearly executed — emotional (frustration/relief), rational (data/comparison), social proof (adoption/testimonials); each would appeal to a different decision-making style",
+            "3": "Variants differ somewhat but the angles overlap significantly",
+            "1": "Variants are superficially different (word changes) but use the same angle",
+            "0": "All variants are essentially identical"
+          }
+        },
+        {
+          "criterion": "Character Limit Compliance",
+          "weight": 0.25,
+          "scoring": {
+            "5": "All 9 headlines are under 30 characters; all 6 descriptions are under 90 characters; every character is used effectively",
+            "3": "Most elements are within limits but 1-2 exceed slightly; generally space-efficient",
+            "1": "Multiple elements exceed character limits",
+            "0": "Character limits largely ignored"
+          }
+        },
+        {
+          "criterion": "Competitive Positioning",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Effectively positions against Asana/Monday.com on simplicity without naming them negatively; '5 minutes to set up' differentiator is prominently featured; addresses engineering managers' specific frustrations",
+            "3": "Mentions simplicity but doesn't clearly differentiate from competitors or the '5 minutes' claim is underused",
+            "1": "Generic PM tool copy without clear competitive positioning",
+            "0": "No differentiation or competitive awareness"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-03",
+      "difficulty": "medium",
+      "description": "Write email sequence copy for a lead nurturing campaign",
+      "input": "Write a 3-email nurture sequence for 'FinLedger', a bookkeeping automation tool for freelancers and solopreneurs. The sequence targets people who downloaded a free guide '10 Tax Mistakes Freelancers Make'. Goal: convert them to a $29/month subscription. Email 1 (Day 0): Welcome + deliver the guide + tease the product. Email 2 (Day 3): Address the #1 pain point (tax season panic) using the BAB framework. Email 3 (Day 7): Final push with social proof and limited-time 20% discount. For each email: subject line, preview text, body (100-200 words), and CTA.",
+      "rubric": [
+        {
+          "criterion": "Sequence Strategy & Flow",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Clear progression from value-delivery (Email 1) to pain amplification (Email 2) to urgency-driven close (Email 3); each email builds on the previous; tone escalates appropriately",
+            "3": "Sequence has a logical order but transitions between emails feel disconnected; no clear escalation",
+            "1": "Emails feel like standalone pieces with no sequence logic",
+            "0": "No coherent sequence strategy"
+          }
+        },
+        {
+          "criterion": "BAB Framework in Email 2",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Email 2 clearly follows Before (tax season panic, scrambling for receipts) → After (calm, organized, confident at tax time) → Bridge (FinLedger automates it); emotionally vivid and specific to freelancers",
+            "3": "BAB structure present but Before/After contrast is weak or not emotionally engaging",
+            "1": "Some transformation language but no clear BAB structure",
+            "0": "No framework applied"
+          }
+        },
+        {
+          "criterion": "Email Format & Best Practices",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Each email has compelling subject line (<50 chars), useful preview text, body within 100-200 words, single clear CTA; P.S. lines used strategically; scannable formatting",
+            "3": "Format is mostly correct but some emails exceed word limits or have weak subject lines",
+            "1": "Missing key elements (no preview text, no subject line, CTAs missing)",
+            "0": "Format doesn't resemble email marketing"
+          }
+        },
+        {
+          "criterion": "Conversion & Urgency Design",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Email 3 effectively uses the 20% discount with legitimate urgency (clear deadline); social proof is specific (names, numbers); CTA creates low-friction next step; discount is positioned as reward, not desperation",
+            "3": "Discount mentioned but urgency is weak or social proof is generic ('thousands of users')",
+            "1": "Discount present but no urgency mechanism; generic CTA",
+            "0": "No conversion-focused elements in Email 3"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-04",
+      "difficulty": "medium",
+      "description": "Write copy that adapts tone and format across multiple platforms for the same product",
+      "input": "Write marketing copy for 'ZenDesk Pro' (a meditation app for busy professionals, $9.99/month) adapted for three different platforms: (1) LinkedIn ad targeting C-suite executives stressed about burnout, (2) Instagram Story ad targeting millennial professionals, (3) App Store description. Each version should promote the same core value (reduce stress in 5 minutes/day) but adapted to platform norms, audience expectations, and format constraints. LinkedIn primary text: max 150 words. Instagram: max 3 slides of 20 words each. App Store: subtitle (30 chars) + promotional text (170 chars) + 5 bullet points.",
+      "rubric": [
+        {
+          "criterion": "Platform Adaptation",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Each version perfectly matches its platform's norms: LinkedIn is professional/data-driven, Instagram is casual/visual-cue-oriented with short punchy text, App Store follows Apple's format with keywords; character/word limits respected",
+            "3": "Platforms are somewhat differentiated but one version doesn't fully match its channel norms",
+            "1": "Same tone/format across platforms with minor tweaks",
+            "0": "No platform differentiation"
+          }
+        },
+        {
+          "criterion": "Audience Adaptation",
+          "weight": 0.3,
+          "scoring": {
+            "5": "LinkedIn speaks to C-suite concerns (leadership performance, burnout stats, executive credibility); Instagram speaks to millennial lifestyle (work-life balance, self-care, relatable language); App Store speaks to general app searchers (feature clarity, keyword-rich)",
+            "3": "Some audience differentiation but language doesn't fully shift between segments",
+            "1": "Same audience approach across all three versions",
+            "0": "Audience mismatch"
+          }
+        },
+        {
+          "criterion": "Core Message Consistency",
+          "weight": 0.2,
+          "scoring": {
+            "5": "All three versions clearly communicate the '5 minutes/day stress reduction' value prop while adapting the framing to each context",
+            "3": "Core message is present but inconsistently emphasized",
+            "1": "Core message is lost in one or more versions",
+            "0": "Versions convey contradictory messages"
+          }
+        },
+        {
+          "criterion": "Format Compliance",
+          "weight": 0.15,
+          "scoring": {
+            "5": "LinkedIn: under 150 words with CTA. Instagram: exactly 3 slides, each under 20 words. App Store: subtitle 30 chars, promo text 170 chars, 5 bullet points. All limits respected",
+            "3": "Most limits respected but 1-2 minor violations",
+            "1": "Multiple format violations",
+            "0": "Formats largely ignored"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-hard-01",
+      "difficulty": "hard",
+      "description": "Write high-stakes B2B landing page with complex audience, objection handling, and proof stacking",
+      "input": "Write complete landing page copy for 'SecureVault', an enterprise data loss prevention (DLP) platform priced at $15,000/year. Target: CISO and IT Security Directors at mid-market companies (500-5,000 employees) in regulated industries (healthcare, finance). They're evaluating DLP solutions after a recent compliance audit flagged data handling gaps. Competitors: Symantec DLP, Digital Guardian. Key differentiators: deploys in 48 hours (vs. weeks), zero-trust architecture, SOC 2 Type II + HIPAA certified. Use the 4Ps framework. Include: hero section (headline + subheadline), problem statement, product overview with 4 key benefits, proof section (3 testimonials, compliance badges, case study summary), objection-handling FAQ (5 questions addressing price, deployment, integration, support, and ROI), and CTA driving demo requests. Total: 800-1200 words.",
+      "rubric": [
+        {
+          "criterion": "4Ps Framework Execution",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Promise (specific, bold claim about DLP outcomes), Picture (CISO visualizes secure, compliant environment), Proof (testimonials, certifications, case study with metrics), Push (demo CTA with urgency and risk reversal) — all stages compelling and properly ordered",
+            "3": "4Ps visible but one stage is underdeveloped or transitions are weak",
+            "1": "Framework loosely referenced but not properly executed",
+            "0": "No framework structure"
+          }
+        },
+        {
+          "criterion": "Enterprise Audience & Tone",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Copy speaks the language of CISOs and IT Security Directors in regulated industries; references compliance frameworks (SOC 2, HIPAA) naturally; addresses post-audit urgency; professional authoritative tone without jargon overload",
+            "3": "Professional tone but lacks security-industry specificity; could be any enterprise SaaS",
+            "1": "Too casual for enterprise security buyers or too jargon-heavy to be persuasive",
+            "0": "Tone mismatch for the audience"
+          }
+        },
+        {
+          "criterion": "Objection Handling Depth",
+          "weight": 0.2,
+          "scoring": {
+            "5": "FAQ addresses all 5 specified objections with substantive answers: price justified by ROI/compliance cost, 48-hour deployment explained, integration details provided, support SLA specified, ROI quantified with metrics",
+            "3": "Most objections addressed but answers are thin or generic",
+            "1": "FAQ present but doesn't address the specified objections or gives evasive answers",
+            "0": "No objection handling"
+          }
+        },
+        {
+          "criterion": "Proof Stack Quality",
+          "weight": 0.2,
+          "scoring": {
+            "5": "3 distinct testimonials from relevant roles (CISO, IT Director, Compliance Officer) with specific metrics; compliance badges properly referenced; case study summary includes before/after metrics and company profile",
+            "3": "Some proof elements present but testimonials are generic or case study lacks specifics",
+            "1": "Minimal proof — generic claims like 'trusted by enterprises'",
+            "0": "No social proof or evidence"
+          }
+        },
+        {
+          "criterion": "Completeness & Word Count",
+          "weight": 0.2,
+          "scoring": {
+            "5": "All sections present (hero, problem, product overview, 4 benefits, proof, FAQ with 5 Qs, CTA); 800-1200 words; well-formatted with clear visual hierarchy",
+            "3": "Most sections present but 1-2 missing or word count significantly off",
+            "1": "Multiple sections missing; incomplete output",
+            "0": "Incomplete or irrelevant output"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 65
+    },
+    {
+      "id": "bench-hard-02",
+      "difficulty": "hard",
+      "description": "Write conversion-optimized copy for a product with a difficult sell requiring advanced objection handling",
+      "input": "Write complete marketing copy for 'PriceWise', a dynamic pricing AI tool for e-commerce that automatically adjusts product prices based on demand, competition, and inventory. Price: $499/month. Target: e-commerce store owners ($1M-$10M annual revenue) on Shopify who are skeptical of automated pricing because they fear losing control, alienating loyal customers, and starting price wars. This is a difficult sell because the audience has strong objections. Write: (1) a landing page hero section with headline and subheadline, (2) a 'How It Works' section (3 steps), (3) an objection-handling section that directly confronts the 3 fears listed above with evidence, (4) a before/after comparison table, (5) a risk-reversal offer section, and (6) a final CTA. Apply whichever framework(s) you think will be most effective and explain your framework choice.",
+      "rubric": [
+        {
+          "criterion": "Framework Choice & Justification",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Selects an appropriate framework (likely BAB or PAS given the skeptical audience) with clear reasoning; explains why the chosen framework addresses this audience's resistance better than alternatives",
+            "3": "Uses a framework but justification is thin or the choice is suboptimal for a skeptical audience",
+            "1": "Claims to use a framework but execution doesn't match",
+            "0": "No framework awareness"
+          }
+        },
+        {
+          "criterion": "Objection Confrontation",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Directly names and confronts all 3 fears (loss of control, customer alienation, price wars) with specific evidence: control features (override settings, price floors/ceilings), customer case studies showing loyalty retention, competitive intelligence that prevents price wars",
+            "3": "Addresses objections but with generic reassurances rather than specific evidence",
+            "1": "Acknowledges concerns exist but minimizes or avoids them",
+            "0": "Ignores the audience's known objections"
+          }
+        },
+        {
+          "criterion": "Before/After Comparison",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Comparison table vividly contrasts the current painful state (manual repricing, missed opportunities, competitor undercutting) with the PriceWise-enabled future (automated optimization, margin growth, competitive intelligence); uses specific metrics",
+            "3": "Comparison table present but contrasts are generic or lack specificity",
+            "1": "Basic feature comparison rather than before/after transformation",
+            "0": "No comparison element"
+          }
+        },
+        {
+          "criterion": "Risk Reversal Design",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Risk reversal directly addresses the audience's fear: guaranteed margin protection, ability to pause/override anytime, free trial with real data, money-back guarantee with specific terms; positioned as proof of confidence, not desperation",
+            "3": "Standard guarantee offered but doesn't specifically address this audience's unique fears",
+            "1": "Generic 'money-back guarantee' without audience-specific design",
+            "0": "No risk reversal"
+          }
+        },
+        {
+          "criterion": "Persuasive Completeness",
+          "weight": 0.15,
+          "scoring": {
+            "5": "All 6 requested sections present and working together as a cohesive conversion page; 'How It Works' section reduces perceived complexity; final CTA matches the risk-reversal promise; entire page builds confidence progressively",
+            "3": "Most sections present but the page doesn't feel cohesive; some sections feel disconnected",
+            "1": "Multiple sections missing or poorly connected",
+            "0": "Incomplete output"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 65
+    },
+    {
+      "id": "bench-hard-03",
+      "difficulty": "hard",
+      "description": "Write a full marketing campaign brief with copy across multiple touchpoints for a product launch",
+      "input": "Create a complete marketing copy suite for the launch of 'CodeShip', a new CI/CD platform for indie developers and small teams (2-10 devs) priced at $0 (free tier) and $19/dev/month (pro). Competitors: GitHub Actions, CircleCI, Vercel. Key differentiator: config-free — detects your stack and sets up pipelines automatically (zero YAML). Target: solo developers and startup CTOs who hate writing CI/CD config files. Create all of the following: (1) Product Hunt launch tagline (under 60 chars) + description (under 260 chars), (2) Twitter/X launch thread (5 tweets, each under 280 chars, with a narrative arc), (3) Landing page hero section (headline, subheadline, 3 bullet points, CTA), (4) Hacker News Show HN post title + opening paragraph (under 100 words), (5) Onboarding email for new free-tier signups (subject, body under 150 words, CTA). For each piece, note the framework/angle used.",
+      "rubric": [
+        {
+          "criterion": "Channel Adaptation Mastery",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Each piece perfectly matches its channel's culture and norms: Product Hunt (concise, launch-energy, emoji-friendly), Twitter (thread narrative, hooks, engagement bait), Landing page (conversion-focused), Hacker News (technical, understated, no hype), Onboarding email (helpful, not salesy). Tone shifts are dramatic and appropriate",
+            "3": "Channels are somewhat differentiated but 1-2 miss the cultural norms (e.g., Hacker News sounds too salesy, or Product Hunt is too formal)",
+            "1": "Same tone and approach across channels with minor word changes",
+            "0": "No channel differentiation"
+          }
+        },
+        {
+          "criterion": "Developer Audience Authenticity",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Copy speaks developer language naturally; references real pain (YAML config hell, debugging pipelines, 'it works on my machine'); avoids marketing-speak that developers distrust; the 'zero YAML' differentiator is hero'd appropriately",
+            "3": "Addresses developers but language feels slightly marketing-heavy or misses developer-specific frustrations",
+            "1": "Generic SaaS marketing copy with developer keywords sprinkled in",
+            "0": "Copy would alienate a developer audience"
+          }
+        },
+        {
+          "criterion": "Narrative Arc & Launch Energy",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Twitter thread has a compelling narrative arc (problem → realization → solution → proof → CTA); Product Hunt description creates launch excitement; all pieces collectively tell a coherent launch story",
+            "3": "Individual pieces work but don't feel like a coordinated launch; thread lacks narrative progression",
+            "1": "Copy is functional but has no launch energy or narrative cohesion",
+            "0": "No narrative structure"
+          }
+        },
+        {
+          "criterion": "Framework Annotations",
+          "weight": 0.1,
+          "scoring": {
+            "5": "Each piece has a clear framework/angle annotation that justifies the approach for that specific channel and audience; demonstrates strategic thinking",
+            "3": "Annotations present but generic (e.g., 'PAS' without explaining why PAS for this channel)",
+            "1": "Minimal or missing annotations",
+            "0": "No framework awareness"
+          }
+        },
+        {
+          "criterion": "Completeness & Format Compliance",
+          "weight": 0.2,
+          "scoring": {
+            "5": "All 5 pieces present; all character/word limits respected; Product Hunt tagline under 60 chars, description under 260; tweets under 280 chars each; HN paragraph under 100 words; email under 150 words",
+            "3": "All pieces present but 2-3 format violations",
+            "1": "Missing pieces or major format violations",
+            "0": "Incomplete output"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 60
+    }
+  ]
+}

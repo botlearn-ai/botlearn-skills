@@ -1,0 +1,476 @@
+{
+  "version": "0.0.1",
+  "dimension": "creative-generation",
+  "tasks": [
+    {
+      "id": "bench-easy-01",
+      "difficulty": "easy",
+      "description": "Generate ideas for a simple product improvement",
+      "input": "Brainstorm ways to make a coffee shop's ordering process faster and more enjoyable for customers.",
+      "rubric": [
+        {
+          "criterion": "Idea Volume",
+          "weight": 0.3,
+          "scoring": {
+            "5": "15+ ideas generated across technology, service design, layout, and customer experience dimensions",
+            "3": "8-14 ideas mostly focused on one or two dimensions",
+            "1": "Fewer than 8 ideas",
+            "0": "Fewer than 3 ideas"
+          }
+        },
+        {
+          "criterion": "Framework Usage",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Applies at least 2 creativity frameworks visibly; ideas clearly derive from structured methods",
+            "3": "One framework applied; some structure visible",
+            "1": "No framework; free association only",
+            "0": "No structured approach"
+          }
+        },
+        {
+          "criterion": "Actionability",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Each idea includes what it is, who benefits, and a first step; feasibility rated; ideas are clustered",
+            "3": "Ideas described at headline level with some feasibility notes",
+            "1": "Vague one-line ideas without detail",
+            "0": "Unusable output"
+          }
+        }
+      ],
+      "expectedScoreWithout": 35,
+      "expectedScoreWith": 75
+    },
+    {
+      "id": "bench-easy-02",
+      "difficulty": "easy",
+      "description": "Brainstorm names and concepts for a new product",
+      "input": "Generate creative ideas for a mobile app that helps people build better daily habits. I need both feature ideas and unique selling points.",
+      "rubric": [
+        {
+          "criterion": "Idea Diversity",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Ideas span gamification, social features, AI personalization, behavioral psychology, integrations, and novel UX; includes cross-domain inspiration",
+            "3": "Ideas cover 2-3 categories; some variety but limited cross-domain thinking",
+            "1": "All ideas are variations of the same approach (e.g., all gamification)",
+            "0": "1-2 generic ideas"
+          }
+        },
+        {
+          "criterion": "Creativity & Novelty",
+          "weight": 0.35,
+          "scoring": {
+            "5": "At least 30% of ideas are novel or adapted from other domains; includes surprising or non-obvious concepts",
+            "3": "Mix of standard and somewhat creative ideas; few surprises",
+            "1": "All ideas are well-known in the habit-tracking space",
+            "0": "No creative effort"
+          }
+        },
+        {
+          "criterion": "Structure & Feasibility",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Ideas clustered by theme; feasibility assessed; top ideas have concrete descriptions and first steps",
+            "3": "Some grouping and feasibility notes but incomplete",
+            "1": "Flat list with no structure or feasibility",
+            "0": "Unorganized dump"
+          }
+        }
+      ],
+      "expectedScoreWithout": 30,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-easy-03",
+      "difficulty": "easy",
+      "description": "Simple brainstorm for event planning",
+      "input": "Think of creative ways to make a company's annual all-hands meeting more engaging and memorable for 150 remote employees.",
+      "rubric": [
+        {
+          "criterion": "Idea Volume & Range",
+          "weight": 0.35,
+          "scoring": {
+            "5": "15+ ideas covering technology, interactive formats, entertainment, team building, and follow-up activities",
+            "3": "8-14 ideas across 2-3 categories",
+            "1": "Fewer than 8 ideas in one category",
+            "0": "Fewer than 3 ideas"
+          }
+        },
+        {
+          "criterion": "Remote-Specific Innovation",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Ideas specifically leverage or address remote context; includes novel virtual engagement mechanics; cross-domain inspiration (gaming, live events, education)",
+            "3": "Ideas acknowledge remote context but mostly adapt in-person activities",
+            "1": "Ideas ignore the remote constraint or are generic",
+            "0": "No remote consideration"
+          }
+        },
+        {
+          "criterion": "Prioritization",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Ideas ranked by impact and effort; feasibility noted; top 3-5 highlighted with implementation steps",
+            "3": "Some ranking but informal; limited implementation detail",
+            "1": "No ranking or prioritization",
+            "0": "No structure"
+          }
+        }
+      ],
+      "expectedScoreWithout": 35,
+      "expectedScoreWith": 75
+    },
+    {
+      "id": "bench-med-01",
+      "difficulty": "medium",
+      "description": "Multi-constraint brainstorm requiring trade-off analysis",
+      "input": "Brainstorm solutions to reduce food waste in a university dining hall that serves 3,000 students daily. Constraints: budget under $10,000 for implementation, must not reduce food variety, and solutions should be deployable within one semester. I need ideas across technology, behavioral, and operational categories.",
+      "rubric": [
+        {
+          "criterion": "Constraint Awareness",
+          "weight": 0.25,
+          "scoring": {
+            "5": "All three constraints (budget, variety, timeline) explicitly addressed in feasibility assessment; ideas flagged when they push constraint boundaries",
+            "3": "Constraints mentioned but not systematically checked against each idea",
+            "1": "Constraints acknowledged but largely ignored in idea generation",
+            "0": "Constraints not considered"
+          }
+        },
+        {
+          "criterion": "Multi-Category Coverage",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Substantive ideas in all 3 requested categories (technology, behavioral, operational) plus unexpected categories; 20+ ideas total",
+            "3": "Ideas in 2 of 3 categories; 10-19 ideas",
+            "1": "Ideas concentrated in one category only",
+            "0": "Fewer than 5 ideas"
+          }
+        },
+        {
+          "criterion": "Feasibility Rigor",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Each idea scored on 4 feasibility dimensions; composite scores calculated; 40%+ viable/promising; budget estimates included for top ideas",
+            "3": "Informal feasibility notes; some viable ideas identified but scoring incomplete",
+            "1": "Minimal feasibility consideration",
+            "0": "No feasibility assessment"
+          }
+        },
+        {
+          "criterion": "Innovation Quality",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Includes cross-domain transfers (e.g., supply chain optimization, behavioral economics nudges); at least 30% novel or adapted ideas",
+            "3": "Some creative ideas but mostly standard approaches to food waste",
+            "1": "All ideas are commonly known food waste solutions",
+            "0": "No creative effort"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 65
+    },
+    {
+      "id": "bench-med-02",
+      "difficulty": "medium",
+      "description": "Cross-domain ideation for a technical challenge",
+      "input": "Generate creative ideas for reducing API response latency in a microservices architecture without increasing infrastructure costs. Current p99 latency is 800ms and the target is under 200ms. Think beyond traditional caching and load balancing.",
+      "rubric": [
+        {
+          "criterion": "Beyond-Obvious Ideas",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Generates ideas beyond standard caching/load-balancing: includes architectural patterns, data flow redesigns, edge computing, predictive pre-computation, protocol changes, or cross-domain analogies; at least 5 non-obvious ideas",
+            "3": "Some ideas go beyond obvious solutions but most are variations of caching/scaling",
+            "1": "All ideas are standard optimization techniques",
+            "0": "Generic advice without specific ideas"
+          }
+        },
+        {
+          "criterion": "Technical Depth",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Ideas include specific technical mechanisms, trade-offs, and estimated latency impact; demonstrates understanding of microservices challenges",
+            "3": "Ideas are technically reasonable but lack specificity on implementation or impact",
+            "1": "Ideas are technically shallow or contain errors",
+            "0": "Technically invalid suggestions"
+          }
+        },
+        {
+          "criterion": "Framework Application",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Uses TRIZ contradiction resolution (speed vs. cost), SCAMPER on the request/response lifecycle, or analogical transfer from other latency-critical domains",
+            "3": "Some structured approach but framework usage is superficial",
+            "1": "No framework usage; ad-hoc brainstorming only",
+            "0": "No structured approach"
+          }
+        },
+        {
+          "criterion": "Prioritized Output",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Ideas clustered by approach type; feasibility scored with cost-neutrality check; top ideas include estimated latency reduction and implementation steps",
+            "3": "Some grouping and prioritization but incomplete feasibility data",
+            "1": "Flat list without prioritization",
+            "0": "Unstructured output"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 65
+    },
+    {
+      "id": "bench-med-03",
+      "difficulty": "medium",
+      "description": "Brainstorm with stakeholder complexity",
+      "input": "Brainstorm ideas for a public library system to increase engagement among teenagers (13-18). The library board is conservative and risk-averse, teens find libraries 'boring', and budget is tight. I need ideas that would appeal to teens AND get board approval.",
+      "rubric": [
+        {
+          "criterion": "Dual-Audience Navigation",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Ideas explicitly address both teen appeal AND board acceptability; trade-offs between audiences are analyzed; framing suggestions for board presentations included",
+            "3": "Ideas generally appropriate for both audiences but trade-offs not explicitly analyzed",
+            "1": "Ideas appeal to one audience but alienate the other",
+            "0": "Audience needs not considered"
+          }
+        },
+        {
+          "criterion": "Idea Diversity & Volume",
+          "weight": 0.25,
+          "scoring": {
+            "5": "20+ ideas across programming, space design, digital integration, partnerships, and outreach; includes cross-domain inspiration from gaming, social media, or education",
+            "3": "10-19 ideas across 2-3 categories",
+            "1": "Fewer than 10 ideas in one category",
+            "0": "Fewer than 5 ideas"
+          }
+        },
+        {
+          "criterion": "Feasibility & Budget Awareness",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Ideas scored for feasibility with budget sensitivity; low-cost quick wins identified alongside longer-term investments; implementation staged by effort",
+            "3": "Budget mentioned but not systematically addressed; some feasibility notes",
+            "1": "Budget constraint largely ignored",
+            "0": "No feasibility consideration"
+          }
+        },
+        {
+          "criterion": "Problem Reframing",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Problem reframed from multiple angles (teen identity, community role, digital-physical hybrid, competition with other activities); reframes drive meaningfully different ideas",
+            "3": "Some reframing attempted but ideas don't significantly differ from initial framing",
+            "1": "No reframing; takes the problem at face value",
+            "0": "Problem misunderstood"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-04",
+      "difficulty": "medium",
+      "description": "Brainstorm requiring feasibility matrix with quantitative scoring",
+      "input": "Generate ideas for a small e-commerce startup (5 people, $50K budget) to differentiate from Amazon in a niche market (artisanal home goods). I need each idea scored on a feasibility matrix with technical viability, resource requirements, time-to-implement, and impact potential.",
+      "rubric": [
+        {
+          "criterion": "Feasibility Matrix Quality",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Every idea scored on all 4 dimensions (1-5 scale); composite scores computed; ideas classified as viable/promising/speculative; matrix is internally consistent",
+            "3": "Most ideas have feasibility notes but not all 4 dimensions; some numerical scoring",
+            "1": "Informal feasibility comments without systematic scoring",
+            "0": "No feasibility assessment"
+          }
+        },
+        {
+          "criterion": "Strategic Differentiation",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Ideas target specific Amazon weaknesses (personalization, curation, community, story, craft authenticity); each idea explains WHY it differentiates",
+            "3": "Some differentiation awareness but ideas could apply to any e-commerce site",
+            "1": "Ideas are generic e-commerce tactics not specific to competing with Amazon",
+            "0": "No differentiation strategy"
+          }
+        },
+        {
+          "criterion": "Startup-Context Fit",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Ideas respect 5-person team and $50K budget; lean/scrappy approaches prioritized; growth staging suggested",
+            "3": "Budget acknowledged but some ideas clearly exceed constraints",
+            "1": "Ideas require enterprise-level resources",
+            "0": "Constraints completely ignored"
+          }
+        },
+        {
+          "criterion": "Clustering & Prioritization",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Ideas grouped into strategic themes; top 3-5 ideas highlighted with first steps; quick wins vs. long-term plays distinguished",
+            "3": "Some grouping but ranking is informal",
+            "1": "Flat list",
+            "0": "No organization"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-hard-01",
+      "difficulty": "hard",
+      "description": "Complex multi-stakeholder brainstorm with competing priorities",
+      "input": "Brainstorm solutions for reducing urban traffic congestion in a mid-size city (population 500K). Stakeholders: city government (limited budget, election cycle pressure), residents (want less noise and pollution), businesses (need delivery access and customer parking), environmental groups (want car-free zones), and public transit authority (underfunded). Generate ideas that balance these competing interests, assess feasibility, and identify which stakeholder coalitions each idea could build.",
+      "rubric": [
+        {
+          "criterion": "Stakeholder Analysis",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Each idea explicitly maps which stakeholders benefit, which bear costs, and what coalitions support it; trade-offs between stakeholders analyzed; ideas designed to build multi-stakeholder support",
+            "3": "Stakeholders mentioned but mapping is incomplete; 2-3 stakeholders considered per idea",
+            "1": "Stakeholders listed but ideas don't account for competing interests",
+            "0": "Stakeholder complexity ignored"
+          }
+        },
+        {
+          "criterion": "Idea Volume & Multi-Dimensionality",
+          "weight": 0.25,
+          "scoring": {
+            "5": "25+ ideas across infrastructure, policy, technology, behavioral, economic incentive, and land-use dimensions; includes cross-domain transfers from logistics, game theory, or urban planning research",
+            "3": "15-24 ideas across 3-4 dimensions",
+            "1": "Fewer than 15 ideas concentrated in 1-2 dimensions",
+            "0": "Fewer than 8 ideas"
+          }
+        },
+        {
+          "criterion": "Framework Sophistication",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Uses TRIZ to resolve stakeholder contradictions; applies Six Hats for multi-perspective analysis; uses SCAMPER on existing traffic systems; cross-domain analogies (ant colonies, fluid dynamics, network routing)",
+            "3": "One framework applied well; some structured thinking visible",
+            "1": "No framework usage; ideas appear ad-hoc",
+            "0": "No structured creative methodology"
+          }
+        },
+        {
+          "criterion": "Actionable Output",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Ideas clustered by implementation timeline (quick wins / medium-term / transformative); feasibility scored; political viability assessed; top 5 ideas have detailed implementation roadmaps",
+            "3": "Some clustering and prioritization; limited implementation detail",
+            "1": "Ideas listed without prioritization or implementation guidance",
+            "0": "Unstructured idea dump"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 60
+    },
+    {
+      "id": "bench-hard-02",
+      "difficulty": "hard",
+      "description": "Paradigm-breaking brainstorm requiring fundamental reframing",
+      "input": "The traditional university education model (4-year degree, lectures, exams, campus-based) is being challenged by online learning, bootcamps, and AI tutors. Brainstorm radically different models for higher education in 2035. Don't just improve the current model — think about what could replace it entirely. I need ideas that are truly novel, not incremental improvements, with feasibility assessment for a 10-year horizon.",
+      "rubric": [
+        {
+          "criterion": "Paradigm Novelty",
+          "weight": 0.3,
+          "scoring": {
+            "5": "At least 50% of ideas represent genuinely new education paradigms (not incremental improvements to lectures/exams); challenges fundamental assumptions about what a university IS; ideas would be surprising to higher-ed professionals",
+            "3": "Mix of novel and incremental ideas; some assumption-challenging but also many 'better version of current' ideas",
+            "1": "Mostly incremental improvements to the existing model with some new technology added",
+            "0": "No paradigm-breaking ideas"
+          }
+        },
+        {
+          "criterion": "Problem Reframing Depth",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Challenges 5+ fundamental assumptions (time-bounded, location-based, credential-focused, age-cohort, discipline-siloed); reframes from learner, employer, society, and knowledge-creation perspectives",
+            "3": "Challenges 2-3 assumptions; 2 reframing perspectives",
+            "1": "Takes the problem at face value with minimal reframing",
+            "0": "No reframing"
+          }
+        },
+        {
+          "criterion": "10-Year Feasibility Assessment",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Each idea assessed for 10-year viability considering technology trends, demographic shifts, economic forces, and regulatory environment; transition pathways from current to future state described",
+            "3": "Some forward-looking feasibility but analysis is shallow or misses key factors",
+            "1": "Feasibility based on current conditions, not 10-year projection",
+            "0": "No feasibility assessment"
+          }
+        },
+        {
+          "criterion": "Cross-Domain Inspiration",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Ideas draw from gaming (progression systems), open source (collaborative creation), healthcare (personalized treatment), professional sports (talent development), or other unexpected domains",
+            "3": "Some cross-domain thinking but mostly from obvious adjacent domains (e.g., corporate training)",
+            "1": "All ideas from within the education domain",
+            "0": "No cross-domain thinking"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 60
+    },
+    {
+      "id": "bench-hard-03",
+      "difficulty": "hard",
+      "description": "Brainstorm under severe constraints requiring creative constraint navigation",
+      "input": "A nonprofit organization with 2 staff members and zero budget needs to increase community awareness about mental health resources in a rural area with limited internet access and high stigma around mental health. Brainstorm at least 20 ideas. Every idea must work with no money and no reliable internet. I need creative solutions that navigate the stigma barrier.",
+      "rubric": [
+        {
+          "criterion": "Constraint Adherence",
+          "weight": 0.25,
+          "scoring": {
+            "5": "All ideas genuinely work with zero budget and no internet; creative resource acquisition strategies (partnerships, in-kind, volunteer networks) identified; no ideas that secretly require funding",
+            "3": "Most ideas respect constraints but 2-3 require modest resources not available",
+            "1": "Many ideas ignore the zero-budget or no-internet constraints",
+            "0": "Constraints largely ignored"
+          }
+        },
+        {
+          "criterion": "Stigma Navigation",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Ideas specifically address stigma with proven de-stigmatization approaches (normalization, trusted messenger strategy, indirect entry points, community-embedded approaches); at least 5 ideas include stigma-navigation mechanisms",
+            "3": "Stigma acknowledged but ideas don't specifically address how to overcome it",
+            "1": "Stigma mentioned once; ideas would likely trigger stigma avoidance",
+            "0": "Stigma barrier ignored entirely"
+          }
+        },
+        {
+          "criterion": "Idea Volume & Creativity",
+          "weight": 0.25,
+          "scoring": {
+            "5": "20+ ideas; includes cross-domain inspiration (public health campaigns, grassroots organizing, religious community networks, agricultural extension models); highly creative given extreme constraints",
+            "3": "15-19 ideas with moderate creativity; some cross-domain thinking",
+            "1": "Fewer than 15 ideas; mostly obvious approaches (flyers, events)",
+            "0": "Fewer than 10 ideas"
+          }
+        },
+        {
+          "criterion": "Feasibility & Prioritization",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Ideas scored for impact and effort (given 2 staff, zero budget); quick wins vs. relationship-building plays identified; implementation sequence suggested; partnership opportunities flagged",
+            "3": "Some prioritization but effort estimates missing or unrealistic for 2-person team",
+            "1": "No prioritization; ideas presented as equally weighted",
+            "0": "No feasibility assessment"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 60
+    }
+  ]
+}

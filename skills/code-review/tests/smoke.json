@@ -1,0 +1,54 @@
+{
+  "version": "0.0.1",
+  "timeout": 60,
+  "tasks": [
+    {
+      "id": "smoke-01",
+      "description": "Review a code snippet with intentionally planted security, performance, and quality issues",
+      "input": "Review the following Express.js API endpoint for security vulnerabilities, performance issues, and code quality:\n\n```javascript\nconst express = require('express');\nconst app = express();\nconst db = require('./db');\n\napp.post('/api/login', async (req, res) => {\n  const { username, password } = req.body;\n  const user = await db.query(`SELECT * FROM users WHERE username = '${username}' AND password = '${password}'`);\n  if (user.rows.length > 0) {\n    const token = username + Date.now();\n    res.json({ token, user: user.rows[0] });\n  } else {\n    res.json({ error: 'Invalid credentials' });\n  }\n});\n\napp.get('/api/users/:id', async (req, res) => {\n  const user = await db.query(`SELECT * FROM users WHERE id = ${req.params.id}`);\n  res.json(user.rows[0]);\n});\n\napp.get('/api/users', async (req, res) => {\n  const users = await db.query('SELECT * FROM users');\n  const result = [];\n  for (const user of users.rows) {\n    const orders = await db.query(`SELECT * FROM orders WHERE user_id = ${user.id}`);\n    result.push({ ...user, orders: orders.rows });\n  }\n  res.json(result);\n});\n\napp.listen(3000);\n```\n\nProvide a structured review with severity classifications and fix suggestions.",
+      "rubric": [
+        {
+          "criterion": "Issue Detection Rate",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Identifies all major issues: SQL injection (2 instances), plaintext password storage, predictable token, missing auth on /users/:id, N+1 query, missing error handling, no rate limiting, full user object in response (including password)",
+            "3": "Identifies 4-5 of the above issues",
+            "1": "Identifies only 1-2 obvious issues",
+            "0": "Misses all major issues or reports false positives"
+          }
+        },
+        {
+          "criterion": "Severity Classification",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Correctly classifies SQL injection and auth issues as Critical/High; N+1 and error handling as Medium; uses consistent severity framework",
+            "3": "Mostly correct severity assignment with minor misclassifications",
+            "1": "Inconsistent or incorrect severity levels",
+            "0": "No severity classification"
+          }
+        },
+        {
+          "criterion": "Fix Quality",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Provides copy-pasteable code fixes for each issue: parameterized queries, bcrypt hashing, JWT tokens, authorization middleware, eager loading/JOIN for N+1, try-catch blocks",
+            "3": "Provides fix descriptions but not all with code examples",
+            "1": "Vague fix suggestions like 'sanitize input'",
+            "0": "No fix suggestions"
+          }
+        },
+        {
+          "criterion": "Report Structure",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Structured report with summary, severity-grouped findings, health scores, positive observations (if any), and prioritized action items",
+            "3": "Some structure but missing components (e.g., no summary or no prioritization)",
+            "1": "Flat list of issues with no organization",
+            "0": "Unstructured prose"
+          }
+        }
+      ],
+      "passThreshold": 60
+    }
+  ]
+}

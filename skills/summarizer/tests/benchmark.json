@@ -1,0 +1,476 @@
+{
+  "version": "0.0.1",
+  "dimension": "content-understanding",
+  "tasks": [
+    {
+      "id": "bench-easy-01",
+      "difficulty": "easy",
+      "description": "Summarize a short factual news article with key statistics",
+      "input": "Summarize the following news article:\n\n---\nGlobal Renewable Energy Hits Record in 2024\n\nThe International Energy Agency (IEA) reported on January 15, 2025 that global renewable energy capacity additions reached 507 gigawatts (GW) in 2024, a 25% increase from the 405 GW added in 2023. Solar photovoltaic (PV) accounted for 75% of new additions at 380 GW, while wind power contributed 117 GW.\n\nChina led installations with 292 GW (57% of global total), followed by the United States at 52 GW, India at 29 GW, and Germany at 18 GW. The IEA's Executive Director Fatih Birol stated that renewables are now 'the cheapest source of new electricity in virtually every country.'\n\nDespite the record additions, the IEA warned that the pace must accelerate to 1,000 GW annually by 2030 to meet Paris Agreement targets. Grid infrastructure remains a bottleneck, with approximately 1,500 GW of renewable projects globally awaiting grid connection.\n---",
+      "rubric": [
+        {
+          "criterion": "Key Fact Retention",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Retains: 507 GW total, 25% increase, solar 380 GW/wind 117 GW split, China 292 GW, 1,000 GW 2030 target, 1,500 GW backlog",
+            "3": "Retains total and top 2-3 statistics but misses some",
+            "1": "Only retains 1-2 numbers",
+            "0": "No quantitative data preserved"
+          }
+        },
+        {
+          "criterion": "Structure Accuracy",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Captures the three-part structure: record achievement, country breakdown, and gap/warning",
+            "3": "Captures achievement and one other aspect",
+            "1": "Only captures the headline finding",
+            "0": "Misrepresents the article structure"
+          }
+        },
+        {
+          "criterion": "Conciseness",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Summary is 40-80 words, well-compressed, no filler",
+            "3": "Summary is reasonable length but contains some unnecessary detail",
+            "1": "Summary is nearly as long as the original or extremely truncated",
+            "0": "No meaningful compression"
+          }
+        }
+      ],
+      "expectedScoreWithout": 45,
+      "expectedScoreWith": 85
+    },
+    {
+      "id": "bench-easy-02",
+      "difficulty": "easy",
+      "description": "Extract key points from a procedural/instructional text",
+      "input": "Give me the key points from this guide:\n\n---\nSetting Up a Production Kubernetes Cluster: Essential Steps\n\n1. Capacity Planning: Before provisioning, calculate expected workload. A typical starting configuration for a medium SaaS application is 3 control plane nodes (4 vCPU, 16 GB RAM each) and 5-10 worker nodes (8 vCPU, 32 GB RAM each). Over-provisioning by 30% is recommended for burst capacity.\n\n2. Network Configuration: Use a CNI plugin (Calico or Cilium recommended). Ensure pod CIDR does not overlap with existing VPC ranges. Allocate at least a /16 for pod networking (65,536 addresses). Enable network policies from day one — retrofitting is significantly harder.\n\n3. Security Hardening: Enable RBAC (mandatory since Kubernetes 1.6). Disable anonymous authentication. Use Pod Security Admission (replacing PodSecurityPolicy since v1.25). Rotate certificates every 90 days. Store secrets in an external manager (HashiCorp Vault or AWS Secrets Manager), not in etcd.\n\n4. Monitoring Stack: Deploy Prometheus + Grafana for metrics, Loki for logs, and Jaeger for distributed tracing. Set up alerts for: node CPU > 80%, pod restart count > 3 in 5 minutes, and persistent volume usage > 85%.\n\n5. Disaster Recovery: Back up etcd every 6 hours using etcdctl snapshot. Test restoration quarterly. Maintain infrastructure-as-code (Terraform or Pulumi) so the entire cluster can be recreated from scratch in under 2 hours. Document the runbook.\n---",
+      "rubric": [
+        {
+          "criterion": "Completeness",
+          "weight": 0.4,
+          "scoring": {
+            "5": "All 5 sections represented with their most critical actionable detail from each",
+            "3": "4 of 5 sections represented or some sections lack specifics",
+            "1": "Only 2-3 sections captured",
+            "0": "Major sections missing"
+          }
+        },
+        {
+          "criterion": "Technical Precision",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Preserves specific technical details: node specs, CIDR range, tool names (Calico/Cilium, Vault), alert thresholds, backup intervals",
+            "3": "Preserves tool names but loses specific configurations",
+            "1": "Generic summary without technical specifics",
+            "0": "Technical details incorrect or fabricated"
+          }
+        },
+        {
+          "criterion": "Format Appropriateness",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Uses bullet or numbered list matching the procedural source; each point is concise and actionable",
+            "3": "Structured but some points are verbose or unclear",
+            "1": "Prose format that buries the procedural structure",
+            "0": "Unstructured output"
+          }
+        }
+      ],
+      "expectedScoreWithout": 40,
+      "expectedScoreWith": 82
+    },
+    {
+      "id": "bench-easy-03",
+      "difficulty": "easy",
+      "description": "TLDR-style ultra-brief summary of a product announcement",
+      "input": "TLDR this announcement:\n\n---\nAnthropic Launches Claude 4 with Expanded Capabilities\n\nSan Francisco, March 15, 2025 — Anthropic today announced Claude 4, the latest version of its AI assistant. The new model features a 500,000-token context window (up from 200,000 in Claude 3.5), improved reasoning capabilities scoring 92% on the GPQA benchmark (up from 65%), and native multimodal support for images, PDFs, and audio.\n\nKey pricing: Claude 4 Opus is available at $15 per million input tokens and $75 per million output tokens through the API. A new 'Projects' feature allows enterprise users to create persistent knowledge bases that Claude can reference across conversations.\n\nThe model was trained using Anthropic's Constitutional AI 2.0 framework, which the company claims reduces harmful outputs by 60% compared to the previous version while maintaining helpfulness scores. Claude 4 is available immediately through the API and web interface, with mobile apps launching in April 2025.\n---",
+      "rubric": [
+        {
+          "criterion": "Brevity",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Summary is 1-2 sentences (under 40 words) capturing the essential announcement",
+            "3": "Summary is 3-4 sentences, slightly verbose for a TLDR",
+            "1": "Summary exceeds 5 sentences",
+            "0": "No meaningful compression"
+          }
+        },
+        {
+          "criterion": "Essential Information",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Captures: what (Claude 4), who (Anthropic), and at least 2 key improvements (context window, GPQA score, multimodal, or pricing)",
+            "3": "Captures product and company but only 1 specific improvement",
+            "1": "Generic statement without specifics",
+            "0": "Misidentifies the product or company"
+          }
+        },
+        {
+          "criterion": "Accuracy",
+          "weight": 0.25,
+          "scoring": {
+            "5": "All stated facts match the source exactly — no number errors or misattributions",
+            "3": "Minor imprecision (e.g., rounded numbers that were already round)",
+            "1": "Contains a factual error",
+            "0": "Multiple factual errors or fabricated details"
+          }
+        }
+      ],
+      "expectedScoreWithout": 45,
+      "expectedScoreWith": 88
+    },
+    {
+      "id": "bench-med-01",
+      "difficulty": "medium",
+      "description": "Summarize an argumentative text with competing viewpoints and nuance",
+      "input": "Summarize the following policy analysis, preserving the competing viewpoints:\n\n---\nThe Universal Basic Income Debate: Evidence from Recent Pilots\n\nThe concept of Universal Basic Income (UBI) has moved from theoretical discussion to empirical testing, with over 50 pilot programs conducted worldwide since 2017. The evidence is both encouraging and cautionary, with results varying significantly based on program design, cultural context, and measurement methodology.\n\nThe strongest evidence for UBI comes from Finland's 2017-2018 experiment, which provided 2,000 unemployed citizens with EUR 560/month unconditionally. The final report, published by Kela in 2020, found that recipients experienced a 0.5 percentage point increase in employment compared to the control group, a statistically significant but modest effect. More notably, recipients reported substantially higher life satisfaction (7.3 vs 6.8 on a 10-point scale) and lower stress levels, with a 37% reduction in self-reported depression symptoms.\n\nStockton, California's SEED program (2019-2021) provided 125 residents with $500/month. UC Berkeley researchers found that full-time employment among recipients rose from 28% to 40%, contradicting the hypothesis that cash transfers reduce work incentive. However, critics note the small sample size and the presence of a Hawthorne effect.\n\nSkeptical perspectives come from several directions. Economist Gregory Mankiw argues that UBI at a meaningful level ($1,000/month per adult in the US) would cost approximately $3.1 trillion annually — roughly 75% of the current federal budget — making it fiscally unsustainable without massive tax increases or program consolidation. The Congressional Budget Office estimated that funding UBI through income tax alone would require a flat rate increase of 39 percentage points.\n\nA different criticism comes from labor economists like Daron Acemoglu, who contends that UBI addresses the symptom (income insufficiency) rather than the cause (labor market disruption from automation). Acemoglu advocates instead for wage subsidies and retraining programs that maintain the dignity and social integration benefits of employment.\n\nThe Kenya GiveDirectly study, the largest randomized controlled trial of basic income (20,000 recipients, 12-year program), has published interim results showing a 27% increase in household assets and a 13% increase in small business revenues among recipients. However, the study also found that recipients in villages where only some people received transfers experienced increased social tension, raising questions about targeting versus universality.\n\nProponents like economist Guy Standing argue that UBI should not be evaluated solely as an employment intervention but as a freedom-enhancing policy that gives individuals bargaining power and the ability to refuse exploitative work. Standing points to India's Madhya Pradesh pilot, where UBI recipients, particularly women, showed increased likelihood of starting small businesses (32% vs 19% in control) and girls' school attendance increased by 25%.\n\nThe emerging view among policy researchers is that UBI works best as a complement to, not a replacement for, existing social safety nets — a position articulated by Stanford's Basic Income Lab. The optimal design appears to involve smaller, unconditional payments ($300-500/month) paired with maintained access to healthcare, housing assistance, and education support.\n---",
+      "rubric": [
+        {
+          "criterion": "Viewpoint Balance",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Presents all major perspectives: pro-UBI evidence (Finland, Stockton, Kenya, India), fiscal criticism (Mankiw/CBO), structural criticism (Acemoglu), and the emerging synthesis position — without favoring any",
+            "3": "Covers pro and con but misses 1-2 perspectives or shows implicit bias",
+            "1": "Presents mostly one side, mentions opposition superficially",
+            "0": "One-sided summary or misrepresents positions"
+          }
+        },
+        {
+          "criterion": "Quantitative Fidelity",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Retains key numbers from both sides: EUR 560/month, employment effect (0.5pp or 28%→40%), $3.1T cost, 39pp tax increase, 27% asset increase, 32% vs 19% business starts",
+            "3": "Retains 4-5 key statistics with correct attribution",
+            "1": "Retains 1-2 numbers or uses vague quantifiers",
+            "0": "No numbers preserved or numbers are incorrect"
+          }
+        },
+        {
+          "criterion": "Nuance Preservation",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Captures qualifications: Finland effect was 'modest', Stockton had small sample/Hawthorne, Kenya showed social tension, complement-not-replacement conclusion",
+            "3": "Captures 2-3 qualifications",
+            "1": "Presents findings as unqualified",
+            "0": "Strips all nuance, presents black-and-white conclusions"
+          }
+        },
+        {
+          "criterion": "Structural Coherence",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Organized thematically (evidence → criticisms → synthesis) with clear flow; appropriate length (150-250 words)",
+            "3": "Logical but some transitions are weak or organization is source-by-source rather than thematic",
+            "1": "Disjointed list of facts without narrative structure",
+            "0": "Incoherent structure"
+          }
+        }
+      ],
+      "expectedScoreWithout": 35,
+      "expectedScoreWith": 80
+    },
+    {
+      "id": "bench-med-02",
+      "difficulty": "medium",
+      "description": "Summarize a technical document preserving methodology and causal reasoning",
+      "input": "Summarize this research findings section, preserving the methodology and causal chain:\n\n---\nEffects of Sleep Deprivation on Cognitive Performance: A Meta-Analysis\n\nMethodology: We conducted a systematic review and meta-analysis of 147 studies (total N = 12,438 participants) published between 2010 and 2024, examining the relationship between sleep deprivation (defined as <6 hours of sleep per night for >=3 consecutive nights) and cognitive performance across five domains. Studies were identified through PubMed, PsycINFO, and Cochrane Library databases. Random-effects models were used to pool effect sizes, and heterogeneity was assessed using the I-squared statistic.\n\nFindings:\n\n1. Attention and Vigilance: The largest effect was observed in sustained attention tasks, with a pooled Cohen's d of -1.42 (95% CI: -1.58 to -1.26, I² = 34%). Psychomotor vigilance test (PVT) lapses increased by 287% after 3 nights of restricted sleep (<6h). Recovery required 2 nights of unrestricted sleep (mean 8.2 hours) to return to baseline.\n\n2. Working Memory: Moderate impairment was observed (d = -0.86, 95% CI: -1.01 to -0.71, I² = 42%). N-back task performance declined linearly: 2-back accuracy dropped from 89% to 67% after 5 nights of restriction. Notably, subjective awareness of impairment plateaued after night 3, while objective performance continued to decline — a phenomenon termed 'sleep debt denial.'\n\n3. Executive Function: Significant but variable effects (d = -0.73, 95% CI: -0.95 to -0.51, I² = 67%). High heterogeneity was driven by task type: planning tasks (Tower of London) showed d = -1.11, while cognitive flexibility tasks (Wisconsin Card Sort) showed only d = -0.38. This suggests that sleep deprivation disproportionately affects top-down, effortful processing.\n\n4. Emotional Regulation: Large effects on emotional processing (d = -1.18, 95% CI: -1.39 to -0.97, I² = 29%). Amygdala reactivity to negative stimuli increased by 60% (fMRI data from 23 studies), while prefrontal cortex regulatory activity decreased by 33%. This neural mechanism explains the consistent finding of increased irritability and impulsive decision-making.\n\n5. Long-term Memory Consolidation: Moderate effects (d = -0.91, 95% CI: -1.08 to -0.74, I² = 38%). Declarative memory (fact recall) was impaired by 23%, while procedural memory (motor skill learning) showed only 8% impairment. Sleep spindle density during NREM Stage 2, reduced by 41% under sleep restriction, correlated with declarative memory decline (r = 0.67, p < 0.001).\n\nDose-Response Relationship: Performance decline followed a nonlinear curve. The critical threshold was identified at 6.5 hours: participants sleeping 6-6.5 hours showed minimal impairment (d = -0.15), while those sleeping 5.5-6 hours showed moderate impairment (d = -0.62), and those below 5 hours showed severe impairment (d = -1.34). This nonlinear relationship has implications for public health guidelines.\n\nLimitations: 78% of studies used young adult samples (age 18-30), limiting generalizability. Only 12 studies examined chronic restriction beyond 7 days. Publication bias was detected (Egger's test p = 0.03), suggesting the true effects may be slightly smaller.\n---",
+      "rubric": [
+        {
+          "criterion": "Methodology Preservation",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Retains: 147 studies, N=12,438, sleep deprivation definition (<6h for >=3 nights), 5 cognitive domains, meta-analytic approach",
+            "3": "Mentions it is a meta-analysis with study count but loses definition or scope details",
+            "1": "Vaguely mentions 'research' without methodology",
+            "0": "No methodology mentioned"
+          }
+        },
+        {
+          "criterion": "Finding Hierarchy",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Preserves the ranked structure: attention most affected (d=-1.42), emotional regulation (d=-1.18), long-term memory (d=-0.91), working memory (d=-0.86), executive function (d=-0.73); includes at least 3 effect sizes",
+            "3": "Captures 3-4 domains with some effect sizes but loses ranking",
+            "1": "Lists domains without quantitative comparison",
+            "0": "Domains not differentiated"
+          }
+        },
+        {
+          "criterion": "Causal Mechanisms",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Preserves key causal explanations: amygdala reactivity increase explaining emotional effects, sleep spindle reduction explaining memory decline, 'sleep debt denial' phenomenon, nonlinear dose-response with 6.5h threshold",
+            "3": "Captures 2 causal mechanisms",
+            "1": "Only reports effects without mechanisms",
+            "0": "No causal reasoning preserved"
+          }
+        },
+        {
+          "criterion": "Limitations Inclusion",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Notes at least 2 of: young adult sample bias, limited chronic studies, publication bias",
+            "3": "Mentions limitations exist but lacks specifics",
+            "1": "No limitations mentioned",
+            "0": "Implies findings are unqualified/universal"
+          }
+        }
+      ],
+      "expectedScoreWithout": 35,
+      "expectedScoreWith": 82
+    },
+    {
+      "id": "bench-med-03",
+      "difficulty": "medium",
+      "description": "Multi-document summarization requiring claim reconciliation",
+      "input": "Synthesize the following three source excerpts into a unified summary:\n\nSource A (The Economist, January 2025):\n\"India's GDP growth slowed to 5.4% in Q3 2024, down from 6.7% in Q2, marking the weakest quarterly performance in two years. Manufacturing output contracted for the first time since 2020, falling 2.2% year-over-year. The Reserve Bank of India (RBI) maintained its repo rate at 6.5%, resisting calls for rate cuts despite the slowdown, citing persistent food inflation at 9.6%.\"\n\nSource B (IMF World Economic Outlook Update, January 2025):\n\"India remains the fastest-growing major economy, with projected full-year 2024 GDP growth of 6.5%, revised down from the October forecast of 7.0%. The medium-term outlook is robust, driven by demographic dividends, digitization, and infrastructure investment (National Infrastructure Pipeline: $1.4 trillion through 2027). However, the IMF flagged risks from elevated household debt (rising from 32% to 40% of GDP between 2019-2024) and a widening current account deficit.\"\n\nSource C (Reserve Bank of India Monetary Policy Statement, December 2024):\n\"The Indian economy continues to demonstrate resilience. While Q3 growth moderated due to temporary factors including monsoon disruptions and inventory adjustments in manufacturing, the RBI projects H2 FY2025 growth at 6.7-7.0%, supported by robust services sector performance and recovering rural demand. Food inflation, currently at 9.6%, is expected to moderate to 5.2% by Q1 FY2026 as supply-side pressures ease.\"\n\n---\nProvide a unified summary that reconciles these sources.",
+      "rubric": [
+        {
+          "criterion": "Claim Reconciliation",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Identifies corroborated facts (5.4% Q3, 9.6% food inflation), contrasting framings (Economist: 'weakest', RBI: 'temporary'), and unique claims per source (IMF: household debt, RBI: H2 recovery projection)",
+            "3": "Reconciles some claims but misses key contradictions or agreements",
+            "1": "Presents sources separately without reconciliation",
+            "0": "Confuses or conflates source claims"
+          }
+        },
+        {
+          "criterion": "Source Attribution",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Every claim correctly attributed to its source; framing differences noted with attribution (e.g., 'The Economist characterizes this as... while the RBI frames it as...')",
+            "3": "Most claims attributed but 1-2 unattributed or misattributed",
+            "1": "Generic 'sources say' without specific attribution",
+            "0": "No attribution or incorrect attribution"
+          }
+        },
+        {
+          "criterion": "Data Accuracy",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Key numbers preserved accurately: 5.4% Q3, 6.5% full-year, -2.2% manufacturing, 6.5% repo rate, $1.4T infrastructure, 40% household debt",
+            "3": "4-5 key numbers correct",
+            "1": "1-2 numbers or numbers with errors",
+            "0": "Numbers fabricated or systematically wrong"
+          }
+        },
+        {
+          "criterion": "Thematic Organization",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Organized by theme (current performance, outlook, risks) rather than by source; flows as a coherent narrative",
+            "3": "Partially thematic but some source-by-source structure remains",
+            "1": "Purely source-by-source with no integration",
+            "0": "Disorganized"
+          }
+        }
+      ],
+      "expectedScoreWithout": 30,
+      "expectedScoreWith": 78
+    },
+    {
+      "id": "bench-med-04",
+      "difficulty": "medium",
+      "description": "Summarize a narrative text preserving causal chain and key actors",
+      "input": "Summarize this case study, preserving the causal chain and key decisions:\n\n---\nThe Collapse of FTX: A Timeline of Decisions\n\nFTX, founded by Sam Bankman-Fried (SBF) in 2019, grew to become the world's third-largest cryptocurrency exchange with a peak valuation of $32 billion in January 2022. Its collapse in November 2022 represents one of the fastest destructions of value in financial history.\n\nThe seeds of collapse were planted in the organizational structure itself. Alameda Research, SBF's quantitative trading firm, maintained an undisclosed special relationship with FTX. Internal documents revealed that Alameda held a $65 billion line of credit from FTX — funded by customer deposits — with no collateral requirements, no independent risk oversight, and no board approval.\n\nThe trigger event occurred on November 2, 2022, when CoinDesk published a leaked Alameda balance sheet showing that $5.8 billion of its $14.6 billion in assets consisted of FTT tokens — FTX's own exchange token. This circular dependency meant that Alameda's solvency was contingent on the market price of a token controlled by its sister company.\n\nBinance CEO Changpeng Zhao (CZ) announced on November 6 that Binance would liquidate its $580 million FTT holdings, triggering a bank run. Within 72 hours, FTX customers attempted to withdraw $6 billion. FTX halted withdrawals on November 8 when it became clear that approximately $8 billion in customer funds had been transferred to Alameda and could not be returned.\n\nBinance signed a non-binding letter of intent to acquire FTX on November 8, but withdrew within 24 hours after due diligence revealed the scale of the shortfall. FTX filed for Chapter 11 bankruptcy on November 11, 2022. SBF was arrested in the Bahamas on December 12, 2022, and was convicted on all seven federal charges — including wire fraud and money laundering — on November 2, 2023. He was sentenced to 25 years in prison on March 28, 2024.\n\nThe bankruptcy proceedings, led by restructuring specialist John Ray III (who previously oversaw the Enron liquidation), recovered approximately $14.5 billion in assets — enough to repay all customers at the time of filing with interest. Ray described the corporate governance at FTX as the worst he had seen in his 40-year career.\n---",
+      "rubric": [
+        {
+          "criterion": "Causal Chain Preservation",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Preserves the full chain: Alameda-FTX relationship (undisclosed credit line) → CoinDesk leak (FTT concentration) → CZ liquidation announcement → bank run → withdrawal halt → bankruptcy → conviction. Each link causally connected to the next",
+            "3": "Captures 4-5 links but some causal connections are implied rather than stated",
+            "1": "Lists events without causal linkage",
+            "0": "Causal chain broken or fabricated"
+          }
+        },
+        {
+          "criterion": "Key Figure Retention",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Names SBF, CZ, and John Ray III with their roles; correctly attributes actions to each",
+            "3": "Names SBF and one other; actions mostly attributed correctly",
+            "1": "Only SBF named; others generic",
+            "0": "Key actors omitted or confused"
+          }
+        },
+        {
+          "criterion": "Critical Numbers",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Retains: $32B valuation, $65B credit line, $5.8B FTT exposure, $6B withdrawal attempt, $8B shortfall, 25-year sentence, $14.5B recovery",
+            "3": "Retains 4-5 of these numbers",
+            "1": "Retains 1-2 numbers",
+            "0": "No numbers or numbers are wrong"
+          }
+        },
+        {
+          "criterion": "Compression Quality",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Summary is 100-180 words, chronologically coherent, no filler",
+            "3": "Reasonable length but some chronological confusion or filler",
+            "1": "Too long (>250 words) or too short (<50 words) losing essential content",
+            "0": "Poor compression"
+          }
+        }
+      ],
+      "expectedScoreWithout": 40,
+      "expectedScoreWith": 85
+    },
+    {
+      "id": "bench-hard-01",
+      "difficulty": "hard",
+      "description": "Summarize a dense technical paper with complex argumentation and multiple competing frameworks",
+      "input": "Summarize the following research paper excerpt, preserving the methodological debate and the authors' contribution:\n\n---\nRethinking Attention: Sparse Mixture-of-Experts vs. Dense Transformers for Long-Context Understanding\n\nAbstract: We present SparseCtx, a novel architecture that replaces dense self-attention with a learned sparse routing mechanism for long-context tasks. On documents exceeding 100K tokens, SparseCtx achieves 94.2% of dense transformer accuracy while using only 18% of the compute (measured in FLOPs). We evaluate on five benchmarks: NarrativeQA, QuALITY, ScrollsQA, RULER-128K, and a new proprietary legal document analysis task.\n\nRelated Work and Methodological Debate: The efficient attention literature has bifurcated into two camps. Linear attention methods (Katharopoulos et al., 2020; Choromanski et al., 2021) replace softmax attention with kernel approximations, achieving O(n) complexity but sacrificing up to 15% accuracy on retrieval-intensive tasks (Tay et al., 2022). Sparse attention methods (Beltagy et al., 2020; Zaheer et al., 2020; Ainslie et al., 2023) maintain exact attention over selected token subsets, preserving accuracy but requiring careful selection heuristics that may miss critical long-range dependencies.\n\nOur work departs from both camps. Rather than approximating or subsetting attention, SparseCtx learns a routing function g(x) that maps each query token to k=32 expert attention heads (from a pool of 256), where each expert specializes in different dependency patterns: local context (window ≤512 tokens), medium-range (512-8K), long-range (8K-64K), and global (full context). The routing function is trained end-to-end with a load-balancing auxiliary loss (coefficient λ=0.01) to prevent expert collapse.\n\nKey Results:\n- NarrativeQA (F1): SparseCtx 71.8 vs. Dense 73.2 vs. Longformer 64.1 vs. Linear Attention 62.7\n- RULER-128K (accuracy): SparseCtx 89.4 vs. Dense 91.1 vs. Longformer 72.3 vs. Linear Attention 68.9\n- Inference latency at 128K tokens: SparseCtx 2.3s vs. Dense 12.8s vs. Longformer 4.1s\n- Training cost (GPU-hours for equivalent performance): SparseCtx 3,200 vs. Dense 18,400\n\nCritical Limitation: We observe a 'routing collapse' phenomenon in 3 of 20 training runs where the router degenerates to always selecting the same 4-5 experts regardless of input. While the load-balancing loss mitigates this, it does not eliminate it. We hypothesize this is an optimization landscape issue analogous to mode collapse in GANs and propose but do not validate a curriculum-based routing warmup strategy.\n---",
+      "rubric": [
+        {
+          "criterion": "Technical Accuracy",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Correctly explains: sparse routing mechanism, the two existing camps (linear attention vs sparse attention) and their tradeoffs, how SparseCtx differs (learned routing to expert heads), and the routing collapse limitation",
+            "3": "Captures the main contribution but loses the methodological debate or specific mechanism details",
+            "1": "Vaguely describes it as an 'efficient attention method' without differentiation",
+            "0": "Technical content incorrect or fabricated"
+          }
+        },
+        {
+          "criterion": "Quantitative Results Fidelity",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Preserves benchmark comparisons showing SparseCtx's position relative to dense and existing efficient methods; includes both accuracy and efficiency metrics (94.2% accuracy at 18% compute, latency comparison)",
+            "3": "Preserves some benchmark numbers but loses the comparative context",
+            "1": "Vague performance claims without numbers",
+            "0": "Numbers wrong or fabricated"
+          }
+        },
+        {
+          "criterion": "Contribution Clarity",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Clearly articulates the paper's unique contribution: learned routing to specialized expert attention heads as a third approach beyond linear approximation and sparse subsetting, achieving near-dense accuracy at fraction of compute",
+            "3": "Describes what the paper does but doesn't clearly position it against alternatives",
+            "1": "Contribution unclear or lost in technical details",
+            "0": "Contribution misrepresented"
+          }
+        },
+        {
+          "criterion": "Limitation Honesty",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Includes routing collapse issue (3/20 runs), notes it is not fully solved, mentions proposed but unvalidated mitigation",
+            "3": "Mentions limitations exist but lacks specifics",
+            "1": "No limitations mentioned, implying the approach is problem-free",
+            "0": "Ignores or obscures limitations"
+          }
+        }
+      ],
+      "expectedScoreWithout": 30,
+      "expectedScoreWith": 78
+    },
+    {
+      "id": "bench-hard-02",
+      "difficulty": "hard",
+      "description": "Summarize a long text with position bias trap — critical information buried in the middle and end",
+      "input": "Summarize the following report. Important: the most decision-relevant information is in sections 3 and 4, not the introduction.\n\n---\nQ4 2024 Market Analysis: Enterprise SaaS Sector\n\nSection 1 — Market Overview:\nThe global enterprise SaaS market reached $232 billion in 2024, growing 18% year-over-year. North America accounted for 52% of revenue ($120.6B), followed by Europe at 26% ($60.3B) and Asia-Pacific at 16% ($37.1B). Total venture capital investment in SaaS declined for the third consecutive year, falling to $41.2 billion from $52.8 billion in 2023 and $89.3 billion in 2022.\n\nSection 2 — Valuation Multiples:\nMedian EV/Revenue multiples for public SaaS companies compressed from 7.2x in January 2024 to 5.8x by December 2024. High-growth companies (>30% YoY revenue growth) maintained premiums at 12.4x, while sub-20% growth companies traded at 3.9x. The Rule of 40 (growth rate + profit margin) threshold separated premium from discount valuations: companies scoring >40 traded at 2.3x the multiple of those below 40.\n\nSection 3 — Churn Analysis (Critical for Strategic Planning):\nThe most significant trend of 2024 was the divergence in net revenue retention (NRR) between AI-augmented and traditional SaaS products. AI-augmented products achieved median NRR of 127%, compared to 108% for traditional products. More critically, gross churn for traditional products increased from 8.2% to 11.7% annually — the first time traditional SaaS churn exceeded 10% at the median.\n\nThe primary churn driver was identified through exit surveys (n=4,200 churned accounts): 43% cited replacement by AI-native alternatives, 28% cited budget consolidation, and 22% cited feature commoditization. The 43% AI-replacement figure represents a 3x increase from the 14% recorded in 2023 exit surveys.\n\nFor traditional SaaS companies, the data implies a 24-36 month window to integrate AI capabilities before churn reaches critical levels. Companies that launched AI features in 2024 saw churn reduce by an average of 3.1 percentage points within two quarters of launch.\n\nSection 4 — Emerging Risk: Usage-Based Pricing Erosion:\nA less-discussed but potentially more disruptive trend: AI-driven productivity gains are reducing per-seat and per-usage metrics that underpin SaaS pricing models. In customer support SaaS, AI automation reduced ticket volume by 40-60%, directly reducing usage-based revenue. CRM platforms report that AI-generated emails and call summaries reduced per-user activity metrics by 35%, triggering downgrades to lower pricing tiers.\n\nThis creates a paradox: the more effective a SaaS product's AI features, the more they cannibalize the product's own usage-based revenue. Five public SaaS companies revised their 2025 revenue guidance downward by 5-12% specifically citing AI-driven usage compression. The companies have not yet found a stable alternative pricing model, though value-based pricing (charging for outcomes rather than usage) is being piloted by 23% of surveyed companies.\n\nSection 5 — Outlook:\nThe consensus analyst forecast projects the SaaS market to reach $295 billion by 2026, but this projection assumes pricing models remain stable. If AI-driven usage compression spreads across categories, realized market size could be $250-265 billion, a 10-15% shortfall. The next 12 months will likely determine whether the industry can transition to new pricing paradigms.\n---",
+      "rubric": [
+        {
+          "criterion": "Position Bias Resistance",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Summary prioritizes Sections 3-4 content (churn divergence AI vs traditional, 43% AI replacement, pricing erosion paradox) over the market overview numbers; demonstrates awareness that critical info was later in the document",
+            "3": "Covers Sections 3-4 but gives equal weight to the less critical Sections 1-2 market size numbers",
+            "1": "Dominated by Section 1-2 market overview; Sections 3-4 mentioned briefly or omitted",
+            "0": "Only summarizes the introduction"
+          }
+        },
+        {
+          "criterion": "Strategic Insight Extraction",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Captures: NRR divergence (127% vs 108%), churn increase (8.2% to 11.7%), 24-36 month integration window, AI usage compression paradox, pricing model instability, and the 10-15% market size risk",
+            "3": "Captures 3-4 of these strategic insights",
+            "1": "Only surface-level observations without strategic implications",
+            "0": "Misses the strategic narrative"
+          }
+        },
+        {
+          "criterion": "Quantitative Precision",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Retains key decision-relevant numbers: 43% AI replacement churn, 3.1pp churn reduction from AI launch, 40-60% ticket reduction, 35% activity metric reduction, 5-12% guidance revision, $250-265B adjusted forecast",
+            "3": "Retains 4-5 decision-relevant numbers",
+            "1": "Mostly retains overview numbers ($232B market size) rather than strategic ones",
+            "0": "Numbers absent or wrong"
+          }
+        },
+        {
+          "criterion": "Coherent Narrative",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Tells a coherent story: AI is simultaneously driving growth (NRR boost) and threatening revenue (usage compression), creating urgency and paradox; the outlook depends on pricing model evolution",
+            "3": "Presents findings but doesn't connect them into a narrative",
+            "1": "Disconnected facts",
+            "0": "Incoherent"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 80
+    },
+    {
+      "id": "bench-hard-03",
+      "difficulty": "hard",
+      "description": "Summarize content with deliberate accuracy traps — similar numbers, easily confused entities, and hedged claims",
+      "input": "Summarize the following, being extremely careful with attribution and numbers:\n\n---\nGlobal AI Regulation: A Comparative Analysis of Three Frameworks\n\nThe European Union's AI Act, which entered into force on August 1, 2024, establishes a risk-based classification system with four tiers: unacceptable risk (banned), high risk (strict requirements), limited risk (transparency obligations), and minimal risk (no specific requirements). Penalties for non-compliance range from EUR 7.5 million or 1.5% of global turnover (for incorrect information) to EUR 35 million or 7% of global turnover (for banned practices). The Act requires high-risk AI systems to undergo conformity assessments, maintain technical documentation, and implement human oversight mechanisms. Implementation timelines are staggered: banned practices take effect February 2025, high-risk obligations August 2026, and general-purpose AI model requirements August 2025.\n\nChina's approach, codified through the Interim Measures for Generative AI Services (effective August 15, 2023) and the subsequent AI Safety Governance Framework (released September 2024), differs fundamentally from the EU model. Rather than risk tiers, China employs a sector-specific regulatory model where different ministries govern AI in their domains. The Cyberspace Administration of China (CAC) requires all generative AI services to undergo security assessments before public release and mandates that training data 'reflect core socialist values.' Penalties are comparatively modest: up to RMB 100,000 (approximately $14,000) per violation under the generative AI measures, though the Data Security Law enables penalties up to RMB 10 million ($1.4 million) for severe data-related violations. Unlike the EU Act, China's framework was in effect before the EU's and already governs over 180 registered generative AI services.\n\nThe United States has taken a decentralized approach. President Biden's Executive Order 14110 (October 30, 2023) established reporting requirements for foundation models trained using more than 10^26 FLOPs of compute and dual-use models with biological, cyber, or critical infrastructure capabilities. However, the EO was revoked by President Trump's Executive Order on January 20, 2025, which shifted policy toward 'removing barriers to American AI innovation.' As of early 2025, the US has no comprehensive federal AI legislation, though 45 states have introduced AI-related bills, with 17 passing into law. The most significant state action is the Colorado AI Act (effective February 2026), which mirrors some EU AI Act provisions for high-risk decision systems. The National Institute of Standards and Technology (NIST) AI Risk Management Framework (AI RMF 1.0, January 2023) serves as the primary voluntary guidance.\n\nComparative Assessment:\nEnforcement capacity varies dramatically. The EU has established a dedicated AI Office with 140 staff and a EUR 50 million annual budget. China's enforcement is distributed across existing regulators with no disclosed dedicated budget but demonstrated enforcement through the suspension of 14 AI services in 2024 for compliance failures. The US has no dedicated enforcement body for AI; oversight is fragmented across the FTC, FDA, DOT, and sector-specific regulators.\n\nInnovation impact assessments diverge as well. A Stanford HAI study estimated EU AI Act compliance costs at EUR 300,000-400,000 per high-risk system for SMEs, prompting 31% of surveyed European AI startups to consider relocating development to the US or UK. In contrast, a Tsinghua University survey found that 78% of Chinese AI companies reported that regulatory requirements 'improved their products' quality,' though critics note the survey's methodology did not account for survivorship bias (companies that exited the market due to regulation were not surveyed).\n---",
+      "rubric": [
+        {
+          "criterion": "Entity-Attribution Accuracy",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Zero misattributions: EU penalties correctly stated (EUR 7.5M/1.5% to EUR 35M/7%), China penalties correctly stated (RMB 100K to RMB 10M), US EO 14110 correctly attributed to Biden and its revocation to Trump, Stanford HAI study not confused with Tsinghua study, Colorado AI Act not confused with EU AI Act",
+            "3": "1-2 minor attribution errors (e.g., wrong penalty range assigned to wrong framework)",
+            "1": "Multiple attribution errors or entities confused",
+            "0": "Systematic misattribution"
+          }
+        },
+        {
+          "criterion": "Framework Differentiation",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Clearly distinguishes the three approaches: EU (risk-based tiers), China (sector-specific with values alignment), US (decentralized, currently no federal law); explains what makes each unique",
+            "3": "Distinguishes approaches but conflates some elements",
+            "1": "Treats frameworks as interchangeable or mischaracterizes their approach",
+            "0": "Fails to differentiate"
+          }
+        },
+        {
+          "criterion": "Nuance and Qualification Preservation",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Preserves: staggered EU timelines (not just 'AI Act passed'), China framework existing before EU's, Biden EO revoked by Trump, Tsinghua survey's survivorship bias criticism, voluntary nature of NIST framework",
+            "3": "Captures 3-4 qualifications",
+            "1": "Presents findings without qualifications",
+            "0": "Oversimplifies to the point of inaccuracy"
+          }
+        },
+        {
+          "criterion": "Completeness at Appropriate Compression",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Summary covers all three frameworks plus comparative assessment in 200-350 words; nothing critical omitted",
+            "3": "Covers all three frameworks but omits comparative section or is too long (>400 words)",
+            "1": "Omits one framework or the comparison entirely",
+            "0": "Covers only one framework"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 75
+    }
+  ]
+}

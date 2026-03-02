@@ -1,0 +1,54 @@
+{
+  "version": "0.0.1",
+  "timeout": 60,
+  "tasks": [
+    {
+      "id": "smoke-01",
+      "description": "Debug a React component crash with a TypeError by analyzing the stack trace, identifying root cause, and suggesting a fix with regression test",
+      "input": "My React app crashes when I load the user profile page. Here's the error:\n\nTypeError: Cannot read properties of undefined (reading 'map')\n    at UserProfile (src/components/UserProfile.jsx:23:34)\n    at renderWithHooks (node_modules/react-dom/cjs/react-dom.development.js:16305:18)\n    at mountIndeterminateComponent (node_modules/react-dom/cjs/react-dom.development.js:20069:13)\n\nHere's the relevant code:\n\n```jsx\nfunction UserProfile({ userId }) {\n  const [user, setUser] = useState(null);\n\n  useEffect(() => {\n    fetch(`/api/users/${userId}`)\n      .then(res => res.json())\n      .then(data => setUser(data));\n  }, [userId]);\n\n  return (\n    <div>\n      <h1>{user.name}</h1>\n      <ul>\n        {user.posts.map(post => (\n          <li key={post.id}>{post.title}</li>\n        ))}\n      </ul>\n    </div>\n  );\n}\n```\n\nIt works fine after I navigate to the page from elsewhere, but crashes on direct page load or refresh.",
+      "rubric": [
+        {
+          "criterion": "Root Cause Identification",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Correctly identifies that user is null on initial render because useState initializes to null and the fetch hasn't completed yet; explains the timing issue between render and async data loading",
+            "3": "Identifies the null reference issue but doesn't fully explain the timing/lifecycle connection",
+            "1": "Mentions null but doesn't pinpoint why it's null on initial render",
+            "0": "Incorrect root cause identification"
+          }
+        },
+        {
+          "criterion": "Fix Quality",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Suggests a proper fix: add a loading state guard (if (!user) return loading), or use optional chaining (user?.posts?.map), or initialize state with {name: '', posts: []}; explains trade-offs between approaches",
+            "3": "Suggests a working fix but doesn't explain trade-offs or only addresses one of the two null access points (user.name and user.posts.map)",
+            "1": "Suggests wrapping in try-catch or a fix that only masks the symptom",
+            "0": "No fix suggested or fix is incorrect"
+          }
+        },
+        {
+          "criterion": "Debugging Process",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Demonstrates systematic analysis: reads stack trace, identifies the failure line, analyzes component lifecycle, formulates hypothesis, explains why it works on navigation (cached data) but not on direct load",
+            "3": "Shows some systematic analysis but skips steps or doesn't explain the navigation vs. direct load difference",
+            "1": "Jumps to fix without analysis",
+            "0": "No debugging process visible"
+          }
+        },
+        {
+          "criterion": "Regression Test",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Suggests a test that renders UserProfile before fetch completes and verifies it shows loading state without crashing; includes test code or clear pseudocode",
+            "3": "Mentions testing but doesn't provide a specific test case",
+            "1": "No test suggestion",
+            "0": "Suggests inappropriate test"
+          }
+        }
+      ],
+      "passThreshold": 60
+    }
+  ]
+}

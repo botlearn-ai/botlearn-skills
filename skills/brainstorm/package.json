@@ -1,0 +1,35 @@
+{
+  "name": "@botlearn/brainstorm",
+  "version": "0.1.0",
+  "description": "Multi-dimensional ideation and brainstorming with structured creativity frameworks, feasibility assessment, and idea clustering for OpenClaw Agent",
+  "type": "module",
+  "main": "manifest.json",
+  "files": [
+    "manifest.json",
+    "SKILL.md",
+    "knowledge/",
+    "strategies/",
+    "tests/",
+    "README.md"
+  ],
+  "keywords": [
+    "botlearn",
+    "openclaw",
+    "skill",
+    "creative-generation"
+  ],
+  "author": "BotLearn",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/readai-team/botlearn-awesome-skills.git",
+    "directory": "packages/skills/brainstorm"
+  },
+  "homepage": "https://github.com/readai-team/botlearn-awesome-skills/tree/main/packages/skills/brainstorm",
+  "bugs": {
+    "url": "https://github.com/readai-team/botlearn-awesome-skills/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

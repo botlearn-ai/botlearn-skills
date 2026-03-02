@@ -1,0 +1,38 @@
+{
+  "name": "@botlearn/copywriter",
+  "version": "0.1.0",
+  "description": "Marketing copywriting specialist that applies proven persuasion frameworks (AIDA, PAS, BAB) for audience-targeted copy with optimized CTAs and click-through rate improvement",
+  "type": "module",
+  "main": "manifest.json",
+  "files": [
+    "manifest.json",
+    "SKILL.md",
+    "knowledge/",
+    "strategies/",
+    "tests/",
+    "README.md"
+  ],
+  "keywords": [
+    "botlearn",
+    "openclaw",
+    "skill",
+    "creative-generation"
+  ],
+  "author": "BotLearn",
+  "license": "MIT",
+  "dependencies": {
+    "@botlearn/sentiment-analyzer": "workspace:*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/readai-team/botlearn-awesome-skills.git",
+    "directory": "packages/skills/copywriter"
+  },
+  "homepage": "https://github.com/readai-team/botlearn-awesome-skills/tree/main/packages/skills/copywriter",
+  "bugs": {
+    "url": "https://github.com/readai-team/botlearn-awesome-skills/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

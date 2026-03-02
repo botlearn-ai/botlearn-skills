@@ -1,0 +1,35 @@
+{
+  "name": "@botlearn/keyword-extractor",
+  "version": "0.1.0",
+  "description": "Semantic-level keyword extraction, topic clustering, and domain-aware term ranking for OpenClaw Agent",
+  "type": "module",
+  "main": "manifest.json",
+  "files": [
+    "manifest.json",
+    "SKILL.md",
+    "knowledge/",
+    "strategies/",
+    "tests/",
+    "README.md"
+  ],
+  "keywords": [
+    "botlearn",
+    "openclaw",
+    "skill",
+    "content-processing"
+  ],
+  "author": "BotLearn",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/readai-team/botlearn-awesome-skills.git",
+    "directory": "packages/skills/keyword-extractor"
+  },
+  "homepage": "https://github.com/readai-team/botlearn-awesome-skills/tree/main/packages/skills/keyword-extractor",
+  "bugs": {
+    "url": "https://github.com/readai-team/botlearn-awesome-skills/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

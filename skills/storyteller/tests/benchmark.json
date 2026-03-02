@@ -1,0 +1,476 @@
+{
+  "version": "0.0.1",
+  "dimension": "creative-generation",
+  "tasks": [
+    {
+      "id": "bench-easy-01",
+      "difficulty": "easy",
+      "description": "Write a simple short story from a clear prompt with defined genre",
+      "input": "Write a short story (300-500 words) about a child who finds a mysterious key in their grandmother's attic. Genre: fantasy. Tone: whimsical and warm.",
+      "rubric": [
+        {
+          "criterion": "Narrative Structure",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Clear beginning, middle, and end; identifiable inciting incident (finding the key), rising action, and resolution; story feels complete",
+            "3": "Has a start and end but the middle lacks direction or the resolution feels abrupt",
+            "1": "Events are listed without structural progression",
+            "0": "No discernible structure"
+          }
+        },
+        {
+          "criterion": "Character & Voice",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Child protagonist has a distinct personality shown through actions and dialogue; age-appropriate voice; emotional response to discovery feels genuine",
+            "3": "Protagonist exists but feels generic; voice is inconsistent or not age-appropriate",
+            "1": "No characterization; protagonist is interchangeable with any character",
+            "0": "No character work"
+          }
+        },
+        {
+          "criterion": "Tone & Genre",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Whimsical, warm tone sustained throughout; fantasy element is creative and integral; sensory details evoke wonder",
+            "3": "Tone is partially achieved; fantasy element present but feels perfunctory",
+            "1": "Tone mismatch; fantasy element is negligible or absent",
+            "0": "Does not match requested genre or tone"
+          }
+        }
+      ],
+      "expectedScoreWithout": 40,
+      "expectedScoreWith": 80
+    },
+    {
+      "id": "bench-easy-02",
+      "difficulty": "easy",
+      "description": "Write a story with a specific emotional arc",
+      "input": "Write a short story (300-500 words) about two strangers who share a taxi during a rainstorm and discover an unexpected connection. The emotional arc should move from awkwardness to warmth. Genre: contemporary fiction.",
+      "rubric": [
+        {
+          "criterion": "Emotional Arc",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Clear progression from awkwardness to warmth; emotional shifts feel earned through specific moments and dialogue; the connection reveal is satisfying",
+            "3": "Some emotional progression but transitions feel abrupt or underdeveloped",
+            "1": "Flat emotional line; characters jump from strangers to connected without buildup",
+            "0": "No emotional arc"
+          }
+        },
+        {
+          "criterion": "Dialogue Quality",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Dialogue sounds natural; contains subtext; each character has a distinct voice; conversation drives the emotional arc forward",
+            "3": "Dialogue is functional but lacks subtext or distinct voices",
+            "1": "Dialogue is stilted, expository, or unrealistic",
+            "0": "No dialogue or entirely non-functional"
+          }
+        },
+        {
+          "criterion": "Setting & Atmosphere",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Rainstorm and taxi setting are used actively — sensory details (rain sounds, confined space, city lights) reinforce mood and intimacy",
+            "3": "Setting is mentioned but not leveraged for atmosphere",
+            "1": "Setting is generic; could be anywhere",
+            "0": "No setting established"
+          }
+        }
+      ],
+      "expectedScoreWithout": 40,
+      "expectedScoreWith": 80
+    },
+    {
+      "id": "bench-easy-03",
+      "difficulty": "easy",
+      "description": "Write a story following a specific narrative framework",
+      "input": "Write a short story (400-600 words) using the Kishotenketsu structure (introduction, development, twist, conclusion) about a baker who makes the same loaf of bread every morning. No conflict is necessary — focus on observation, routine, and a surprising recontextualization. Genre: literary fiction.",
+      "rubric": [
+        {
+          "criterion": "Kishotenketsu Structure",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Four-part structure is clearly present; Ki establishes routine, Sho deepens it, Ten introduces a genuine twist or recontextualization, Ketsu reconciles with new understanding; story works without relying on conflict",
+            "3": "Structure is partially present but the twist feels weak or the story defaults to conflict-driven patterns",
+            "1": "Attempts the structure but falls back into three-act conflict-driven format",
+            "0": "No Kishotenketsu structure"
+          }
+        },
+        {
+          "criterion": "Prose Quality",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Lyrical, observational prose; rich sensory detail (smell of bread, textures, sounds of the bakery); language matches literary fiction expectations",
+            "3": "Competent prose with some strong moments but inconsistent quality",
+            "1": "Flat, generic prose; no sensory engagement",
+            "0": "Poor writing quality"
+          }
+        },
+        {
+          "criterion": "Twist Quality",
+          "weight": 0.3,
+          "scoring": {
+            "5": "The Ten (twist) genuinely recontextualizes the routine; surprising yet feels inevitable in retrospect; creates a moment of insight or beauty",
+            "3": "The twist is present but predictable or insufficiently transformative",
+            "1": "No real twist; the story is linear without recontextualization",
+            "0": "No twist attempted"
+          }
+        }
+      ],
+      "expectedScoreWithout": 30,
+      "expectedScoreWith": 75
+    },
+    {
+      "id": "bench-med-01",
+      "difficulty": "medium",
+      "description": "Write a story with complex character dynamics and internal conflict",
+      "input": "Write a story (600-1000 words) about a retired detective who receives a letter proving that the one case they are most proud of solving — the case that made their career — was built on a critical mistake. The detective must decide what to do. Genre: psychological drama. Include internal conflict, a clear character arc, and show-don't-tell technique.",
+      "rubric": [
+        {
+          "criterion": "Character Depth",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Detective has a fully realized internal world: pride conflicting with integrity, fear of lost legacy versus duty to truth; backstory woven through action and memory, not exposition; the decision feels weighty and personal",
+            "3": "Character has some internal conflict but it feels surface-level; backstory is told rather than shown",
+            "1": "Character is a stock detective with no meaningful internal life",
+            "0": "No characterization"
+          }
+        },
+        {
+          "criterion": "Show Don't Tell",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Emotions and internal states rendered through physical behavior, environmental interaction, memory fragments, and telling details; no direct emotional labels ('he felt guilty')",
+            "3": "Mix of showing and telling; some strong moments but falls back on direct narration of emotions",
+            "1": "Predominantly tells emotions and states directly",
+            "0": "Entirely exposition-based"
+          }
+        },
+        {
+          "criterion": "Plot & Structure",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Clear structure with the letter as inciting incident, escalating internal tension, a decisive moment (climax), and a resolution that reveals character growth or change",
+            "3": "Structure is present but pacing is uneven; climax or resolution feels weak",
+            "1": "Events unfold without structural intent",
+            "0": "No plot structure"
+          }
+        },
+        {
+          "criterion": "Thematic Resonance",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Story explores themes of truth, legacy, and integrity without moralizing; the ending makes a thematic statement through action rather than narration",
+            "3": "Thematic elements present but stated too directly or explored shallowly",
+            "1": "No thematic depth; story is purely plot-driven",
+            "0": "No thematic content"
+          }
+        }
+      ],
+      "expectedScoreWithout": 30,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-02",
+      "difficulty": "medium",
+      "description": "Write a story that balances multiple characters with distinct voices",
+      "input": "Write a story (600-1000 words) told from alternating perspectives of three siblings returning to their childhood home after their mother's death to sort through her belongings. Each sibling has a different relationship with the mother and a different emotional response. Genre: contemporary literary fiction. Each character must have a distinct voice.",
+      "rubric": [
+        {
+          "criterion": "Voice Distinction",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Each sibling has a clearly identifiable voice — different vocabulary, sentence rhythm, and emotional register; dialogue could be attributed without tags; inner monologue (if present) differs in style per character",
+            "3": "Some voice variation but characters blur together at times",
+            "1": "All three siblings sound essentially the same",
+            "0": "No voice distinction"
+          }
+        },
+        {
+          "criterion": "Emotional Complexity",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Each sibling's relationship to the mother is specific and different (e.g., guilt, grief, relief, anger); emotions are layered and contradictory; the story avoids sentimentality while achieving genuine feeling",
+            "3": "Emotional responses differ but feel surface-level or predictable",
+            "1": "All characters have similar emotional responses; feelings are generic grief",
+            "0": "No emotional content"
+          }
+        },
+        {
+          "criterion": "Structural Management",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Perspective shifts are clean and purposeful; each perspective adds new information or recontextualizes previous sections; the story builds to a collective moment",
+            "3": "Perspective shifts are identifiable but feel mechanical; some sections don't add enough new dimension",
+            "1": "Perspective shifts are confusing or arbitrary",
+            "0": "No structural management of perspectives"
+          }
+        },
+        {
+          "criterion": "Detail & Setting",
+          "weight": 0.2,
+          "scoring": {
+            "5": "The childhood home is rendered with specific, evocative details; objects trigger memories and emotions; setting functions as a character that surfaces the past",
+            "3": "Setting is present but generic; objects mentioned but not used emotionally",
+            "1": "Setting is an afterthought; could be anywhere",
+            "0": "No setting work"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-03",
+      "difficulty": "medium",
+      "description": "Write a story with effective foreshadowing and plot twist",
+      "input": "Write a mystery story (600-1000 words) about a small-town librarian who discovers that the anonymous donor funding the library's renovation has a hidden motive. Include at least three instances of foreshadowing that a re-read would reveal, and a twist that is surprising yet feels inevitable. Genre: mystery/suspense.",
+      "rubric": [
+        {
+          "criterion": "Foreshadowing Quality",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Three or more foreshadowing elements are woven naturally into the narrative; they function as story details on first read but clearly point to the twist on re-read; uses multiple foreshadowing types (behavioral, environmental, dialogue)",
+            "3": "Foreshadowing is present but too obvious (reader sees the twist coming) or too obscure (feels random in retrospect)",
+            "1": "One vague hint at most; no systematic foreshadowing",
+            "0": "No foreshadowing"
+          }
+        },
+        {
+          "criterion": "Twist Effectiveness",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Twist is genuinely surprising yet feels inevitable on reflection; recontextualizes earlier events; the hidden motive is specific, believable, and emotionally resonant",
+            "3": "Twist is present but somewhat predictable, or the motive is generic",
+            "1": "Twist feels forced, random, or unconnected to the established story",
+            "0": "No twist or it comes from nowhere (deus ex machina)"
+          }
+        },
+        {
+          "criterion": "Mystery Construction",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Clues, red herrings, and investigative steps are well-balanced; the librarian's process of discovery drives the plot; tension escalates naturally",
+            "3": "Some mystery elements but investigation is thin or tension is flat",
+            "1": "Mystery is perfunctory; revelation is accidental rather than investigated",
+            "0": "No mystery elements"
+          }
+        },
+        {
+          "criterion": "Prose & Atmosphere",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Small-town setting is vivid and atmospheric; prose builds suspense through pacing, detail selection, and controlled revelation; dialogue is naturalistic",
+            "3": "Some atmosphere but inconsistent; prose is functional rather than suspenseful",
+            "1": "Flat prose; no atmosphere; setting is generic",
+            "0": "Poor writing quality"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 65
+    },
+    {
+      "id": "bench-med-04",
+      "difficulty": "medium",
+      "description": "Write a story that effectively integrates world-building without exposition dumps",
+      "input": "Write a science fiction story (600-1000 words) set in a society where memories can be bought and sold. A memory merchant discovers a memory that could destabilize the entire market. World-building must be integrated organically — no exposition dumps or 'As you know, Bob' dialogue. Genre: sci-fi.",
+      "rubric": [
+        {
+          "criterion": "World-Building Integration",
+          "weight": 0.35,
+          "scoring": {
+            "5": "The memory-market society is revealed through character actions, transactions, environmental details, and natural dialogue; the reader understands the world without any paragraphs of explanation; details serve double duty as characterization and setting",
+            "3": "World is mostly shown but with some expository passages that halt the narrative",
+            "1": "World-building is primarily exposition dumps or 'As you know' dialogue",
+            "0": "No world-building or entirely told through exposition"
+          }
+        },
+        {
+          "criterion": "Concept Originality",
+          "weight": 0.2,
+          "scoring": {
+            "5": "The memory-market concept has specific, well-thought-out mechanics; the destabilizing memory is a creative, non-obvious choice; the story explores implications beyond surface level",
+            "3": "Concept is present but mechanics are vague or the dangerous memory is a cliche",
+            "1": "Concept is barely developed; could be any MacGuffin plot",
+            "0": "No meaningful concept development"
+          }
+        },
+        {
+          "criterion": "Character & Plot",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Memory merchant is a fully realized character whose personal stakes intersect with the market-level threat; plot has clear structure with escalating tension and meaningful resolution",
+            "3": "Character exists to serve the plot; structure is present but resolution is weak",
+            "1": "Thin characterization; plot is predictable or aimless",
+            "0": "No character development or plot structure"
+          }
+        },
+        {
+          "criterion": "Prose Craft",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Prose is genre-appropriate; sensory details make the speculative world tangible; pacing balances discovery, tension, and resolution effectively",
+            "3": "Competent prose but lacks distinctive style or sensory depth",
+            "1": "Flat or overwrought prose that undermines the story",
+            "0": "Poor writing quality"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 65
+    },
+    {
+      "id": "bench-hard-01",
+      "difficulty": "hard",
+      "description": "Write a story with an unreliable narrator and layered meaning",
+      "input": "Write a story (800-1200 words) with an unreliable narrator — a person writing a letter to someone they wronged, trying to justify their actions. The reader should gradually realize the narrator's account is self-serving and the truth is different from what's being told. Genre: literary fiction. The unreliability should emerge through contradictions, omissions, and word choices rather than an explicit reveal.",
+      "rubric": [
+        {
+          "criterion": "Unreliable Narration",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Narrator's unreliability emerges subtly through contradictions between claims and described actions, suspicious omissions, overly precise justifications, and shifts in tone when approaching key events; a careful reader can reconstruct the true version; no heavy-handed reveal",
+            "3": "Some unreliability signals but they are either too obvious (undermining the technique) or too subtle (reader can't detect them)",
+            "1": "Narrator is either clearly lying from the start (no subtlety) or the unreliability is only revealed by an explicit twist at the end",
+            "0": "No unreliable narration; narrator is straightforward"
+          }
+        },
+        {
+          "criterion": "Voice & Epistolary Form",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Letter format is used effectively; the narrator's voice is distinctive and consistent; word choices reveal character (defensiveness, self-aggrandizement, minimization); the addressee is a felt presence even without dialogue",
+            "3": "Letter format is present but the voice is generic; occasional strong word choices",
+            "1": "Format is nominally a letter but reads like standard third-person narrative",
+            "0": "No epistolary qualities"
+          }
+        },
+        {
+          "criterion": "Layered Meaning",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Story works on two levels: the narrator's version and the implied truth; key scenes carry double meaning; re-reading reveals planted clues; thematic depth about self-deception, guilt, or rationalization",
+            "3": "Some layering but the gap between narrator's version and truth is shallow or the thematic dimension is underdeveloped",
+            "1": "Single-layered narrative; surface reading is the only reading",
+            "0": "No layered meaning"
+          }
+        },
+        {
+          "criterion": "Prose Craft",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Prose is carefully controlled; sentence rhythm shifts at moments of evasion; specific, concrete details anchor the abstract; language serves the unreliability without being showy",
+            "3": "Competent prose but doesn't leverage style as a tool for unreliability",
+            "1": "Flat prose that doesn't support the story's ambitions",
+            "0": "Poor writing quality"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 60
+    },
+    {
+      "id": "bench-hard-02",
+      "difficulty": "hard",
+      "description": "Write a story that sustains tension and pacing across a longer narrative with multiple plot threads",
+      "input": "Write a thriller story (1000-1500 words) about a cybersecurity analyst who discovers a breach in their company's systems — and evidence that the attacker is someone inside the building. The analyst has 90 minutes before the attacker's payload deploys. Include: a ticking clock, at least two suspects with plausible motives, a red herring, and a resolution that relies on a clue planted in the first quarter of the story. Genre: techno-thriller.",
+      "rubric": [
+        {
+          "criterion": "Tension & Pacing",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Ticking clock drives relentless forward momentum; tension escalates with each scene; sentence rhythm accelerates toward climax; breathing moments are brief and purposeful; the 90-minute constraint feels real and urgent",
+            "3": "Some tension but pacing is uneven; the ticking clock is mentioned but not felt throughout",
+            "1": "Flat tension; story lacks urgency despite the premise",
+            "0": "No tension management"
+          }
+        },
+        {
+          "criterion": "Plot Construction",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Two suspects are equally plausible with distinct, specific motives; red herring is convincing on first read; resolution uses a clue clearly planted in the opening; all plot threads converge logically; no deus ex machina",
+            "3": "Suspects and red herring exist but one suspect is obviously guilty or the clue payoff is weak",
+            "1": "Plot is linear with token suspects; resolution feels arbitrary",
+            "0": "No mystery construction"
+          }
+        },
+        {
+          "criterion": "Technical Authenticity",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Cybersecurity elements are plausible and specific (not just 'hacking' — actual techniques, tools, or concepts); technical details serve the story without overwhelming non-technical readers",
+            "3": "Some technical grounding but relies on generic 'hacking' tropes",
+            "1": "Technical elements are Hollywood-level implausible",
+            "0": "No technical content despite the genre"
+          }
+        },
+        {
+          "criterion": "Character Under Pressure",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Analyst is a real character who reveals personality through their crisis response — methodology, fear, determination, mistakes; the pressure exposes who they are; suspects are characterized through brief but specific details",
+            "3": "Analyst functions as a plot vehicle; some personality but shallow",
+            "1": "Characters are interchangeable with any thriller stock characters",
+            "0": "No characterization"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 60
+    },
+    {
+      "id": "bench-hard-03",
+      "difficulty": "hard",
+      "description": "Write a story that blends genres and subverts reader expectations",
+      "input": "Write a story (800-1200 words) that begins as a conventional fairy tale (a princess in a tower, a dragon, a would-be rescuer) but gradually shifts genre into something unexpected — science fiction, noir, psychological horror, or existential comedy. The genre shift should feel organic, not random. The story should still be satisfying as a complete narrative with a beginning, middle, and end. Maintain internal consistency despite the genre transition.",
+      "rubric": [
+        {
+          "criterion": "Genre Transition",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Genre shift is gradual and organic — early fairy tale elements contain seeds of the target genre; the transition recontextualizes rather than abandons the opening; the story feels like a unified whole rather than two halves glued together",
+            "3": "Genre shift occurs but feels abrupt or forced; the fairy tale and second genre coexist awkwardly",
+            "1": "The story simply switches genre at a midpoint with no preparation or integration",
+            "0": "No genre transition; stays entirely in fairy tale territory"
+          }
+        },
+        {
+          "criterion": "Subversion Quality",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Fairy tale conventions are set up with clear awareness and then subverted in ways that create meaning — the subversion says something about the conventions themselves or about the human experiences they represent",
+            "3": "Subversion is present but superficial (e.g., the princess rescues herself — clever but well-trodden)",
+            "1": "Subversion is random or purely for shock value; no thematic purpose",
+            "0": "No subversion of expectations"
+          }
+        },
+        {
+          "criterion": "Narrative Cohesion",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Story is internally consistent; character motivations hold up across the genre shift; the ending resolves both the fairy tale setup and the genre destination; feels like one story, not a gimmick",
+            "3": "Mostly cohesive but some inconsistencies or the ending resolves only one layer",
+            "1": "Story feels disjointed; characters behave inconsistently across the shift",
+            "0": "No narrative cohesion"
+          }
+        },
+        {
+          "criterion": "Craft & Imagination",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Prose style shifts subtly to match the evolving genre; imagination is evident in the specific choices made; the result feels fresh and memorable",
+            "3": "Some style adaptation but prose is generic; imaginative moments are isolated",
+            "1": "Flat prose throughout; predictable choices",
+            "0": "No craft or imagination"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 60
+    }
+  ]
+}

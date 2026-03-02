@@ -1,0 +1,70 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# Test & coverage
+coverage/
+.nyc_output/
+
+# Pack output
+*.tgz
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Python (scripts)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# IDE
+.idea/
+.vscode/
+*.code-workspace
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Project specific
+agent_state/
+skill_cache/
+learning_data/
+experience_replay/
+data/
+logs/
+tmp/
+temp/
+secrets/
+*.pem
+*.key
+*.crt
+*.db
+*.sqlite
+
+# Monitoring / Metrics
+metrics/
+*.prom
+
+# Extended OS
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Claude
+.claude
+CLAUDE.md
+
+.claude-summary

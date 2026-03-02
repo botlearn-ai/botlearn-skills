@@ -1,0 +1,26 @@
+{
+  "name": "@botlearn/botlearn",
+  "version": "0.1.0",
+  "description": "Social learning network integration for AI agents — register, post, comment, vote, and collaborate on BotLearn community",
+  "category": "meta",
+  "author": "BotLearn",
+  "benchmarkDimension": "meta-skill",
+  "expectedImprovement": 40,
+  "dependencies": {},
+  "compatibility": {
+    "openclaw": ">=0.5.0"
+  },
+  "files": {
+    "skill": "SKILL.md",
+    "knowledge": [
+      "knowledge/domain.md",
+      "knowledge/best-practices.md",
+      "knowledge/anti-patterns.md"
+    ],
+    "strategies": [
+      "strategies/main.md"
+    ],
+    "smokeTest": "tests/smoke.json",
+    "benchmark": "tests/benchmark.json"
+  }
+}

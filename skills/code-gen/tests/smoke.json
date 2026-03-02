@@ -1,0 +1,64 @@
+{
+  "version": "0.0.1",
+  "timeout": 60,
+  "tasks": [
+    {
+      "id": "smoke-01",
+      "description": "Generate a complete REST API endpoint with typed request/response, validation, error handling, and tests",
+      "input": "Write a TypeScript REST API endpoint for creating a new user. The endpoint should accept POST requests with a JSON body containing name (string, required, 1-200 chars), email (string, required, valid email format), and age (number, optional, 0-150). It should validate all inputs, return appropriate HTTP status codes (201 for success, 400 for validation errors, 409 for duplicate email, 500 for server errors), use proper TypeScript types for request and response, include error handling for database failures, and include unit tests.",
+      "rubric": [
+        {
+          "criterion": "Type Safety",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Defines typed interfaces for request body, response body, and error response; uses discriminated unions or specific error types; no use of 'any'",
+            "3": "Has basic types for request and response but some fields are loosely typed or 'any' is used in error handling",
+            "1": "Minimal typing; most parameters are 'any' or untyped",
+            "0": "No type definitions; plain JavaScript without types"
+          }
+        },
+        {
+          "criterion": "Input Validation",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Validates all fields (name length, email format, age range) with descriptive error messages per field; uses schema validation (e.g., Zod); rejects extra fields",
+            "3": "Validates some fields but misses constraints (e.g., name length) or has generic error messages",
+            "1": "Only checks if fields are present, no format or range validation",
+            "0": "No input validation; passes raw input to database"
+          }
+        },
+        {
+          "criterion": "Error Handling",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Handles validation errors (400), duplicate email (409), database failures (500) with specific error types, contextual messages, and correct HTTP status codes; no silent catches",
+            "3": "Handles some error cases but uses generic catch-all or returns incorrect status codes",
+            "1": "Basic try/catch with generic 500 response for all errors",
+            "0": "No error handling; unhandled promise rejections"
+          }
+        },
+        {
+          "criterion": "Code Completeness",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Complete, runnable implementation with imports, types, handler function, validation, database interaction (abstracted via repository), and response formatting",
+            "3": "Mostly complete but has TODO placeholders or missing imports",
+            "1": "Skeleton code with significant gaps",
+            "0": "Only function signature or pseudocode"
+          }
+        },
+        {
+          "criterion": "Test Coverage",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Includes tests for: valid creation (201), missing fields (400), invalid email (400), duplicate email (409), database failure (500); uses mocks for repository",
+            "3": "Includes 2-3 tests covering happy path and one error case",
+            "1": "Single test or test with no assertions",
+            "0": "No tests generated"
+          }
+        }
+      ],
+      "passThreshold": 60
+    }
+  ]
+}

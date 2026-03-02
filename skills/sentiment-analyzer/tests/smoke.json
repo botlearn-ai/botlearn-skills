@@ -1,0 +1,54 @@
+{
+  "version": "0.0.1",
+  "timeout": 60,
+  "tasks": [
+    {
+      "id": "smoke-01",
+      "description": "Analyze sentiment of a product review with mixed opinions across multiple aspects and a sarcastic remark",
+      "input": "Analyze the sentiment of this product review:\n\n\"I've been using this wireless headphone for two weeks now. The sound quality is absolutely phenomenal — rich bass, crisp highs, and a wide soundstage that rivals wired headphones. The noise cancellation is decent, though not quite as good as the Sony XM5s. However, the battery life is a complete joke. They advertise 30 hours but I'm lucky to get 15. Oh, and the 'premium' companion app? It crashes every single time I try to adjust the EQ. At least the comfort is great — I can wear them for hours without any ear fatigue. Overall, good sound hampered by poor software and misleading battery claims.\"",
+      "rubric": [
+        {
+          "criterion": "Aspect Identification",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Identifies all 5+ aspects: sound quality, noise cancellation, battery life, companion app, comfort; correctly categorizes each",
+            "3": "Identifies 3-4 aspects but misses some or miscategorizes",
+            "1": "Identifies only 1-2 obvious aspects",
+            "0": "No aspect-level analysis performed"
+          }
+        },
+        {
+          "criterion": "Polarity Accuracy",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Correctly assigns: sound quality (strongly positive), noise cancellation (slightly positive), battery life (strongly negative), app (strongly negative), comfort (positive); detects sarcasm in 'premium' and 'joke'",
+            "3": "Gets most polarities right but misses sarcasm or misclassifies 1-2 aspects",
+            "1": "Only gets document-level polarity roughly right; aspect polarities are incorrect",
+            "0": "Polarity assignments are largely wrong"
+          }
+        },
+        {
+          "criterion": "Valence Shifter Handling",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Correctly processes: 'absolutely' as intensifier on 'phenomenal', 'not quite as good' as diminished comparison, 'complete joke' as sarcastic negative, scare quotes on 'premium' as ironic",
+            "3": "Handles basic intensifiers/negation but misses sarcastic usage or scare quotes",
+            "1": "Ignores most valence shifters",
+            "0": "No valence shifter detection"
+          }
+        },
+        {
+          "criterion": "Output Structure and Confidence",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Structured output with aspect-level detail, confidence scores, document-level summary labeled as 'mixed', sarcasm flagged, and the concluding sentence used to anchor overall sentiment",
+            "3": "Has aspect breakdown and document summary but missing confidence scores or sarcasm flags",
+            "1": "Only provides document-level sentiment without aspect detail",
+            "0": "Unstructured or no usable output"
+          }
+        }
+      ],
+      "passThreshold": 60
+    }
+  ]
+}

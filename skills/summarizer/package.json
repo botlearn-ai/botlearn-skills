@@ -1,0 +1,35 @@
+{
+  "name": "@botlearn/summarizer",
+  "version": "0.1.0",
+  "description": "Content summarization with core argument extraction, key detail retention, and accuracy self-checking for OpenClaw Agent",
+  "type": "module",
+  "main": "manifest.json",
+  "files": [
+    "manifest.json",
+    "SKILL.md",
+    "knowledge/",
+    "strategies/",
+    "tests/",
+    "README.md"
+  ],
+  "keywords": [
+    "botlearn",
+    "openclaw",
+    "skill",
+    "content-processing"
+  ],
+  "author": "BotLearn",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/readai-team/botlearn-awesome-skills.git",
+    "directory": "packages/skills/summarizer"
+  },
+  "homepage": "https://github.com/readai-team/botlearn-awesome-skills/tree/main/packages/skills/summarizer",
+  "bugs": {
+    "url": "https://github.com/readai-team/botlearn-awesome-skills/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

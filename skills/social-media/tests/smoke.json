@@ -1,0 +1,64 @@
+{
+  "version": "0.0.1",
+  "timeout": 60,
+  "tasks": [
+    {
+      "id": "smoke-01",
+      "description": "Create a LinkedIn post about a product launch with hashtags and timing recommendation",
+      "input": "Create a LinkedIn post announcing the launch of our new AI-powered project management tool called 'FlowState'. The target audience is tech startup founders and engineering managers. Highlight that it reduces meeting time by 40% through automated standups and async decision-making. Include appropriate hashtags and recommend the best time to post for a US audience.",
+      "rubric": [
+        {
+          "criterion": "Platform Adaptation",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Content is unmistakably LinkedIn-native: professional tone, paragraph breaks, 1,200-1,500 characters, 'see more' hook, no Twitter/Instagram-style formatting",
+            "3": "Reasonable LinkedIn post but could work on other platforms without much change; generic professional tone",
+            "1": "Content reads like a press release or generic announcement, not platform-adapted",
+            "0": "Content violates LinkedIn norms (too casual, too short, or formatted for another platform)"
+          }
+        },
+        {
+          "criterion": "Hook Quality",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Opening line is a scroll-stopping hook (data-driven, contrarian, or curiosity-driven) that compels readers to click 'see more'; specific to the product's value proposition",
+            "3": "Decent opening but generic ('Excited to announce...'); doesn't maximize curiosity",
+            "1": "Weak or missing hook; post starts with company name or bland statement",
+            "0": "No discernible hook; wall of text from the start"
+          }
+        },
+        {
+          "criterion": "Hashtag Strategy",
+          "weight": 0.2,
+          "scoring": {
+            "5": "3-5 relevant hashtags following the relevance pyramid (1 broad + 2-3 niche + optional branded); placed at end of post; CamelCase formatting",
+            "3": "Hashtags present but count is off, or some are irrelevant to the content",
+            "1": "Too many or too few hashtags; all broad or all niche; no strategic mix",
+            "0": "No hashtags or completely irrelevant hashtag spam"
+          }
+        },
+        {
+          "criterion": "Timing & Engagement",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Specific posting time recommendation with timezone context for US audience; includes day-of-week recommendation; rationale based on LinkedIn engagement patterns",
+            "3": "General timing recommendation ('post in the morning') without specifics",
+            "1": "Vague or missing timing recommendation",
+            "0": "No timing recommendation provided"
+          }
+        },
+        {
+          "criterion": "CTA & Value Delivery",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Clear, low-friction CTA appropriate to LinkedIn (comment-driving question, 'share with your team', link in comments note); value proposition (40% meeting reduction) is prominent and compelling",
+            "3": "CTA present but generic ('check it out'); value proposition mentioned but not highlighted",
+            "1": "Weak or missing CTA; value proposition buried",
+            "0": "No CTA; reads as pure self-promotion without audience value"
+          }
+        }
+      ],
+      "passThreshold": 60
+    }
+  ]
+}

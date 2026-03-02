@@ -1,0 +1,64 @@
+{
+  "version": "0.0.1",
+  "timeout": 60,
+  "tasks": [
+    {
+      "id": "smoke-01",
+      "description": "Write landing page copy for a B2B SaaS product targeting mid-market sales teams",
+      "input": "Write landing page copy for a CRM tool called 'DealFlow' that helps mid-market B2B sales teams (50-200 employees) automate pipeline management. The main value prop is reducing time spent on manual CRM updates by 80%, so reps can focus on selling. Target audience: VP of Sales and Sales Ops managers frustrated with low CRM adoption and inaccurate forecasting. Include a headline, body copy, and CTA. The landing page should drive free trial signups.",
+      "rubric": [
+        {
+          "criterion": "Audience Targeting",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Copy directly addresses VP of Sales / Sales Ops pain points (low CRM adoption, inaccurate forecasting, manual updates); uses their language and references their specific role challenges",
+            "3": "Copy addresses sales teams generally but lacks role-specific pain points or language",
+            "1": "Generic business copy with no clear audience targeting",
+            "0": "Copy is not relevant to the described audience"
+          }
+        },
+        {
+          "criterion": "Framework Application",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Clearly follows a recognized persuasion framework (AIDA, PAS, BAB, or 4Ps) with all stages present and well-executed; framework choice is appropriate for the audience and channel",
+            "3": "Some framework structure visible but stages are incomplete or the framework is not well-matched to the context",
+            "1": "No recognizable framework structure; copy is loosely organized",
+            "0": "Disorganized content with no persuasive structure"
+          }
+        },
+        {
+          "criterion": "Headline Quality",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Headline is specific, benefit-driven, creates curiosity or names a pain point; 6-12 words; would stop a VP of Sales from scrolling",
+            "3": "Headline conveys the product benefit but is generic or could apply to any CRM",
+            "1": "Headline is vague, feature-focused, or uses jargon without clarity",
+            "0": "No headline or completely irrelevant headline"
+          }
+        },
+        {
+          "criterion": "CTA Effectiveness",
+          "weight": 0.2,
+          "scoring": {
+            "5": "CTA is action + benefit format, includes risk reversal (e.g., 'no credit card'), creates appropriate urgency, and is clearly placed; drives toward free trial signup as specified",
+            "3": "CTA is present and relevant but uses generic wording ('Sign Up', 'Learn More') without benefit language",
+            "1": "CTA is weak, buried, or mismatched to the goal (e.g., 'Contact Us' when goal is free trial)",
+            "0": "No CTA present"
+          }
+        },
+        {
+          "criterion": "Persuasiveness & Proof",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Copy includes at least one social proof element, addresses likely objections (price, integration, adoption), benefits outnumber features, and the 80% time-saving claim is positioned credibly",
+            "3": "Some persuasive elements present but missing social proof or objection handling",
+            "1": "Copy lists features without connecting to benefits; no proof or objection handling",
+            "0": "Copy is not persuasive; reads like a product spec"
+          }
+        }
+      ],
+      "passThreshold": 60
+    }
+  ]
+}

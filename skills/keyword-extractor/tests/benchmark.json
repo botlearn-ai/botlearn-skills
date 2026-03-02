@@ -1,0 +1,476 @@
+{
+  "version": "0.0.1",
+  "dimension": "content-understanding",
+  "tasks": [
+    {
+      "id": "bench-easy-01",
+      "difficulty": "easy",
+      "description": "Extract keywords from a short product description",
+      "input": "Extract the key terms from this product description:\n\nThe Sony WH-1000XM5 wireless headphones feature industry-leading noise cancellation powered by two processors and eight microphones. With 30-hour battery life, multipoint Bluetooth connection, and speak-to-chat technology, these over-ear headphones deliver exceptional audio quality through 30mm carbon fiber composite drivers. Available in black, silver, and midnight blue.",
+      "rubric": [
+        {
+          "criterion": "Keyword Completeness",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Extracts product name (Sony WH-1000XM5), key features (noise cancellation, multipoint Bluetooth, speak-to-chat), specs (30-hour battery, 30mm drivers, carbon fiber), and category (wireless headphones, over-ear)",
+            "3": "Extracts the product name and major features but misses technical specs or category terms",
+            "1": "Extracts only 2-3 obvious terms",
+            "0": "Fails to identify relevant keywords"
+          }
+        },
+        {
+          "criterion": "Entity Recognition",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Correctly identifies Sony as ORGANIZATION, WH-1000XM5 as PRODUCT, Bluetooth as TECHNOLOGY; preserves multi-word entities intact",
+            "3": "Identifies some entities but fragments multi-word names or misclassifies types",
+            "1": "No entity recognition — treats all terms as generic keywords",
+            "0": "Fragments named entities into meaningless tokens"
+          }
+        },
+        {
+          "criterion": "Ranking Accuracy",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Product name and primary differentiators (noise cancellation) ranked highest; color options and generic terms ranked lowest",
+            "3": "Reasonable ranking but some feature terms are over- or under-weighted",
+            "1": "No meaningful ranking distinction",
+            "0": "Generic terms ranked above specific product features"
+          }
+        }
+      ],
+      "expectedScoreWithout": 40,
+      "expectedScoreWith": 80
+    },
+    {
+      "id": "bench-easy-02",
+      "difficulty": "easy",
+      "description": "Extract keywords from a news headline and summary",
+      "input": "Extract keywords from this news summary:\n\nThe European Central Bank held interest rates steady at 4.5% on Thursday, signaling that rate cuts could begin in June if inflation continues to fall toward the 2% target. ECB President Christine Lagarde noted that wage growth is moderating and the eurozone economy shows signs of bottoming out after a period of stagnation.",
+      "rubric": [
+        {
+          "criterion": "Topic Identification",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Identifies core topics: monetary policy, interest rates, inflation, eurozone economy; extracts key entities: ECB, Christine Lagarde, European Central Bank",
+            "3": "Identifies main topic (interest rates) but misses supporting economic concepts",
+            "1": "Extracts generic financial terms without capturing the specific topic",
+            "0": "Fails to identify the article's subject"
+          }
+        },
+        {
+          "criterion": "Specificity",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Extracts specific values and terms: 4.5%, 2% target, rate cuts, wage growth, stagnation; preserves numeric context",
+            "3": "Extracts key terms but loses specific values and quantitative context",
+            "1": "Only general terms like 'economy' and 'bank'",
+            "0": "No domain-specific terms extracted"
+          }
+        },
+        {
+          "criterion": "Cluster Coherence",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Groups into logical clusters: Monetary Policy (interest rates, rate cuts, ECB), Economic Indicators (inflation, wage growth, stagnation), Entities (ECB, Lagarde, eurozone)",
+            "3": "Some grouping present but clusters mix unrelated concepts",
+            "1": "No clustering — flat keyword list",
+            "0": "Incoherent grouping"
+          }
+        }
+      ],
+      "expectedScoreWithout": 40,
+      "expectedScoreWith": 80
+    },
+    {
+      "id": "bench-easy-03",
+      "difficulty": "easy",
+      "description": "Extract keywords from a recipe",
+      "input": "Extract the key terms and topics from this recipe:\n\nClassic Beef Bourguignon\nSlow-braised beef chuck in a rich Burgundy wine sauce with pearl onions, mushrooms, and bacon lardons. This traditional French stew combines aromatics — carrots, celery, garlic, and thyme — with a flour-thickened stock base. Braise at 325°F for 2.5 hours until the beef is fork-tender. Serve over egg noodles or crusty bread. Pairs well with a medium-bodied Pinot Noir.",
+      "rubric": [
+        {
+          "criterion": "Domain Keyword Coverage",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Extracts dish name (Beef Bourguignon), technique (slow-braised, braise), key ingredients (beef chuck, Burgundy wine, pearl onions, mushrooms, bacon lardons), aromatics, and serving suggestions",
+            "3": "Extracts main ingredients and dish name but misses cooking techniques or serving context",
+            "1": "Only extracts 3-4 obvious food items",
+            "0": "Fails to extract culinary-relevant keywords"
+          }
+        },
+        {
+          "criterion": "Categorization",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Categorizes keywords into: Dish Identity (Beef Bourguignon, French stew), Techniques (slow-braised, braise, flour-thickened), Main Ingredients, Aromatics, Serving",
+            "3": "Some categorization but mixes techniques with ingredients",
+            "1": "No categorization attempted",
+            "0": "Incorrect categorization"
+          }
+        },
+        {
+          "criterion": "Semantic Understanding",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Recognizes 'Beef Bourguignon' as a single entity (not fragmented); identifies 'French cuisine' as an implied topic; understands 'fork-tender' as a doneness descriptor, not a keyword",
+            "3": "Preserves some multi-word terms but includes non-informative descriptors as keywords",
+            "1": "Fragments multi-word expressions; includes stopwords",
+            "0": "No semantic understanding demonstrated"
+          }
+        }
+      ],
+      "expectedScoreWithout": 35,
+      "expectedScoreWith": 75
+    },
+    {
+      "id": "bench-med-01",
+      "difficulty": "medium",
+      "description": "Extract keywords from a technical research abstract with domain-specific terminology",
+      "input": "Extract keywords and identify topics from this research abstract:\n\nWe present a novel approach to few-shot text classification using prompt-tuning with retrieval-augmented generation (RAG). Our method combines a frozen large language model (LLM) with a learned continuous prompt and a non-parametric retrieval module that fetches semantically similar examples from a labeled datastore at inference time. On the GLUE and SuperGLUE benchmarks, our approach achieves state-of-the-art performance with only 16 labeled examples per class, outperforming full fine-tuning by 3.2% on average. We demonstrate that the retrieval component reduces hallucination by 47% compared to prompt-only baselines, as measured by a factual consistency score. Ablation studies reveal that prompt length (20 tokens), retrieval top-k (k=5), and temperature scaling are the most impactful hyperparameters. Our code and models are available at github.com/example/rag-fewshot.",
+      "rubric": [
+        {
+          "criterion": "Technical Keyword Precision",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Extracts all key technical terms: few-shot text classification, prompt-tuning, RAG, LLM, continuous prompt, non-parametric retrieval, GLUE, SuperGLUE, fine-tuning, hallucination, ablation study, hyperparameters, temperature scaling; preserves multi-word terms intact",
+            "3": "Extracts most technical terms but fragments some multi-word concepts or misses benchmark names",
+            "1": "Extracts generic ML terms but misses the specific methodology and metrics",
+            "0": "Fails to extract domain-specific terminology"
+          }
+        },
+        {
+          "criterion": "Topic Clustering Quality",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Creates coherent clusters: Methodology (prompt-tuning, RAG, continuous prompt, retrieval), Evaluation (GLUE, SuperGLUE, few-shot, state-of-the-art), Model Architecture (LLM, frozen model, non-parametric), Experimental Setup (ablation, hyperparameters, top-k, temperature)",
+            "3": "Clusters are present but some terms are misassigned or clusters are too broad",
+            "1": "Minimal clustering with poor coherence",
+            "0": "No clustering"
+          }
+        },
+        {
+          "criterion": "Implicit Concept Detection",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Identifies implied topics not explicitly stated: NLP, transfer learning, in-context learning, semantic search, embedding similarity; flags these as semantic-level with appropriate confidence",
+            "3": "Identifies 1-2 implied concepts but misses others",
+            "1": "Only extracts explicitly stated terms",
+            "0": "No semantic-level extraction"
+          }
+        },
+        {
+          "criterion": "Quantitative Context Preservation",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Preserves key quantitative context: 16 examples per class, 3.2% improvement, 47% hallucination reduction, 20 tokens, k=5; associates metrics with the correct terms",
+            "3": "Some quantitative context preserved but not linked to correct terms",
+            "1": "Numbers extracted but without context",
+            "0": "Quantitative context lost"
+          }
+        }
+      ],
+      "expectedScoreWithout": 30,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-02",
+      "difficulty": "medium",
+      "description": "Extract keywords from a legal contract clause with domain-specific language",
+      "input": "Extract key terms and legal concepts from this contract clause:\n\nIndemnification and Limitation of Liability. The Service Provider shall indemnify, defend, and hold harmless the Client, its officers, directors, employees, and agents from and against any and all claims, damages, losses, liabilities, costs, and expenses (including reasonable attorneys' fees) arising out of or relating to (a) any breach of this Agreement by the Service Provider, (b) any negligent or wrongful act or omission of the Service Provider, or (c) any violation of applicable law by the Service Provider. Notwithstanding the foregoing, in no event shall the Service Provider's aggregate liability under this Agreement exceed the total fees paid by the Client during the twelve (12) months preceding the claim. Neither party shall be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to loss of profits, data, or business opportunity, regardless of whether such damages were foreseeable.",
+      "rubric": [
+        {
+          "criterion": "Legal Term Extraction",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Extracts all key legal terms: indemnify, hold harmless, limitation of liability, breach, negligent act, aggregate liability, consequential damages, punitive damages, attorneys' fees, foreseeable damages; preserves legal phrases intact",
+            "3": "Extracts major legal terms but misses nuanced concepts like 'hold harmless' or 'aggregate liability'",
+            "1": "Extracts only 3-4 obvious legal terms",
+            "0": "Fails to identify legal-specific terminology"
+          }
+        },
+        {
+          "criterion": "Concept Hierarchy",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Identifies the hierarchy: Indemnification (broader) containing breach, negligence, legal violation (triggers); Liability Cap (aggregate liability, twelve months, total fees); Damage Exclusions (indirect, consequential, punitive, loss of profits)",
+            "3": "Groups some related terms but misses the hierarchical relationship between indemnification triggers and the liability cap",
+            "1": "Flat list with no structural understanding",
+            "0": "No grouping"
+          }
+        },
+        {
+          "criterion": "Domain Contextualization",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Maps terms to contract law domain; identifies clause type (indemnification + liability limitation); notes that this is a standard commercial contract provision",
+            "3": "Identifies the legal domain but doesn't classify the clause type",
+            "1": "No domain context provided",
+            "0": "Misclassifies the domain"
+          }
+        },
+        {
+          "criterion": "Boilerplate Filtering",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Correctly filters out boilerplate words (herein, notwithstanding, foregoing, including but not limited to) and does not include them as keywords",
+            "3": "Filters some boilerplate but includes 1-2 legal filler phrases as keywords",
+            "1": "Includes multiple boilerplate terms as keywords",
+            "0": "No boilerplate filtering"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-03",
+      "difficulty": "medium",
+      "description": "Extract keywords from a multilingual product review with sentiment signals",
+      "input": "Extract keywords and identify the main topics discussed in these product reviews:\n\nReview 1: 'The battery life on the Pixel 8 Pro is outstanding — easily lasts 2 days with moderate use. The Tensor G3 chip handles AI features like Magic Eraser and Best Take flawlessly. Camera quality rivals the iPhone 15 Pro, especially in low-light with Night Sight. However, the 6.7-inch display feels too large for one-handed use.'\n\nReview 2: 'Disappointed with the fingerprint sensor — it fails about 30% of the time. Software updates are frequent but sometimes introduce new bugs. The 50MP main camera produces oversaturated colors in auto mode. On the positive side, 7 years of OS updates is a huge commitment and the $999 price point is competitive for a flagship.'\n\nReview 3: 'Coming from a Samsung Galaxy S23, the Pixel's stock Android experience is refreshingly clean. Google Assistant integration is leagues ahead of Bixby. The 120Hz LTPO display is smooth, though peak brightness could be higher. Wireless charging and IP68 water resistance are expected at this price tier.'",
+      "rubric": [
+        {
+          "criterion": "Cross-Review Keyword Synthesis",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Synthesizes keywords across all 3 reviews: identifies recurring themes (camera, battery, display, software), consolidates product references (Pixel 8 Pro), and captures both positive and negative aspect terms",
+            "3": "Extracts keywords from each review but doesn't synthesize or identify recurring themes",
+            "1": "Extracts keywords from only 1-2 reviews",
+            "0": "Fails to handle multi-document input"
+          }
+        },
+        {
+          "criterion": "Feature-Level Clustering",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Clusters by product features: Camera (50MP, Night Sight, Magic Eraser, low-light), Display (6.7-inch, 120Hz, LTPO), Performance (Tensor G3, AI features), Battery, Software (stock Android, OS updates), Biometrics (fingerprint sensor), Build (IP68, wireless charging)",
+            "3": "Some feature-level clustering but merges distinct features or misses categories",
+            "1": "Minimal clustering; most keywords ungrouped",
+            "0": "No feature clustering"
+          }
+        },
+        {
+          "criterion": "Comparative Entity Handling",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Correctly identifies compared products (Pixel 8 Pro, iPhone 15 Pro, Samsung Galaxy S23) and technologies (Tensor G3 vs Bixby vs Google Assistant) as distinct entity keywords; doesn't conflate them",
+            "3": "Identifies most product entities but misses technology comparisons",
+            "1": "Fragments product names or misses comparison context",
+            "0": "No entity recognition"
+          }
+        },
+        {
+          "criterion": "Sentiment-Aware Extraction",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Notes sentiment polarity for key feature keywords: battery (positive), fingerprint sensor (negative), camera (mixed), software updates (mixed); does not extract sentiment words themselves as topic keywords",
+            "3": "Some sentiment awareness but includes sentiment adjectives (outstanding, disappointed) as topic keywords",
+            "1": "No sentiment distinction — treats positive and negative aspects identically",
+            "0": "Sentiment interferes with keyword quality"
+          }
+        }
+      ],
+      "expectedScoreWithout": 30,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-04",
+      "difficulty": "medium",
+      "description": "Extract keywords from a policy document with nested hierarchical topics",
+      "input": "Extract key terms and topic hierarchy from this policy summary:\n\nThe EU Artificial Intelligence Act establishes a risk-based regulatory framework for AI systems across the European Union. AI systems are classified into four risk tiers: (1) Unacceptable Risk — banned outright, including social scoring by governments, real-time biometric surveillance in public spaces, and manipulative AI targeting vulnerable groups; (2) High Risk — subject to strict requirements including conformity assessments, human oversight, data governance, and transparency obligations, covering areas such as employment screening, credit scoring, law enforcement, and critical infrastructure; (3) Limited Risk — requiring transparency measures such as disclosure that content is AI-generated, applicable to chatbots and deepfake generators; (4) Minimal Risk — freely permitted with no special requirements, covering spam filters, AI-enabled video games, and recommendation systems. General-purpose AI models (GPAI) face additional obligations including technical documentation, copyright compliance, and energy consumption reporting. Penalties for non-compliance reach up to 35 million euros or 7% of global annual turnover.",
+      "rubric": [
+        {
+          "criterion": "Hierarchical Term Extraction",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Extracts the full hierarchy: EU AI Act (top-level), four risk tiers with their specific examples, GPAI obligations, and penalties; preserves the nested structure of risk categories and their associated requirements",
+            "3": "Extracts the risk tiers but misses specific examples within each tier or loses the hierarchical relationship",
+            "1": "Extracts flat terms like 'AI', 'risk', 'regulation' without hierarchy",
+            "0": "Fails to identify the regulatory structure"
+          }
+        },
+        {
+          "criterion": "Domain Precision",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Extracts precise regulatory terms: conformity assessment, human oversight, data governance, transparency obligations, social scoring, biometric surveillance, GPAI, global annual turnover; no over-generalization",
+            "3": "Extracts main regulatory concepts but generalizes some specific terms",
+            "1": "Only generic terms like 'regulation' and 'compliance'",
+            "0": "Misidentifies or omits domain-specific terms"
+          }
+        },
+        {
+          "criterion": "Coverage Completeness",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Covers all four risk tiers, GPAI provisions, and penalty structure; no major section of the text is left without keyword representation",
+            "3": "Covers 3 of the 4 risk tiers and most provisions",
+            "1": "Covers only 1-2 aspects of the policy",
+            "0": "Major gaps in coverage"
+          }
+        },
+        {
+          "criterion": "Cluster Organization",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Keywords organized into clusters matching the policy structure: Risk Classification, Requirements & Obligations, Prohibited Practices, GPAI Rules, Enforcement & Penalties",
+            "3": "Some organization but clusters don't align with the policy's natural structure",
+            "1": "Flat list despite clear hierarchical content",
+            "0": "No organization"
+          }
+        }
+      ],
+      "expectedScoreWithout": 30,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-hard-01",
+      "difficulty": "hard",
+      "description": "Extract keywords from a highly technical cross-disciplinary text spanning biology and computer science",
+      "input": "Extract keywords and map topic clusters from this cross-disciplinary passage:\n\nProtein structure prediction has been revolutionized by deep learning approaches, particularly AlphaFold2's use of attention mechanisms and multiple sequence alignments (MSAs) to achieve atomic-level accuracy. The model's Evoformer module processes evolutionary relationships between amino acid residues through axial attention, while the Structure Module generates 3D coordinates via invariant point attention (IPA). Training on the Protein Data Bank (PDB) with distillation from self-predictions, AlphaFold2 achieves a median GDT-TS score of 92.4 on CASP14 free-modeling targets.\n\nRecent extensions include ESMFold, which eliminates the MSA requirement using a protein language model (pLM) pretrained on 65 million sequences, and RoseTTAFold All-Atom, which extends predictions to protein-ligand and protein-nucleic acid complexes. Diffusion-based approaches like RFdiffusion enable de novo protein design by sampling from learned structure distributions, opening applications in enzyme engineering, drug delivery scaffolds, and biosensor design.\n\nCritically, confidence metrics such as pLDDT (predicted local distance difference test) and PAE (predicted aligned error) allow researchers to assess prediction reliability per-residue, distinguishing well-folded domains from intrinsically disordered regions (IDRs).",
+      "rubric": [
+        {
+          "criterion": "Cross-Domain Keyword Precision",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Extracts terms from both domains: Biology (protein structure, amino acid residues, MSA, PDB, enzyme engineering, intrinsically disordered regions) and CS/ML (deep learning, attention mechanisms, axial attention, diffusion models, language model); preserves all acronyms with expansions",
+            "3": "Extracts terms from both domains but misses specialized terms in one domain",
+            "1": "Extracts terms from only one domain",
+            "0": "Fails to identify domain-specific terminology"
+          }
+        },
+        {
+          "criterion": "Named System Recognition",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Correctly identifies all named systems as atomic entities: AlphaFold2, Evoformer, Structure Module, ESMFold, RoseTTAFold All-Atom, RFdiffusion, CASP14, PDB; classifies each appropriately (model/benchmark/database)",
+            "3": "Identifies most named systems but fragments some (e.g., 'RoseTTAFold' and 'All-Atom' as separate keywords)",
+            "1": "Identifies only the most prominent names (AlphaFold2)",
+            "0": "Fragments or misidentifies named systems"
+          }
+        },
+        {
+          "criterion": "Topic Cluster Coherence",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Creates coherent cross-disciplinary clusters: Structural Biology Methods (MSA, PDB, GDT-TS, residues), Deep Learning Architecture (attention, Evoformer, IPA, diffusion), Prediction Systems (AlphaFold2, ESMFold, RFdiffusion), Applications (enzyme engineering, drug delivery, biosensors), Confidence Metrics (pLDDT, PAE, IDR)",
+            "3": "Reasonable clusters but some terms misassigned across biology/CS boundaries",
+            "1": "Only broad 'biology' and 'CS' clusters without nuance",
+            "0": "No meaningful clustering"
+          }
+        },
+        {
+          "criterion": "Metric and Acronym Handling",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Preserves all metrics (GDT-TS 92.4, pLDDT, PAE) and acronyms (MSA, IPA, pLM, IDR) with their expansions; associates metrics with correct models",
+            "3": "Preserves most acronyms but misses expansions or metric associations",
+            "1": "Some acronyms extracted but without context",
+            "0": "Acronyms fragmented or omitted"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 65
+    },
+    {
+      "id": "bench-hard-02",
+      "difficulty": "hard",
+      "description": "Extract keywords from an ambiguous text with negations, hypotheticals, and contrasting arguments",
+      "input": "Extract keywords from this analytical essay, handling negations and contrasting viewpoints correctly:\n\nThe claim that remote work universally increases productivity is not supported by the evidence. While studies from Stanford (Bloom et al., 2015) showed a 13% performance increase for call center employees, these results do not generalize to creative or collaborative roles. In fact, Microsoft's analysis of 61,000 employees found that cross-team collaboration decreased by 25% during remote work periods.\n\nIt would be misleading to conclude that office work is therefore superior. Hybrid models — combining 2-3 office days with remote flexibility — appear to optimize both individual focus time and team cohesion. However, this finding does not account for industries with strict security requirements (defense, healthcare) where remote access is fundamentally constrained.\n\nNotably, the productivity debate ignores several confounding variables: commute time savings (averaging 41 minutes per day in US metro areas), real estate cost reduction for employers ($11,000 per employee annually), and the environmental impact of reduced commuting (estimated 54 million tons of CO2 equivalent annually). These factors may outweigh marginal productivity differences in either direction.\n\nCritics argue that long-term innovation suffers without serendipitous in-person interactions, but no longitudinal study has yet confirmed this hypothesis with statistical significance.",
+      "rubric": [
+        {
+          "criterion": "Negation-Aware Extraction",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Correctly handles negations: 'remote work increases productivity' is identified as a CONTESTED claim, not an affirmed keyword; 'does not generalize' is not used to assert generalizability; 'no longitudinal study has confirmed' flags innovation impact as UNPROVEN; negated terms are either excluded or clearly marked",
+            "3": "Handles some negations but treats 1-2 negated claims as affirmed keywords",
+            "1": "Ignores negation context entirely — extracts 'productivity increase' as a positive keyword",
+            "0": "Negation blindness — all terms extracted as if affirmed"
+          }
+        },
+        {
+          "criterion": "Argumentative Structure Keywords",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Extracts keywords that reflect the debate structure: remote work productivity (contested), hybrid models (proposed solution), cross-team collaboration (declined), confounding variables (reframing), serendipitous interactions (hypothesis); captures the nuance of each position",
+            "3": "Extracts topic terms but loses the argumentative nuance — doesn't distinguish claims from counter-claims",
+            "1": "Extracts only surface-level terms without argumentative context",
+            "0": "Misrepresents the text's argumentative positions"
+          }
+        },
+        {
+          "criterion": "Quantitative Evidence Linking",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Links statistics to correct claims: 13% increase (Stanford/call center), 25% decrease (Microsoft/collaboration), 41 min commute savings, $11K cost reduction, 54M tons CO2; associates each with its source and scope",
+            "3": "Extracts most statistics but doesn't link all to their correct claims or sources",
+            "1": "Extracts some numbers without context",
+            "0": "Quantitative data lost or misattributed"
+          }
+        },
+        {
+          "criterion": "Topic Coverage Despite Complexity",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Covers all sub-topics: productivity evidence, collaboration impact, hybrid models, industry constraints, economic factors, environmental impact, innovation concerns; organizes into coherent clusters",
+            "3": "Covers 4-5 sub-topics but misses 1-2 or clusters poorly",
+            "1": "Covers only the main topic (remote work) without sub-topic differentiation",
+            "0": "Major gaps in topic coverage"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 60
+    },
+    {
+      "id": "bench-hard-03",
+      "difficulty": "hard",
+      "description": "Extract keywords from a dense technical specification with overlapping terminology across sections",
+      "input": "Extract and deduplicate keywords from this API specification:\n\nEndpoint: POST /v2/models/{model_id}/predictions\nAuthentication: Bearer token (JWT, RS256 signed, 1-hour expiry)\nRate Limit: 100 requests/minute per API key, burst allowance of 20 requests/second\n\nRequest Body:\n- model_id (string, required): The unique identifier of the deployed model. Supports versioned IDs (e.g., 'gpt-4-turbo-2024-04-09').\n- messages (array, required): Conversation history. Each message object contains 'role' (system|user|assistant) and 'content' (string, max 128K tokens).\n- temperature (float, optional, default 1.0): Sampling temperature. Range [0.0, 2.0]. Lower values produce more deterministic outputs.\n- top_p (float, optional, default 1.0): Nucleus sampling parameter. Mutually exclusive with temperature when both differ from defaults.\n- max_tokens (integer, optional): Maximum tokens in the response. Model-dependent upper bound.\n- stream (boolean, optional, default false): Enable server-sent events (SSE) for streaming responses.\n- tools (array, optional): Function calling definitions. Each tool specifies 'name', 'description', and 'parameters' (JSON Schema).\n\nResponse:\n- id (string): Unique prediction identifier (UUID v4)\n- choices (array): Model outputs. Each choice contains 'message' (role + content), 'finish_reason' (stop|length|tool_calls|content_filter), and 'index'.\n- usage (object): Token consumption — 'prompt_tokens', 'completion_tokens', 'total_tokens'.\n- model (string): Actual model used (may differ from requested if aliased).\n\nError Codes: 400 (invalid request), 401 (authentication failed), 429 (rate limited), 500 (internal error), 503 (model unavailable).",
+      "rubric": [
+        {
+          "criterion": "API Concept Extraction",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Extracts all key API concepts: endpoint, authentication (JWT, RS256, Bearer token), rate limiting, request/response schema, streaming (SSE), function calling, token counting; preserves technical precision",
+            "3": "Extracts most API concepts but misses technical details like RS256 or SSE",
+            "1": "Extracts only broad concepts like 'API' and 'authentication'",
+            "0": "Fails to identify API-specific terminology"
+          }
+        },
+        {
+          "criterion": "Parameter Keyword Organization",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Organizes parameters into logical clusters: Sampling Control (temperature, top_p, max_tokens), Input Structure (messages, model_id, roles), Output Format (choices, finish_reason, usage), Configuration (stream, tools); distinguishes request from response terms",
+            "3": "Groups some parameters but mixes request and response terms or misclassifies",
+            "1": "Flat list of parameter names without grouping",
+            "0": "Parameters not extracted as keywords"
+          }
+        },
+        {
+          "criterion": "Deduplication Across Sections",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Correctly deduplicates: 'model_id' appears in endpoint path and request body — extracted once; 'tokens' appears in multiple contexts (max_tokens, prompt_tokens, 128K tokens) — unified under a token-related cluster; 'role' in messages and choices merged",
+            "3": "Some deduplication but 1-2 terms appear redundantly",
+            "1": "No deduplication — same terms appear multiple times from different sections",
+            "0": "Excessive duplication"
+          }
+        },
+        {
+          "criterion": "Technical Precision",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Preserves precise technical terms: UUID v4, JSON Schema, SSE, RS256, JWT, nucleus sampling, server-sent events; includes constraint values where relevant (128K tokens, [0.0, 2.0] range)",
+            "3": "Preserves most technical terms but loses some precision or constraint context",
+            "1": "Generalizes technical terms (e.g., 'identifier' instead of 'UUID v4')",
+            "0": "Technical precision lost"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 60
+    }
+  ]
+}

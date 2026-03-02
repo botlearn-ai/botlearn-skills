@@ -1,0 +1,486 @@
+{
+  "version": "0.0.1",
+  "dimension": "information-retrieval",
+  "tasks": [
+    {
+      "id": "bench-easy-01",
+      "difficulty": "easy",
+      "description": "Identify the current top trending topic in a single subreddit",
+      "input": "What is the hottest topic on r/technology right now? Give me the top trending post with its engagement metrics.",
+      "rubric": [
+        {
+          "criterion": "Data Retrieval",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Retrieves current hot/rising posts from r/technology with score, upvote_ratio, num_comments, and post age",
+            "3": "Retrieves top posts but missing some engagement metrics",
+            "1": "Provides a general description without specific post data",
+            "0": "No data retrieved from the subreddit"
+          }
+        },
+        {
+          "criterion": "Metric Interpretation",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Explains what the metrics mean in context — normalizes by subreddit size, notes velocity, identifies lifecycle phase",
+            "3": "Reports metrics but without normalization or velocity context",
+            "1": "Raw numbers only with no interpretation",
+            "0": "No metrics provided"
+          }
+        },
+        {
+          "criterion": "Output Quality",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Structured output with post title, link, metrics, and a brief assessment of why it is trending",
+            "3": "Post identified with partial metrics",
+            "1": "Vague description of trending content",
+            "0": "No usable output"
+          }
+        }
+      ],
+      "expectedScoreWithout": 35,
+      "expectedScoreWith": 75
+    },
+    {
+      "id": "bench-easy-02",
+      "difficulty": "easy",
+      "description": "Check a subreddit's current activity level relative to its baseline",
+      "input": "Is r/worldnews more active than usual right now? Check the current activity level and compare it to what you'd expect for this time of day.",
+      "rubric": [
+        {
+          "criterion": "Baseline Awareness",
+          "weight": 0.4,
+          "scoring": {
+            "5": "References subreddit subscriber count and typical active user count; compares current activity to expected hourly baseline for this time of day and day of week",
+            "3": "Notes current activity level but baseline comparison is approximate or missing temporal context",
+            "1": "Reports current active users without any baseline reference",
+            "0": "No activity level assessment"
+          }
+        },
+        {
+          "criterion": "Data Collection",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Checks active user count, recent post frequency in /new, and comment rates to triangulate activity level",
+            "3": "Checks one or two activity indicators",
+            "1": "Only mentions subscriber count without current activity data",
+            "0": "No data collected"
+          }
+        },
+        {
+          "criterion": "Contextual Output",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Clear verdict (above/below/at baseline) with specific numbers and time-of-day context; notes if an event may be driving unusual activity",
+            "3": "Provides a verdict but without supporting numbers or temporal context",
+            "1": "Vague assessment without data",
+            "0": "No assessment provided"
+          }
+        }
+      ],
+      "expectedScoreWithout": 30,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-easy-03",
+      "difficulty": "easy",
+      "description": "Find relevant subreddits for a given topic",
+      "input": "What are the most relevant subreddits for tracking developments in artificial intelligence? List them with subscriber counts and typical activity levels.",
+      "rubric": [
+        {
+          "criterion": "Subreddit Discovery",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Identifies 5+ relevant subreddits spanning different aspects of AI (research, news, applications, ethics) including both mega-subs and niche communities",
+            "3": "Identifies 3-4 relevant subreddits but misses niche or specialized communities",
+            "1": "Only identifies 1-2 obvious subreddits (e.g., r/artificial)",
+            "0": "No relevant subreddits identified"
+          }
+        },
+        {
+          "criterion": "Community Profiling",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Each subreddit includes: subscriber count, size tier, activity level, content focus, and typical post types",
+            "3": "Subscriber counts and basic descriptions but missing activity characterization",
+            "1": "Names only without metadata",
+            "0": "No profiling"
+          }
+        },
+        {
+          "criterion": "Strategic Value Assessment",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Explains which subreddits are best for early trend detection vs. broad coverage vs. expert analysis; recommends a monitoring set",
+            "3": "Lists subreddits but doesn't differentiate their strategic value for monitoring",
+            "1": "Flat list with no monitoring strategy advice",
+            "0": "No strategic guidance"
+          }
+        }
+      ],
+      "expectedScoreWithout": 35,
+      "expectedScoreWith": 80
+    },
+    {
+      "id": "bench-med-01",
+      "difficulty": "medium",
+      "description": "Detect cross-subreddit topic convergence for a breaking event",
+      "input": "A major tech company just announced a significant product. Check r/technology, r/gadgets, r/apple, and r/Android to see if this topic is spreading across communities. Identify the topic, trace where it originated, and assess the cross-community spread pattern.",
+      "rubric": [
+        {
+          "criterion": "Cross-Subreddit Detection",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Scans all 4 subreddits for overlapping topics using URL matching, keyword clustering, and entity co-occurrence; identifies the converging topic with specific evidence",
+            "3": "Checks multiple subreddits and finds overlap but uses only one correlation method",
+            "1": "Checks subreddits independently without systematic cross-correlation",
+            "0": "No cross-subreddit analysis"
+          }
+        },
+        {
+          "criterion": "Origin Tracing",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Identifies the earliest post by timestamp, traces the crosspost chain, determines which subreddit served as the origin, and maps the propagation path",
+            "3": "Identifies the likely origin subreddit but doesn't trace the full propagation path",
+            "1": "Mentions where the topic appeared but doesn't determine origin",
+            "0": "No origin analysis"
+          }
+        },
+        {
+          "criterion": "Spread Pattern Classification",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Correctly classifies the propagation pattern (hub-and-spoke, grassroots, cascade, or synchronized) with evidence; calculates spread score",
+            "3": "Describes the spread qualitatively but doesn't formally classify the pattern",
+            "1": "Notes that the topic appears in multiple places without pattern analysis",
+            "0": "No spread analysis"
+          }
+        },
+        {
+          "criterion": "Report Completeness",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Structured report with topic summary, origin, spread map, per-subreddit engagement metrics, and prediction of further spread",
+            "3": "Reports the topic and affected subreddits but missing metrics or predictions",
+            "1": "Partial report with significant gaps",
+            "0": "No coherent report"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 65
+    },
+    {
+      "id": "bench-med-02",
+      "difficulty": "medium",
+      "description": "Perform velocity-based breakout detection on rising posts",
+      "input": "Analyze the rising posts in r/science right now. Identify any posts that are showing breakout velocity — engagement rates significantly above the subreddit's baseline. For each candidate, calculate the velocity metrics and predict whether it will reach the front page.",
+      "rubric": [
+        {
+          "criterion": "Velocity Calculation",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Calculates upvote velocity, comment velocity, and award velocity for rising posts; normalizes by subreddit size (3M+ subscribers) and post age; compares against baseline thresholds",
+            "3": "Computes some velocity metrics but normalization is incomplete or thresholds are not referenced",
+            "1": "Reports engagement numbers without computing velocity (rate of change over time)",
+            "0": "No velocity analysis"
+          }
+        },
+        {
+          "criterion": "Breakout Identification",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Flags posts exceeding the 90th-percentile velocity threshold for r/science; classifies each flagged post's lifecycle phase; provides multi-metric confirmation (upvote + comment velocity agreement)",
+            "3": "Identifies high-engagement posts but breakout criteria are loosely defined",
+            "1": "Lists popular posts without breakout-specific analysis",
+            "0": "No breakout detection"
+          }
+        },
+        {
+          "criterion": "Prediction Quality",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Provides front-page probability estimate with reasoning based on velocity curve phase, time-of-day, and subreddit-specific breakout history; includes predicted peak timing",
+            "3": "Makes a prediction but without detailed supporting analysis",
+            "1": "Vague speculation about whether posts might trend",
+            "0": "No predictions made"
+          }
+        },
+        {
+          "criterion": "Anti-Pattern Awareness",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Checks for vote manipulation signals, repost conflation, and bot activity; explicitly notes if any flagged posts have suspicious patterns",
+            "3": "Mentions the possibility of manipulation but doesn't perform specific checks",
+            "1": "No consideration of manipulation or false signals",
+            "0": "Analysis is likely skewed by undetected anti-patterns"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 65
+    },
+    {
+      "id": "bench-med-03",
+      "difficulty": "medium",
+      "description": "Analyze community sentiment on a controversial topic",
+      "input": "There's a heated discussion about AI regulation in r/technology and r/MachineLearning. Analyze the sentiment in both communities. I need to know: Are the communities aligned or divided? What are the dominant viewpoints? Is the discussion quality genuine or astroturfed?",
+      "rubric": [
+        {
+          "criterion": "Sentiment Analysis",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Analyzes comment sentiment distribution (positive/negative/neutral/mixed) in both subreddits; compares sentiment between communities; identifies dominant viewpoints with supporting quotes",
+            "3": "Provides sentiment assessment for both subreddits but without systematic distribution analysis",
+            "1": "Vague characterization of sentiment without evidence",
+            "0": "No sentiment analysis"
+          }
+        },
+        {
+          "criterion": "Cross-Community Comparison",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Compares r/technology (general audience) vs r/MachineLearning (practitioner audience) sentiment explicitly; identifies where they agree and diverge; explains the divergence in terms of community composition",
+            "3": "Notes differences between communities but doesn't explain the reasons",
+            "1": "Treats both communities as a single unit",
+            "0": "No comparison"
+          }
+        },
+        {
+          "criterion": "Discussion Quality Assessment",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Evaluates engagement quality tier (Deep/Reactive/Hostile/Astroturfed) for each community; checks for coordinated messaging, bot accounts, and formulaic comments; provides evidence for quality classification",
+            "3": "Comments on discussion quality but without systematic evaluation against quality tiers",
+            "1": "No quality assessment beyond basic observation",
+            "0": "Assumes all engagement is genuine without checking"
+          }
+        },
+        {
+          "criterion": "Output Structure",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Structured comparison report with per-community sentiment breakdown, dominant viewpoints, quality assessment, and a synthesis identifying key points of alignment and divergence",
+            "3": "Covers main points but output lacks clear structure",
+            "1": "Unstructured observations",
+            "0": "No coherent output"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 65
+    },
+    {
+      "id": "bench-med-04",
+      "difficulty": "medium",
+      "description": "Detect early signals of an emerging trend before it peaks",
+      "input": "I need to detect trends 24 hours before they hit the front page. Scan r/gaming, r/pcgaming, and r/Games for any posts currently in the Ignition or early Surge phase that haven't reached mainstream visibility yet. Focus on posts less than 2 hours old with anomalous engagement velocity.",
+      "rubric": [
+        {
+          "criterion": "Early Detection Methodology",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Scans /new and /rising (not just /hot) for posts under 2 hours old; calculates velocity at this early stage; compares against historical breakout curves for gaming subreddits; correctly focuses on Ignition-phase signals",
+            "3": "Checks rising posts but doesn't filter by age or compare against historical breakout patterns",
+            "1": "Reports currently hot posts that are already mainstream — misses the early detection goal",
+            "0": "No early detection methodology applied"
+          }
+        },
+        {
+          "criterion": "Velocity Normalization",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Normalizes velocity by each subreddit's size and current time-of-day baseline; accounts for different content types (game announcements vs. memes vs. discussion posts) in gaming subs",
+            "3": "Some normalization but missing important context factors",
+            "1": "Reports raw engagement numbers without normalization",
+            "0": "No normalization"
+          }
+        },
+        {
+          "criterion": "Multi-Signal Confirmation",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Confirms breakout candidates using at least 2 signals (e.g., high upvote velocity + high comment velocity + early awards); notes signal agreement or disagreement",
+            "3": "Uses one velocity metric without multi-signal confirmation",
+            "1": "Relies on a single metric (e.g., just upvote count)",
+            "0": "No signal confirmation"
+          }
+        },
+        {
+          "criterion": "Actionable Prediction",
+          "weight": 0.2,
+          "scoring": {
+            "5": "For each candidate, provides predicted peak timing, confidence score, and recommended action (monitor, act, wait); compares against similar past breakouts",
+            "3": "Flags candidates as potentially trending but without timing or confidence specifics",
+            "1": "Lists posts without prediction or actionability",
+            "0": "No predictions"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 65
+    },
+    {
+      "id": "bench-hard-01",
+      "difficulty": "hard",
+      "description": "Distinguish organic trends from coordinated manipulation campaigns",
+      "input": "I've noticed a sudden surge of posts about a specific cryptocurrency across r/CryptoCurrency, r/technology, r/investing, and r/wallstreetbets. Investigate whether this is organic community interest or a coordinated pump campaign. Analyze posting patterns, account authenticity, comment quality, and engagement metrics to make a determination.",
+      "rubric": [
+        {
+          "criterion": "Account Analysis",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Checks posting accounts for: account age, karma history, post history diversity, recent activity patterns; identifies clusters of new or single-purpose accounts; compares against bot/shill indicators from anti-patterns",
+            "3": "Notes some account characteristics but doesn't perform systematic authentication analysis",
+            "1": "Ignores account characteristics entirely",
+            "0": "No account analysis"
+          }
+        },
+        {
+          "criterion": "Coordination Detection",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Analyzes temporal posting patterns (are posts suspiciously synchronized?); checks for identical or near-identical phrasing across posts/comments; examines whether accounts have coordinated history; identifies talking-point patterns",
+            "3": "Notes suspicious timing or phrasing but doesn't perform comprehensive coordination analysis",
+            "1": "Treats all posts as independent without checking for coordination",
+            "0": "No coordination analysis"
+          }
+        },
+        {
+          "criterion": "Organic vs. Inauthentic Verdict",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Provides a clear, evidence-based verdict (organic / likely manipulated / mixed) with confidence level; lists specific evidence supporting the conclusion; quantifies the ratio of authentic vs. suspicious engagement",
+            "3": "Provides a verdict but supporting evidence is thin or speculative",
+            "1": "Hedges without committing to an assessment despite available evidence",
+            "0": "No determination made"
+          }
+        },
+        {
+          "criterion": "Cross-Subreddit Pattern Comparison",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Compares the engagement pattern in each subreddit — notes if behavior differs by community (e.g., organic in r/CryptoCurrency but astroturfed in r/technology); explains why different communities may react differently",
+            "3": "Compares across subreddits but superficially",
+            "1": "Treats all subreddits as a single unit",
+            "0": "No cross-subreddit comparison"
+          }
+        }
+      ],
+      "expectedScoreWithout": 15,
+      "expectedScoreWith": 60
+    },
+    {
+      "id": "bench-hard-02",
+      "difficulty": "hard",
+      "description": "Full trend lifecycle analysis with prediction accuracy assessment",
+      "input": "Track a developing story across r/news, r/worldnews, r/politics, and relevant niche subreddits. I need: (1) origin identification — where did this story first appear on Reddit, (2) full propagation timeline across communities, (3) velocity curves at each stage, (4) sentiment evolution as the story spread, and (5) a prediction of whether it will sustain for 48+ hours or burn out quickly. Include confidence levels for all predictions.",
+      "rubric": [
+        {
+          "criterion": "Origin & Timeline Tracing",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Identifies the earliest Reddit post about the story with exact timestamp; maps the complete propagation timeline showing when each subreddit picked up the topic; identifies crosspost chains and independent discoveries",
+            "3": "Identifies origin but timeline is incomplete or approximate",
+            "1": "Notes which subreddits discuss the topic but no temporal ordering",
+            "0": "No origin or timeline analysis"
+          }
+        },
+        {
+          "criterion": "Multi-Subreddit Velocity Analysis",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Provides per-subreddit velocity curves showing engagement over time; identifies lifecycle phase in each community; notes velocity differences between communities and explains them (e.g., r/worldnews peaked before r/politics due to international angle)",
+            "3": "Provides velocity data for some subreddits but analysis is inconsistent",
+            "1": "Reports final engagement numbers without velocity over time",
+            "0": "No velocity analysis"
+          }
+        },
+        {
+          "criterion": "Sentiment Evolution",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Tracks how sentiment changed as the story spread — e.g., initial concern in r/news, political framing in r/politics, international perspective in r/worldnews; identifies narrative shifts over time",
+            "3": "Provides snapshot sentiment but doesn't track evolution",
+            "1": "Single sentiment label for the entire story",
+            "0": "No sentiment analysis"
+          }
+        },
+        {
+          "criterion": "Sustainability Prediction",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Provides a reasoned prediction of story sustainability (48h+ or burnout) based on: velocity decay rate, cross-community engagement depth, historical comparison with similar stories, and external event dependency; includes confidence level",
+            "3": "Makes a prediction but with limited supporting analysis",
+            "1": "Vague guess about story longevity",
+            "0": "No prediction"
+          }
+        },
+        {
+          "criterion": "Report Synthesis",
+          "weight": 0.1,
+          "scoring": {
+            "5": "Coherent narrative connecting all five requested elements; executive summary with key findings and confidence levels",
+            "3": "All elements present but not well connected",
+            "1": "Fragmented analysis",
+            "0": "Incomplete report"
+          }
+        }
+      ],
+      "expectedScoreWithout": 15,
+      "expectedScoreWith": 55
+    },
+    {
+      "id": "bench-hard-03",
+      "difficulty": "hard",
+      "description": "Predict an emerging trend 24 hours before peak from weak early signals",
+      "input": "You have access to r/startups, r/SaaS, r/Entrepreneur, r/smallbusiness, and r/webdev. Using early signal detection, identify any topics that are currently showing Seed or early Ignition phase characteristics that could become significant trends within 24 hours. I want you to detect trends that have NOT yet appeared on any subreddit's front page. Provide evidence for each prediction and a false-positive assessment.",
+      "rubric": [
+        {
+          "criterion": "Early Signal Detection",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Systematically scans /new and /rising across all 5 subreddits for posts under 1 hour old; identifies anomalous velocity in the Seed/Ignition phase using multi-metric signals; successfully spots at least one genuinely early trend",
+            "3": "Checks rising in some subreddits but may miss very early signals in /new; detection criteria are not rigorous",
+            "1": "Reports already-visible trends rather than pre-peak signals",
+            "0": "No early detection capability demonstrated"
+          }
+        },
+        {
+          "criterion": "Prediction Methodology",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Predictions are based on velocity analysis, cross-subreddit convergence checks, temporal pattern matching, and comparison with historical breakout curves; methodology is explicitly stated and repeatable",
+            "3": "Predictions have some analytical basis but methodology is not comprehensive",
+            "1": "Predictions are speculative without clear analytical grounding",
+            "0": "No methodology for prediction"
+          }
+        },
+        {
+          "criterion": "False Positive Assessment",
+          "weight": 0.25,
+          "scoring": {
+            "5": "For each flagged trend, provides: confidence score, list of confirming signals, list of potential confounds (repost, bot, niche-only), and explicit false-positive probability estimate; demonstrates awareness that most early signals do NOT become major trends",
+            "3": "Acknowledges uncertainty but false-positive assessment is informal",
+            "1": "Presents all predictions with equal confidence; no false-positive awareness",
+            "0": "No false-positive consideration"
+          }
+        },
+        {
+          "criterion": "Evidence & Traceability",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Each prediction is backed by specific posts with links, metrics, and timeline; evidence is sufficient for the user to independently verify the assessment",
+            "3": "Some supporting evidence but not enough for independent verification",
+            "1": "Claims without supporting evidence",
+            "0": "No evidence provided"
+          }
+        }
+      ],
+      "expectedScoreWithout": 15,
+      "expectedScoreWith": 55
+    }
+  ]
+}

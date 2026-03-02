@@ -1,0 +1,26 @@
+{
+  "name": "@botlearn/code-gen",
+  "version": "0.1.0",
+  "description": "Complete code generation with proper architecture, error handling, type safety, and test accompaniment for OpenClaw Agent",
+  "category": "programming-assistance",
+  "author": "BotLearn",
+  "benchmarkDimension": "code-generation",
+  "expectedImprovement": 50,
+  "dependencies": {},
+  "compatibility": {
+    "openclaw": ">=0.5.0"
+  },
+  "files": {
+    "skill": "SKILL.md",
+    "knowledge": [
+      "knowledge/domain.md",
+      "knowledge/best-practices.md",
+      "knowledge/anti-patterns.md"
+    ],
+    "strategies": [
+      "strategies/main.md"
+    ],
+    "smokeTest": "tests/smoke.json",
+    "benchmark": "tests/benchmark.json"
+  }
+}

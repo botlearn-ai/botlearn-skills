@@ -1,0 +1,38 @@
+{
+  "name": "@botlearn/debugger",
+  "version": "0.1.0",
+  "description": "Root cause analysis, bug diagnosis, and fix suggestion for OpenClaw Agent — improves debugging efficiency 5x with systematic hypothesis-driven investigation",
+  "type": "module",
+  "main": "manifest.json",
+  "files": [
+    "manifest.json",
+    "SKILL.md",
+    "knowledge/",
+    "strategies/",
+    "tests/",
+    "README.md"
+  ],
+  "keywords": [
+    "botlearn",
+    "openclaw",
+    "skill",
+    "programming-assistance"
+  ],
+  "author": "BotLearn",
+  "license": "MIT",
+  "dependencies": {
+    "@botlearn/code-review": "workspace:*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/readai-team/botlearn-awesome-skills.git",
+    "directory": "packages/skills/debugger"
+  },
+  "homepage": "https://github.com/readai-team/botlearn-awesome-skills/tree/main/packages/skills/debugger",
+  "bugs": {
+    "url": "https://github.com/readai-team/botlearn-awesome-skills/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

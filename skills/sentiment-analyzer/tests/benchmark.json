@@ -1,0 +1,476 @@
+{
+  "version": "0.0.1",
+  "dimension": "content-understanding",
+  "tasks": [
+    {
+      "id": "bench-easy-01",
+      "difficulty": "easy",
+      "description": "Simple positive sentiment with clear opinion target",
+      "input": "Analyze the sentiment of this text:\n\n\"I absolutely love this coffee maker. It brews a perfect cup every morning and the built-in grinder is incredibly convenient. Best kitchen purchase I've made in years.\"",
+      "rubric": [
+        {
+          "criterion": "Polarity Accuracy",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Correctly identifies strongly positive sentiment; detects intensifiers ('absolutely', 'incredibly', 'best') and maps to the high end of the positive scale",
+            "3": "Identifies positive sentiment but does not capture the intensity or differentiate from mildly positive",
+            "1": "Identifies sentiment direction but labels it as neutral or mixed",
+            "0": "Incorrect polarity"
+          }
+        },
+        {
+          "criterion": "Aspect Extraction",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Extracts at least 3 aspects: overall product, brewing quality, built-in grinder/convenience; all tagged as positive",
+            "3": "Extracts 1-2 aspects or correctly identifies overall sentiment without aspect detail",
+            "1": "No aspect extraction, only document-level label",
+            "0": "No usable analysis"
+          }
+        },
+        {
+          "criterion": "Output Quality",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Structured output with polarity label, score, confidence (high, >0.90), and aspect breakdown",
+            "3": "Provides polarity and some structure but missing confidence or aspect detail",
+            "1": "Single-word or single-sentence output",
+            "0": "No usable output"
+          }
+        }
+      ],
+      "expectedScoreWithout": 45,
+      "expectedScoreWith": 85
+    },
+    {
+      "id": "bench-easy-02",
+      "difficulty": "easy",
+      "description": "Simple negative sentiment with explicit complaints",
+      "input": "Analyze the sentiment of this text:\n\n\"Terrible experience at this restaurant. The food was cold, the waiter was rude, and we waited over an hour for our order. Never coming back.\"",
+      "rubric": [
+        {
+          "criterion": "Polarity Accuracy",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Correctly identifies strongly negative sentiment across all aspects; detects 'terrible', 'cold', 'rude', 'never' as negative signals",
+            "3": "Identifies negative sentiment but misses intensity or treats some aspects as neutral",
+            "1": "Gets direction right but classifies as mildly negative",
+            "0": "Incorrect polarity"
+          }
+        },
+        {
+          "criterion": "Aspect Extraction",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Extracts 3+ aspects: food (cold/negative), service/waiter (rude/negative), wait time (negative); all correctly negative",
+            "3": "Extracts 1-2 aspects, misses some",
+            "1": "Only document-level analysis",
+            "0": "No analysis"
+          }
+        },
+        {
+          "criterion": "Output Quality",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Structured output with aspect-level detail, high confidence scores, domain detected as restaurant review",
+            "3": "Basic structure with polarity labels but missing domain detection or confidence",
+            "1": "Minimal output",
+            "0": "No usable output"
+          }
+        }
+      ],
+      "expectedScoreWithout": 45,
+      "expectedScoreWith": 85
+    },
+    {
+      "id": "bench-easy-03",
+      "difficulty": "easy",
+      "description": "Neutral/factual text with no opinion expressed",
+      "input": "Analyze the sentiment of this text:\n\n\"The company was founded in 2015 and is headquartered in Austin, Texas. It currently employs approximately 500 people across three offices. The annual revenue report will be published next quarter.\"",
+      "rubric": [
+        {
+          "criterion": "Polarity Accuracy",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Correctly identifies the text as neutral/objective with no opinion expressed; does not force a positive or negative label",
+            "3": "Identifies as mostly neutral but incorrectly finds weak sentiment in factual statements",
+            "1": "Misclassifies as positive or negative",
+            "0": "Completely wrong classification"
+          }
+        },
+        {
+          "criterion": "Objectivity Detection",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Explicitly notes the text is factual/informational with no opinion holder or sentiment expressions; provides appropriate low-confidence note",
+            "3": "Labels as neutral but does not explain why or note the absence of opinion",
+            "1": "Does not distinguish between neutral-opinion and factual-objective",
+            "0": "No objectivity assessment"
+          }
+        },
+        {
+          "criterion": "Output Quality",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Structured output noting neutral classification, no aspects with sentiment, and a note that the text is purely factual",
+            "3": "Basic neutral label with some explanation",
+            "1": "Minimal output",
+            "0": "No usable output"
+          }
+        }
+      ],
+      "expectedScoreWithout": 40,
+      "expectedScoreWith": 80
+    },
+    {
+      "id": "bench-med-01",
+      "difficulty": "medium",
+      "description": "Mixed sentiment review with contrasting aspects requiring aspect-level analysis",
+      "input": "Analyze the sentiment of this text:\n\n\"The laptop has an incredible display — the OLED panel is vibrant and the 120Hz refresh rate makes scrolling buttery smooth. Build quality is also top-notch with a solid aluminum chassis. However, the keyboard is mushy and imprecise, the trackpad is too small for comfortable use, and the fan noise under any load is distractingly loud. For the price they're asking, the input devices should be much better. The webcam is passable but nothing special.\"",
+      "rubric": [
+        {
+          "criterion": "Aspect-Level Accuracy",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Correctly identifies 6+ aspects (display, refresh rate, build quality, keyboard, trackpad, fan noise, price/value, webcam) with correct individual polarities: display/build positive, keyboard/trackpad/fan negative, webcam slightly positive/neutral, price negative",
+            "3": "Identifies 3-4 aspects with mostly correct polarities but misses some",
+            "1": "Only 1-2 aspects identified or several misclassified",
+            "0": "No aspect-level analysis"
+          }
+        },
+        {
+          "criterion": "Mixed Sentiment Handling",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Document-level sentiment labeled as 'mixed' with clear breakdown of positive aspects (display, build) vs. negative aspects (input, noise, value); does not average to neutral",
+            "3": "Labels as mixed but aggregation is simplistic (e.g., averaged to slightly negative)",
+            "1": "Forces a single polarity label (positive or negative) ignoring the contrast",
+            "0": "Completely mischaracterizes the overall sentiment"
+          }
+        },
+        {
+          "criterion": "Valence Shifter and Comparative Handling",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Detects 'however' as sentiment pivot, 'too small' as negative intensification, 'nothing special' as diminished neutral, 'should be much better' as negative expectation gap",
+            "3": "Handles 'however' pivot but misses nuanced shifters",
+            "1": "Misses most valence shifters and comparatives",
+            "0": "No shifter handling"
+          }
+        },
+        {
+          "criterion": "Output Structure",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Full structured report with aspect table, confidence per aspect, document summary, domain detected as product/laptop review",
+            "3": "Aspect list with polarities but missing confidence or structure",
+            "1": "Unstructured text output",
+            "0": "No usable output"
+          }
+        }
+      ],
+      "expectedScoreWithout": 30,
+      "expectedScoreWith": 75
+    },
+    {
+      "id": "bench-med-02",
+      "difficulty": "medium",
+      "description": "Sentiment analysis with negation chains and double negation",
+      "input": "Analyze the sentiment of this text:\n\n\"I wouldn't say the service was bad — the staff wasn't unfriendly, and the response time was not unreasonable. But I can't pretend I was satisfied either. The product itself doesn't lack features, yet none of them work without issues. It's not that I don't appreciate the effort, but the execution leaves much to be desired.\"",
+      "rubric": [
+        {
+          "criterion": "Negation Handling",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Correctly resolves all negation chains: 'wasn't unfriendly' = weakly positive (litotes), 'not unreasonable' = weakly positive, 'can't pretend satisfied' = negative, 'doesn't lack features' = neutral-positive, 'none work without issues' = negative, 'not that I don't appreciate' = weakly positive but pivots to negative",
+            "3": "Resolves simple negations correctly but mishandles double negations or litotes",
+            "1": "Treats negated positives as positive or misreads most negation",
+            "0": "Ignores negation entirely"
+          }
+        },
+        {
+          "criterion": "Overall Polarity",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Correctly identifies the overall sentiment as slightly negative to negative — the author uses polite hedging but the cumulative message is dissatisfaction. The politeness does not make it neutral.",
+            "3": "Identifies as negative but doesn't capture the hedged, polite-negative nuance",
+            "1": "Classifies as neutral or positive due to the polite framing",
+            "0": "Completely wrong classification"
+          }
+        },
+        {
+          "criterion": "Confidence Calibration",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Assigns moderate confidence (0.60-0.75) reflecting the genuine ambiguity and hedged language; flags the complexity of the negation patterns",
+            "3": "Provides confidence but it's either too high (>0.90) or too low (<0.40)",
+            "1": "No confidence scoring",
+            "0": "No analysis"
+          }
+        },
+        {
+          "criterion": "Output Quality",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Structured output with each negation chain explained, aspect breakdown (service, product features, execution), and hedging explicitly noted",
+            "3": "Basic structure but negation resolution not explained",
+            "1": "Minimal output",
+            "0": "No usable output"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-03",
+      "difficulty": "medium",
+      "description": "Social media text with emoji, slang, and informal language",
+      "input": "Analyze the sentiment of these social media posts:\n\n1. \"this new album is straight fire bruh the beats slap so hard cant stop listening\"\n2. \"ngl the movie was mid at best the cgi looked like a ps2 cutscene\"\n3. \"just got the update and everything is broken again amazing job devs\"\n4. \"lowkey obsessed w this cafe their matcha latte hits different fr fr\"",
+      "rubric": [
+        {
+          "criterion": "Slang and Informal Language",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Correctly interprets all slang: 'fire'/'slap' = strongly positive, 'mid' = negative/mediocre, 'amazing job devs' = sarcastic negative, 'hits different'/'obsessed' = strongly positive; handles 'ngl', 'fr fr', 'bruh', 'lowkey', 'w'",
+            "3": "Gets most slang right but misinterprets 1-2 terms or misses sarcasm in post 3",
+            "1": "Fails to interpret most slang terms; treats unfamiliar terms as neutral",
+            "0": "Cannot process informal language"
+          }
+        },
+        {
+          "criterion": "Sarcasm Detection",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Correctly identifies post 3 as sarcastic — 'amazing job devs' with context of 'everything is broken' signals sarcasm; inverts polarity to strongly negative; distinguishes from the genuine positive sentiment in posts 1 and 4",
+            "3": "Detects sarcasm in post 3 but with low confidence, or misflags another post as sarcastic",
+            "1": "Misses sarcasm in post 3; takes 'amazing job' at face value",
+            "0": "No sarcasm detection capability"
+          }
+        },
+        {
+          "criterion": "Per-Post Accuracy",
+          "weight": 0.2,
+          "scoring": {
+            "5": "All 4 posts correctly classified: post 1 strongly positive, post 2 negative, post 3 strongly negative (sarcasm-inverted), post 4 strongly positive",
+            "3": "3 out of 4 posts correctly classified",
+            "1": "2 or fewer posts correctly classified",
+            "0": "All posts misclassified"
+          }
+        },
+        {
+          "criterion": "Output Quality",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Each post analyzed separately with polarity, slang interpretation noted, sarcasm flagged where applicable, domain identified as social media",
+            "3": "Posts analyzed but slang interpretation not explained",
+            "1": "Single aggregate sentiment for all posts",
+            "0": "No usable output"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-04",
+      "difficulty": "medium",
+      "description": "Comparative sentiment requiring entity-specific opinion tracking",
+      "input": "Analyze the sentiment of this text:\n\n\"After switching from Android to iPhone, I have to say the ecosystem integration is miles ahead — Airdrop, iMessage, and Handoff work seamlessly. The camera on the iPhone is also noticeably sharper in low-light conditions. That said, I really miss the customization freedom on Android. The notification system on iOS is still frustratingly limited compared to what Android offers, and I hate that I can't set default apps properly. The hardware build on both is equally premium. If Google could match Apple's ecosystem cohesion, it would be the perfect phone.\"",
+      "rubric": [
+        {
+          "criterion": "Entity-Specific Sentiment",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Correctly tracks sentiment per entity: iPhone positive (ecosystem, camera), iPhone negative (notifications, default apps, customization); Android positive (customization, notifications), Android negative (ecosystem cohesion); hardware neutral/positive for both",
+            "3": "Distinguishes some entity-specific sentiments but conflates opinions or misattributes 1-2",
+            "1": "Treats all sentiment as applying to one entity",
+            "0": "No entity-level separation"
+          }
+        },
+        {
+          "criterion": "Comparative Expression Handling",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Correctly interprets 'miles ahead' (strongly positive for iPhone ecosystem), 'noticeably sharper' (positive iPhone camera), 'frustratingly limited compared to' (negative iOS, positive Android for notifications), 'equally premium' (neutral comparison), 'if Google could match' (conditional — implies Android is worse on ecosystem)",
+            "3": "Handles explicit comparisons but misses implied comparative ('if Google could match')",
+            "1": "Misinterprets comparisons or ignores comparative structure",
+            "0": "No comparative handling"
+          }
+        },
+        {
+          "criterion": "Conditional/Irrealis Detection",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Identifies 'If Google could match Apple's ecosystem cohesion, it would be the perfect phone' as conditional/hypothetical; notes it implies current Android ecosystem is inferior while expressing positive hypothetical",
+            "3": "Notes the conditional but doesn't fully interpret its sentiment implications",
+            "1": "Treats conditional as asserted fact",
+            "0": "Ignores conditional entirely"
+          }
+        },
+        {
+          "criterion": "Output Structure",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Structured output with separate sentiment summaries for iPhone and Android, aspect-level breakdown per entity, comparisons explicitly noted, conditional flagged",
+            "3": "Some entity separation but incomplete aspect detail",
+            "1": "Single-entity output or unstructured",
+            "0": "No usable output"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-hard-01",
+      "difficulty": "hard",
+      "description": "Subtle sarcasm, irony, and implicit sentiment in a lengthy review",
+      "input": "Analyze the sentiment of this text:\n\n\"I must commend the airline for their unwavering commitment to mediocrity. In an age where most carriers are at least trying to improve, it's refreshing to find one that has perfected the art of consistent disappointment.\n\nLet me count the ways: The 'spacious' economy seats — perfect if you happen to be a contortionist. The 'complimentary' beverage service — a thimble of water delivered with the enthusiasm of someone fulfilling a court-ordered community service obligation. And my personal favorite: the 'on-time departure' that only required us to redefine what 'on time' means by approximately 90 minutes.\n\nThe in-flight entertainment system featured a cutting-edge selection of films from 2019, which I suppose counts as 'curated' in the same way my junk drawer is 'curated.' The Wi-Fi, advertised at $12.99, delivered speeds that would make a dial-up modem feel nostalgic.\n\nI will say, in complete sincerity, that the flight crew was genuinely kind and professional throughout. They deserve to work for a better airline.\n\nFive stars. Would definitely recommend to anyone I secretly dislike.\"",
+      "rubric": [
+        {
+          "criterion": "Sarcasm and Irony Detection",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Correctly identifies pervasive sarcasm throughout: 'commend... mediocrity', 'refreshing... disappointment', 'spacious' in scare quotes, 'complimentary' as ironic, 'on-time departure' as ironic, 'cutting-edge... 2019', 'curated' as mocking, 'five stars' as sarcastic, 'recommend to anyone I secretly dislike' as confirming sarcastic intent. Correctly identifies the ONE genuine positive statement about the flight crew.",
+            "3": "Detects sarcasm in most obvious cases but misses some or incorrectly flags the genuine compliment about the crew as sarcastic",
+            "1": "Detects some sarcasm but misclassifies the overall tone or misses the crew compliment as genuine",
+            "0": "Takes the review at face value or misses sarcasm entirely"
+          }
+        },
+        {
+          "criterion": "Genuine vs. Sarcastic Sentiment Separation",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Correctly separates the genuine positive sentiment about the crew ('in complete sincerity', 'genuinely kind and professional') from the sarcastic negative sentiment about everything else. Notes the explicit sincerity marker as evidence of genuine opinion.",
+            "3": "Separates crew sentiment but with low confidence, or partially misattributes sarcastic/genuine labels",
+            "1": "Treats all sentiment as either sarcastic or genuine without distinction",
+            "0": "No separation attempted"
+          }
+        },
+        {
+          "criterion": "Aspect-Level Detail",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Extracts 7+ aspects: seats/comfort (sarcastic, actually negative), beverage service (sarcastic, negative), punctuality (sarcastic, negative), entertainment (sarcastic, negative), Wi-Fi (negative), crew (genuinely positive), overall recommendation (sarcastic negative). Each with inverted polarity and confidence.",
+            "3": "Extracts 4-6 aspects with mostly correct sarcasm-inverted polarities",
+            "1": "Extracts 1-3 aspects or misses sarcasm inversion",
+            "0": "No aspect extraction"
+          }
+        },
+        {
+          "criterion": "Confidence and Flags",
+          "weight": 0.15,
+          "scoring": {
+            "5": "High confidence on sarcasm detection (multiple reinforcing signals), flags entire review as 'predominantly sarcastic', notes the sincerity marker exception, document-level is strongly negative despite surface-positive language",
+            "3": "Flags sarcasm but confidence calibration is off (too low given strong signals)",
+            "1": "No sarcasm flagging or confidence",
+            "0": "No flags or confidence"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 65
+    },
+    {
+      "id": "bench-hard-02",
+      "difficulty": "hard",
+      "description": "Multi-entity opinion mining with reported speech and opinion holder disambiguation",
+      "input": "Analyze the sentiment of this text:\n\n\"The board meeting was contentious. CEO Sarah Chen defended the Q3 results, calling them 'a strong performance given market headwinds,' but CFO Mark Rivera countered that the margins were 'dangerously thin' and warned the current trajectory was 'unsustainable.' Several board members expressed concern about the R&D budget, which they described as 'reckless spending with no clear ROI.'\n\nIndustry analyst Patricia Wong noted in her post-meeting report that 'the company's strategic pivot shows promise but execution risk remains elevated.' She praised the new product line but questioned whether the management team had the operational discipline to scale it.\n\nInternal employee sentiment, based on a recent Glassdoor survey, shows 72% satisfaction with company culture but only 34% confidence in senior leadership's direction. One anonymous review stated: 'Great colleagues, great mission, terrible management decisions.'\"",
+      "rubric": [
+        {
+          "criterion": "Opinion Holder Identification",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Correctly identifies and separates 5+ opinion holders: Sarah Chen (positive on Q3), Mark Rivera (negative on margins/trajectory), board members (negative on R&D), Patricia Wong (mixed — positive on pivot, negative on execution risk), employees (positive on culture, negative on leadership). Each opinion correctly attributed to its holder.",
+            "3": "Identifies 3-4 holders with mostly correct attribution but conflates some opinions",
+            "1": "Identifies 1-2 holders or misattributes opinions significantly",
+            "0": "No opinion holder tracking; treats all as a single voice"
+          }
+        },
+        {
+          "criterion": "Reported vs. Direct Sentiment",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Correctly distinguishes reported speech (quoted opinions from Chen, Rivera, board members, Wong, employee) from narrative framing. Notes that the text author is reporting, not expressing their own opinion. Identifies direct quotes vs. paraphrased opinions.",
+            "3": "Distinguishes some reported speech but misses the narrative framing or misattributes the author's stance",
+            "1": "Treats all sentiment as the text author's opinion",
+            "0": "No distinction between reported and direct sentiment"
+          }
+        },
+        {
+          "criterion": "Aspect-Entity Matrix",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Builds a complete matrix: Q3 results (Chen: positive, Rivera: negative), R&D budget (board: negative), strategic pivot (Wong: positive), execution capability (Wong: negative), company culture (employees: positive), leadership (employees: negative). Quantitative data (72%, 34%) correctly interpreted.",
+            "3": "Covers most aspect-entity pairs but misses some or doesn't integrate quantitative data",
+            "1": "Partial matrix with significant gaps",
+            "0": "No aspect-entity tracking"
+          }
+        },
+        {
+          "criterion": "Output Quality",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Structured output organized by opinion holder with aspect-level detail per holder; overall synthesis noting the contentious/divided nature of sentiment; confidence adjusted for reported speech",
+            "3": "Some organization by holder but synthesis is superficial",
+            "1": "Flat list or single aggregate sentiment",
+            "0": "No usable output"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 60
+    },
+    {
+      "id": "bench-hard-03",
+      "difficulty": "hard",
+      "description": "Cross-domain sentiment requiring domain calibration and implicit sentiment detection",
+      "input": "Analyze the sentiment of these three texts from different domains:\n\nText A (Medical case note): \"Patient presents with stable vitals and unremarkable lab results. The tumor has not progressed since the last scan. While the prognosis remains guarded, the treatment protocol appears to be achieving its intended effect. No new contraindications were identified.\"\n\nText B (Financial analyst report): \"Q4 earnings were flat against consensus expectations. The company maintained its aggressive acquisition strategy despite rising interest rates. Revenue growth decelerated to 3% YoY, though management characterized this as 'disciplined growth.' Cash reserves remain robust at $2.1B, providing a defensive buffer against market volatility.\"\n\nText C (Restaurant critic review): \"Chef Martinez's new tasting menu is an exercise in restraint. The flavors are precise rather than bold, the plating understated rather than theatrical. Some may find the portions challenging, but each course demonstrates an uncommon technical mastery. The wine pairing, curated by sommelier Ana Torres, is nothing short of revelatory. A quiet triumph.\"",
+      "rubric": [
+        {
+          "criterion": "Domain Detection and Calibration",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Correctly detects all three domains (medical, financial, culinary) and calibrates accordingly: 'stable' is positive in medical, 'aggressive' is contextual in finance, 'restraint' is positive in fine dining criticism. 'Unremarkable' is positive in medical (no abnormalities), 'flat' is neutral-negative in finance, 'challenging' portions is diplomatic negative in food criticism.",
+            "3": "Detects domains but miscalibrates 2-3 domain-specific terms",
+            "1": "Applies general-purpose sentiment without domain calibration",
+            "0": "No domain awareness"
+          }
+        },
+        {
+          "criterion": "Implicit Sentiment Detection",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Detects implicit sentiment: Text A — cautiously positive (no progression is good in oncology, 'guarded' is standard hedging not negative); Text B — mixed (flat earnings = neutral-negative, 'disciplined growth' in quotes suggests skepticism of management's framing, 'defensive buffer' is positive); Text C — strongly positive despite restrained language ('uncommon technical mastery', 'revelatory', 'quiet triumph' are high praise in critic register)",
+            "3": "Gets overall direction right for each text but misses subtle implicit signals",
+            "1": "Misreads the register — treats medical hedging as negative, critic's restraint as lukewarm",
+            "0": "Completely misreads the implicit sentiment"
+          }
+        },
+        {
+          "criterion": "Register and Tone Awareness",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Recognizes that each text uses a different register: clinical objectivity (Text A), analytical finance (Text B), literary criticism (Text C). Notes that sentiment expression norms differ: hedging is standard in medical/clinical, 'quiet triumph' is superlative praise from a food critic, scare quotes around 'disciplined growth' signal analyst skepticism.",
+            "3": "Notes different registers but doesn't fully adjust interpretation",
+            "1": "Treats all three texts with the same interpretive framework",
+            "0": "No register awareness"
+          }
+        },
+        {
+          "criterion": "Output Quality",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Each text analyzed separately with domain label, register notes, aspect-level detail, and calibrated confidence. Cross-domain comparison notes how the same words carry different weight.",
+            "3": "Separate analysis per text but without cross-domain comparison or register notes",
+            "1": "Combined analysis or missing structure",
+            "0": "No usable output"
+          }
+        }
+      ],
+      "expectedScoreWithout": 15,
+      "expectedScoreWith": 60
+    }
+  ]
+}

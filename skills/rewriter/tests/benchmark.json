@@ -1,0 +1,476 @@
+{
+  "version": "0.0.1",
+  "dimension": "content-understanding",
+  "tasks": [
+    {
+      "id": "bench-easy-01",
+      "difficulty": "easy",
+      "description": "Simple register shift from formal to casual",
+      "input": "Rewrite this formal notice in a casual, friendly tone:\n\n\"We wish to inform all employees that the annual performance evaluation cycle will commence on March 15, 2025. All staff members are required to complete their self-assessment documentation prior to the scheduled review meetings. Failure to submit the requisite materials by the designated deadline may result in a delay of the evaluation process.\"",
+      "rubric": [
+        {
+          "criterion": "Register Shift",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Fully casual: contractions, direct address, friendly language, no corporate stiffness; reads like a message from a colleague",
+            "3": "Partially casual but retains some formal phrasing ('requisite', 'designated', 'commence')",
+            "1": "Minor word changes but fundamentally still formal in structure and vocabulary",
+            "0": "No register change"
+          }
+        },
+        {
+          "criterion": "Factual Accuracy",
+          "weight": 0.35,
+          "scoring": {
+            "5": "All facts preserved: March 15 date, self-assessment requirement, deadline consequence",
+            "3": "Key facts present but one detail altered or omitted",
+            "1": "Multiple factual changes or omissions",
+            "0": "Facts fabricated or reversed"
+          }
+        },
+        {
+          "criterion": "Naturalness",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Reads like genuine casual human writing; varied sentence structure, no AI-tell vocabulary",
+            "3": "Mostly natural but some AI patterns detectable",
+            "1": "Stilted casual tone; feels like AI attempting casual",
+            "0": "Unnatural throughout"
+          }
+        }
+      ],
+      "expectedScoreWithout": 40,
+      "expectedScoreWith": 80
+    },
+    {
+      "id": "bench-easy-02",
+      "difficulty": "easy",
+      "description": "Basic paraphrase with synonym variation",
+      "input": "Paraphrase the following paragraph using different words and sentence structures while keeping the same meaning:\n\n\"Remote work has become increasingly common since 2020. Many companies discovered that employees could be productive outside traditional office settings. However, some managers remain skeptical about long-term remote work, citing concerns about team collaboration and company culture.\"",
+      "rubric": [
+        {
+          "criterion": "Lexical Variation",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Substantial word replacement with contextually appropriate synonyms; sentence structures meaningfully reorganized; not a word-swap exercise",
+            "3": "Moderate synonym use but sentence structures largely mirror the original",
+            "1": "Minimal changes; mostly the same words with minor swaps",
+            "0": "Near-verbatim copy of source"
+          }
+        },
+        {
+          "criterion": "Meaning Preservation",
+          "weight": 0.35,
+          "scoring": {
+            "5": "All three ideas intact: remote work growth since 2020, productivity discovery, manager skepticism with specific concerns (collaboration, culture)",
+            "3": "Core meaning preserved but one nuance lost or altered",
+            "1": "Significant meaning drift; key qualifications missing",
+            "0": "Meaning changed or contradicted"
+          }
+        },
+        {
+          "criterion": "Naturalness",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Reads fluently as original human prose; no thesaurus-abuse artifacts; appropriate register maintained",
+            "3": "Mostly fluent but occasional awkward synonym choices or stilted phrasing",
+            "1": "Reads like mechanical synonym substitution",
+            "0": "Incoherent or unnatural"
+          }
+        }
+      ],
+      "expectedScoreWithout": 45,
+      "expectedScoreWith": 82
+    },
+    {
+      "id": "bench-easy-03",
+      "difficulty": "easy",
+      "description": "Tone adjustment from neutral to persuasive",
+      "input": "Rewrite this neutral product description to be persuasive and compelling, as if for a landing page:\n\n\"The XR-500 headphones have 40mm drivers, active noise cancellation, and a 30-hour battery life. They weigh 250 grams and connect via Bluetooth 5.3. The retail price is $149.99.\"",
+      "rubric": [
+        {
+          "criterion": "Persuasive Transformation",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Compelling marketing copy: benefit-driven framing, emotional hooks, sensory language, clear value proposition; features translated to user benefits",
+            "3": "Some persuasive elements but reads more like enhanced spec sheet than marketing copy",
+            "1": "Minimal persuasive language; mostly restated specs with adjectives added",
+            "0": "No persuasive transformation"
+          }
+        },
+        {
+          "criterion": "Factual Accuracy",
+          "weight": 0.35,
+          "scoring": {
+            "5": "All specs accurate: 40mm drivers, ANC, 30-hour battery, 250g, Bluetooth 5.3, $149.99",
+            "3": "Most specs correct but one rounded or approximated",
+            "1": "Multiple spec errors",
+            "0": "Specs fabricated or significantly wrong"
+          }
+        },
+        {
+          "criterion": "Naturalness",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Reads like professional human copywriting; varied rhythm, no AI-tell vocabulary, genuine enthusiasm without being generic",
+            "3": "Decent copy but some AI patterns (overuse of 'experience', 'seamlessly', 'elevate')",
+            "1": "Generic AI marketing tone; could describe any product",
+            "0": "Stilted or incoherent"
+          }
+        }
+      ],
+      "expectedScoreWithout": 40,
+      "expectedScoreWith": 78
+    },
+    {
+      "id": "bench-med-01",
+      "difficulty": "medium",
+      "description": "Academic-to-journalistic style transformation with complex source material",
+      "input": "Rewrite this academic abstract as a news article lead and body (3-4 paragraphs, journalistic style):\n\n\"This randomized controlled trial (N=1,256; 18-month follow-up) evaluated the efficacy of a combined cognitive-behavioral therapy and mindfulness-based intervention for treatment-resistant depression. Participants randomized to the intervention arm (n=628) demonstrated a clinically significant reduction in PHQ-9 scores (mean difference: -4.7, 95% CI: -5.9 to -3.5, p < 0.001) compared to the treatment-as-usual control group (n=628). Secondary outcomes included improved sleep quality (Pittsburgh Sleep Quality Index improvement of 2.3 points) and reduced antidepressant dosage in 34% of intervention participants. Adverse events were reported by 8% of intervention participants, primarily mild (headache, transient anxiety increase). The findings suggest that integrated CBT-mindfulness approaches may offer a viable augmentation strategy for patients who have not responded adequately to pharmacotherapy alone.\"",
+      "rubric": [
+        {
+          "criterion": "Style Transformation",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Authentic journalistic style: inverted pyramid, lead with key finding, accessible language, attribution, short paragraphs; no academic register",
+            "3": "Partially journalistic but retains academic phrasing or structure",
+            "1": "Minor surface changes; still reads as academic text",
+            "0": "No style transformation"
+          }
+        },
+        {
+          "criterion": "Factual Accuracy",
+          "weight": 0.3,
+          "scoring": {
+            "5": "All key data preserved: 1256 participants, 18 months, PHQ-9 reduction of 4.7, sleep improvement, 34% dose reduction, 8% adverse events",
+            "3": "Most data preserved but 1-2 statistics simplified or omitted",
+            "1": "Several factual errors or major omissions",
+            "0": "Facts altered or fabricated"
+          }
+        },
+        {
+          "criterion": "Audience Accessibility",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Clinical terms explained or translated (PHQ-9 explained, treatment-resistant defined, CBT spelled out); no unexplained jargon",
+            "3": "Some jargon simplified but technical terms remain without context",
+            "1": "Jargon largely retained; general reader would struggle",
+            "0": "No accessibility improvement"
+          }
+        },
+        {
+          "criterion": "AI-Detection Resistance",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Varied sentence length, diverse openers, no AI-tell vocabulary, natural paragraph rhythm, genuine journalistic voice",
+            "3": "Some variation but AI patterns visible in places",
+            "1": "Uniform rhythm and predictable structure",
+            "0": "Obvious AI-generated patterns"
+          }
+        }
+      ],
+      "expectedScoreWithout": 30,
+      "expectedScoreWith": 72
+    },
+    {
+      "id": "bench-med-02",
+      "difficulty": "medium",
+      "description": "Technical documentation to executive summary with audience shift",
+      "input": "Rewrite this technical incident report as a 2-paragraph executive summary for the C-suite:\n\n\"At 14:32 UTC on 2024-11-15, the primary PostgreSQL database cluster (db-prod-01 through db-prod-03) experienced cascading connection pool exhaustion due to a long-running query originating from the analytics service (commit hash: a3f7b2c). The query executed a sequential scan on the `user_events` table (4.2B rows) without the expected index on `created_at`, triggered by an ORM migration that dropped the index during a schema update (migration #247). Connection pool saturation propagated to the API gateway within 3 minutes, resulting in HTTP 503 errors for 78% of requests. The incident affected approximately 340,000 active users across all regions. MTTR was 47 minutes, achieved by killing the offending query (14:41 UTC), restoring the index (14:52 UTC), and gradually draining the connection pool backlog (15:19 UTC). Root cause: insufficient migration review process; the index drop was not flagged during code review as the migration file did not include a performance impact annotation.\"",
+      "rubric": [
+        {
+          "criterion": "Audience Adaptation",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Executive-appropriate: business impact framed first (users affected, duration), technical details translated to impact language, clear action items, no unexplained jargon (ORM, PostgreSQL, connection pool explained or omitted)",
+            "3": "Some business framing but technical details dominate; partial jargon translation",
+            "1": "Technical report with minor formatting changes; still requires engineering background to understand",
+            "0": "No audience adaptation"
+          }
+        },
+        {
+          "criterion": "Factual Accuracy",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Key business facts preserved: 340,000 users affected, 47-minute resolution time, 78% error rate, date/time, root cause (review process gap)",
+            "3": "Most business-relevant facts preserved but one key metric wrong or missing",
+            "1": "Several factual errors or critical omissions",
+            "0": "Facts fabricated or significantly altered"
+          }
+        },
+        {
+          "criterion": "Conciseness & Structure",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Exactly 2 well-structured paragraphs; first covers what happened and impact, second covers resolution and prevention; no filler",
+            "3": "Reasonable structure but too long, too short, or poorly organized",
+            "1": "Single block of text or excessive length",
+            "0": "Unstructured output"
+          }
+        },
+        {
+          "criterion": "Naturalness",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Reads like a genuine executive briefing written by a senior leader; authoritative, clear, no AI-tell vocabulary",
+            "3": "Mostly professional but some AI patterns or generic corporate language",
+            "1": "Generic AI business writing; could describe any incident",
+            "0": "Unnatural or incoherent"
+          }
+        }
+      ],
+      "expectedScoreWithout": 30,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-03",
+      "difficulty": "medium",
+      "description": "Rewrite for AI-detection avoidance with strict naturalness requirements",
+      "input": "Rewrite the following AI-generated text to read as naturally human-written as possible. The goal is to pass AI-detection tools while preserving the complete meaning:\n\n\"Artificial intelligence has revolutionized the healthcare landscape in numerous ways. It is important to note that machine learning algorithms can now analyze medical images with remarkable accuracy, often surpassing human radiologists in detecting certain conditions. Furthermore, AI-powered predictive models are being leveraged to identify patients at risk of developing chronic diseases, enabling early intervention strategies. Additionally, natural language processing tools are being utilized to extract valuable insights from unstructured clinical notes, thereby streamlining the documentation process. However, it is worth mentioning that significant challenges remain, including data privacy concerns, algorithmic bias, and the need for robust regulatory frameworks to ensure patient safety.\"",
+      "rubric": [
+        {
+          "criterion": "AI-Detection Resistance",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Passes as human-written: no AI-tell vocabulary (leveraged, landscape, robust, furthermore, additionally, it is important to note), varied sentence length (SD > 6), diverse openers, natural burstiness",
+            "3": "Most AI patterns removed but 1-2 tell-tale phrases remain or sentence rhythm is still uniform",
+            "1": "Surface-level changes but fundamental AI patterns intact",
+            "0": "Still reads as obviously AI-generated"
+          }
+        },
+        {
+          "criterion": "Meaning Preservation",
+          "weight": 0.3,
+          "scoring": {
+            "5": "All five points preserved: medical image analysis, predictive models for chronic disease, NLP for clinical notes, and three challenges (privacy, bias, regulation)",
+            "3": "Most points preserved but one dropped or significantly altered",
+            "1": "Substantial meaning loss or addition of unsupported claims",
+            "0": "Content significantly changed"
+          }
+        },
+        {
+          "criterion": "Naturalness Techniques",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Employs multiple naturalness techniques: personal voice, specific examples, varied paragraph structure, organic transitions, rhetorical variation",
+            "3": "Some naturalness techniques applied but execution is inconsistent",
+            "1": "Reads as a mechanical synonym-swap of the original",
+            "0": "Less natural than the source"
+          }
+        },
+        {
+          "criterion": "Prose Quality",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Engaging, well-paced prose that a skilled human writer would be proud of; clear voice and personality",
+            "3": "Competent prose but lacks distinctive voice",
+            "1": "Functional but bland",
+            "0": "Poor quality writing"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 72
+    },
+    {
+      "id": "bench-med-04",
+      "difficulty": "medium",
+      "description": "Cross-audience adaptation preserving complex argumentation",
+      "input": "Rewrite this expert-level policy analysis for a general audience blog post (800-1000 words equivalent). Preserve the argument structure but make it accessible to someone with no economics background:\n\n\"The countercyclical fiscal multiplier debate remains contentious. Auerbach & Gorodnichenko (2012) estimated multipliers of 1.5-2.0 during recessions versus 0-0.5 during expansions using a regime-switching SVAR model. However, Ramey & Zubairy (2018) challenged these findings, arguing that the local projection approach yields multipliers below unity even in slack states when controlling for the zero lower bound. The reconciliation may lie in the composition of fiscal stimulus: transfer payments exhibit higher multipliers than government consumption in liquidity-constrained environments (Galí et al., 2007), suggesting that the instrument matters as much as the timing. For policymakers, this implies that blanket fiscal expansion during downturns is insufficient; the design of stimulus packages — targeting constrained households versus general spending — materially affects macroeconomic outcomes.\"",
+      "rubric": [
+        {
+          "criterion": "Accessibility",
+          "weight": 0.3,
+          "scoring": {
+            "5": "All economic concepts explained through plain language and analogy (multiplier, countercyclical, SVAR, zero lower bound, liquidity-constrained); no unexplained jargon; reading level 8th-10th grade",
+            "3": "Most jargon translated but some economic concepts assume reader knowledge",
+            "1": "Jargon partially simplified but still requires economics background",
+            "0": "No accessibility improvement"
+          }
+        },
+        {
+          "criterion": "Argument Preservation",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Full argument structure preserved: debate framing, two opposing positions with researchers named, reconciliation thesis (composition matters), policy implication (targeting matters)",
+            "3": "Main argument preserved but one position or nuance lost",
+            "1": "Oversimplified to the point of losing the argument structure",
+            "0": "Argument distorted or lost"
+          }
+        },
+        {
+          "criterion": "Engagement",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Genuinely engaging for a general reader: uses concrete examples, relatable framing, narrative hooks; makes economics interesting",
+            "3": "Readable but dry; translated rather than transformed",
+            "1": "Simplified but boring; textbook-like",
+            "0": "Inaccessible or dull"
+          }
+        },
+        {
+          "criterion": "AI-Detection Resistance",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Natural human voice throughout; varied structure, no AI-tell vocabulary, organic flow",
+            "3": "Mostly natural but some AI patterns detectable",
+            "1": "Reads as AI-generated explainer content",
+            "0": "Obvious AI patterns"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 68
+    },
+    {
+      "id": "bench-hard-01",
+      "difficulty": "hard",
+      "description": "Multi-version rewrite producing three audience variants from one source",
+      "input": "Produce three versions of the following text: (1) for a medical professional journal, (2) for a patient-facing health website, and (3) for a social media post (Twitter/X thread). Each version must preserve all factual claims.\n\nSource: \"A Phase III clinical trial (AURORA-3, NCT04821674) of sarilumab 200mg subcutaneous injection demonstrated superior efficacy compared to adalimumab in biologic-naive patients with moderate-to-severe rheumatoid arthritis. At week 24, ACR50 response rates were 45.2% (sarilumab) vs. 29.8% (adalimumab) (p < 0.001). DAS28-CRP remission rates were 26.1% vs. 13.7%. Serious adverse events occurred in 5.3% of the sarilumab group (primarily infections: 2.1%) versus 4.8% in the adalimumab group. The safety profile was consistent with previous sarilumab trials.\"",
+      "rubric": [
+        {
+          "criterion": "Medical Professional Version",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Authentic medical journal style: appropriate terminology retained, study identifiers included, statistical rigor preserved, structured reporting format, no dumbing-down",
+            "3": "Mostly appropriate but inconsistent register or missing key clinical details",
+            "1": "Generic formal writing, not specifically medical journal style",
+            "0": "Inappropriate for medical audience"
+          }
+        },
+        {
+          "criterion": "Patient-Facing Version",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Clear, empathetic, jargon-free: medical terms explained (ACR50, DAS28-CRP, biologic-naive), statistics contextualized for patients, balanced risk/benefit framing, reassuring tone",
+            "3": "Partially simplified but some medical terms unexplained or statistics presented without context",
+            "1": "Minor simplification; still requires medical knowledge to understand",
+            "0": "Not accessible to patients"
+          }
+        },
+        {
+          "criterion": "Social Media Version",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Authentic social media voice: thread format, hook opening, emoji-appropriate, key stats highlighted, accessible, shareable; respects platform conventions",
+            "3": "Social-media-adjacent but reads like a shortened article rather than native thread content",
+            "1": "Formal text truncated to fit character limits",
+            "0": "Not recognizable as social media content"
+          }
+        },
+        {
+          "criterion": "Cross-Version Factual Consistency",
+          "weight": 0.25,
+          "scoring": {
+            "5": "All three versions preserve identical facts: trial name, drug names/doses, 45.2% vs 29.8%, 26.1% vs 13.7%, safety data (5.3% vs 4.8%), infection rate 2.1%",
+            "3": "Facts consistent across versions but 1-2 statistics omitted in simplified versions without acknowledgment",
+            "1": "Factual inconsistencies between versions",
+            "0": "Contradictions between versions"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 65
+    },
+    {
+      "id": "bench-hard-02",
+      "difficulty": "hard",
+      "description": "Rewrite preserving nuanced argumentation while transforming style and defeating AI detection",
+      "input": "Rewrite this legal analysis as an engaging long-form magazine article (The Atlantic style). Preserve every legal argument and citation but make it compelling for an educated general reader. The output must pass AI-detection tools.\n\n\"In Gonzalez v. Google LLC (2023), the Supreme Court declined to address the scope of Section 230 immunity for algorithmic content recommendations, vacating the Ninth Circuit's decision on narrower grounds (the claims failed even without Section 230 protection). Justice Thomas's concurrence in Malwarebytes v. Enigma Software (2019) had signaled judicial appetite for reconsidering Section 230's breadth, noting that the statute's 'sweeping immunity' may exceed congressional intent. The doctrinal tension persists: the Third Circuit in Domen v. Vimeo (2022) applied traditional Section 230 analysis to content moderation decisions, while the Fifth Circuit in NetChoice v. Paxton (2024) held that platforms' editorial discretion does not categorically constitute protected speech under the First Amendment. This circuit split, combined with emerging state legislation (Texas HB 20, Florida SB 7072), creates significant uncertainty for platform liability. The unresolved question — whether algorithmic amplification constitutes 'publishing' under §230(c)(1) — will likely require Supreme Court intervention within the next 2-3 terms.\"",
+      "rubric": [
+        {
+          "criterion": "Magazine Style Transformation",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Authentic long-form magazine voice: narrative hooks, scene-setting, accessible legal explanation through analogy and storytelling, varied pacing, personality in the prose",
+            "3": "Readable for general audience but lacks distinctive magazine voice; more like a well-written explainer than an Atlantic piece",
+            "1": "Legal analysis with simplified vocabulary; structure unchanged",
+            "0": "No meaningful style transformation"
+          }
+        },
+        {
+          "criterion": "Legal Accuracy",
+          "weight": 0.3,
+          "scoring": {
+            "5": "All cases cited correctly (Gonzalez v. Google, Malwarebytes v. Enigma, Domen v. Vimeo, NetChoice v. Paxton), holdings accurately described, Section 230 analysis correct, circuit split framed properly, state laws identified correctly",
+            "3": "Most legal content accurate but 1-2 holdings described imprecisely",
+            "1": "Several legal inaccuracies or mischaracterized holdings",
+            "0": "Legal content substantially wrong"
+          }
+        },
+        {
+          "criterion": "AI-Detection Resistance",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Passes as human-written: distinctive voice, varied rhythm, unexpected word choices, genuine analytical personality, no AI-tell vocabulary or patterns",
+            "3": "Mostly natural but some AI patterns detectable in transitions or paragraph structure",
+            "1": "AI patterns pervasive despite surface-level style changes",
+            "0": "Obviously AI-generated"
+          }
+        },
+        {
+          "criterion": "Reader Engagement",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Genuinely compelling: a non-lawyer would want to read to the end; stakes made clear, human impact conveyed, forward-looking tension maintained",
+            "3": "Informative and readable but not particularly gripping",
+            "1": "Dry and academic despite style changes",
+            "0": "Difficult or boring to read"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 62
+    },
+    {
+      "id": "bench-hard-03",
+      "difficulty": "hard",
+      "description": "Adversarial rewrite with conflicting constraints: maximum style change, maximum accuracy, maximum naturalness",
+      "input": "Rewrite this dense scientific methodology section as a first-person narrative blog post written by the lead researcher, as if explaining the experiment to a curious friend over coffee. You must preserve every methodological detail (exact numbers, procedures, controls) while making it completely conversational and natural. The output must contain zero AI-detectable patterns.\n\n\"We employed a double-blind, placebo-controlled crossover design with a 2-week washout period between conditions. Forty-eight participants (24F, 24M; mean age 31.4 ± 5.2 years; BMI 22.1 ± 2.8 kg/m²) completed both experimental arms. The intervention consisted of 400mg caffeine administered via standardized capsules at 08:00, with the placebo condition utilizing visually identical cellulose capsules. Cognitive performance was assessed using the Cambridge Neuropsychological Test Automated Battery (CANTAB) at four time points: baseline (07:30), +1h, +3h, and +6h post-administration. Primary outcomes were reaction time on the Rapid Visual Information Processing (RVP) task and spatial working memory (SWM) errors. Blood samples for plasma caffeine concentration were collected at each time point via antecubital venipuncture. Salivary cortisol was measured using enzyme-linked immunosorbent assay (ELISA) at baseline and +3h. Environmental conditions were controlled (22 ± 1°C, 45 ± 5% relative humidity, 300 lux ambient lighting). Participants abstained from caffeine for 72 hours prior to each session, verified by baseline plasma caffeine levels < 0.5 μg/mL.\"",
+      "rubric": [
+        {
+          "criterion": "Conversational Transformation",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Authentic first-person narrative: reads like a real scientist talking informally; contractions, asides, humor, personal perspective; the 'over coffee' framing is realized, not just stated",
+            "3": "First person but still reads like a formal presentation simplified; lacks genuine conversational quality",
+            "1": "Third-to-first person pronoun change with minimal style adaptation",
+            "0": "No meaningful transformation"
+          }
+        },
+        {
+          "criterion": "Methodological Accuracy",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Every detail preserved: double-blind crossover, 2-week washout, 48 participants (24F/24M), age 31.4±5.2, BMI 22.1±2.8, 400mg caffeine at 08:00, cellulose placebo, CANTAB at 4 timepoints (07:30, +1h, +3h, +6h), RVP and SWM outcomes, blood draws, cortisol via ELISA, environmental controls (22°C, 45% humidity, 300 lux), 72h abstinence, <0.5 μg/mL threshold",
+            "3": "Most details preserved but 2-3 specific numbers omitted or approximated",
+            "1": "General methodology described but many specifics lost",
+            "0": "Methodology substantially altered or incomplete"
+          }
+        },
+        {
+          "criterion": "AI-Detection Resistance",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Zero detectable AI patterns: highly varied sentence structure, genuine personal voice, idiosyncratic phrasing, natural imperfections, burstiness, no AI-tell vocabulary",
+            "3": "Most AI patterns eliminated but some uniformity in sentence rhythm or vocabulary remains",
+            "1": "Surface-level naturalization but fundamental AI patterns intact",
+            "0": "Clearly AI-generated"
+          }
+        },
+        {
+          "criterion": "Engagement & Voice",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Genuinely enjoyable to read; feels like listening to a passionate scientist explain their work; personality comes through; reader learns without feeling lectured",
+            "3": "Readable and clear but lacks distinctive personality",
+            "1": "Information delivered but not engaging",
+            "0": "Boring or confusing"
+          }
+        }
+      ],
+      "expectedScoreWithout": 18,
+      "expectedScoreWith": 60
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "validate": "node scripts/validate-all.mjs",
+    "test:regression": "node scripts/cross-regression.mjs",
+    "publish:dry": "node scripts/publish.mjs --dry-run",
+    "publish:npm": "node scripts/publish.mjs",
+    "publish:skills": "node scripts/publish.mjs --registry https://npm.skills.ai",
+    "publish:clawhub": "node scripts/publish.mjs --clawhub"
+  }
+}

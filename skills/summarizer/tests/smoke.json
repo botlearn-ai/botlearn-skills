@@ -1,0 +1,54 @@
+{
+  "version": "0.0.1",
+  "timeout": 60,
+  "tasks": [
+    {
+      "id": "smoke-01",
+      "description": "Summarize a multi-paragraph argumentative article with quantitative data and competing claims",
+      "input": "Summarize the following article:\n\n---\nThe Future of Remote Work: A Data-Driven Analysis\n\nThe shift to remote work, accelerated by the COVID-19 pandemic, has become one of the most significant labor market transformations in decades. A 2024 Stanford study led by Nicholas Bloom, tracking 30,000 employees across 500 companies over 3 years, found that hybrid workers (3 days office, 2 days remote) showed a 13% productivity increase compared to full-time office workers, while fully remote workers showed only a 4% increase.\n\nHowever, the picture is not uniformly positive. Microsoft's 2024 Work Trend Index, surveying 31,000 workers across 31 countries, revealed that 68% of employees report not having enough uninterrupted focus time, and cross-team collaboration declined by 25% in fully remote settings. The report attributed this decline to reduced serendipitous interactions and weaker social ties between teams.\n\nCompensation dynamics have also shifted. According to Glassdoor's 2024 Salary Report, fully remote positions now command a 7-12% salary discount compared to equivalent hybrid roles in major metro areas, reversing the 2021-2022 trend where remote roles carried a premium. Economist Raj Chetty argues this discount reflects employers' perception of reduced oversight value rather than actual productivity differences.\n\nThe commercial real estate impact has been substantial. CBRE's Q3 2024 report shows US office vacancy rates at 19.6%, the highest since 1991, with Class B and C properties experiencing vacancy rates above 25%. JLL estimates that $1.2 trillion in commercial real estate value is at risk of repricing by 2026.\n\nMeanwhile, smaller cities have experienced population booms. The Brookings Institution reports that cities like Boise, Idaho and Bentonville, Arkansas saw population growth rates 3-4x the national average between 2020-2024, driven primarily by remote workers seeking lower cost of living.\n\nCritics of the remote-first model, including JPMorgan CEO Jamie Dimon, argue that in-person work is essential for mentorship, culture building, and career development. A 2024 Harvard Business Review study found that remote workers were 35% less likely to be promoted than their in-office counterparts, even when performance metrics were equivalent — a finding researchers attributed to proximity bias rather than performance differences.\n\nThe emerging consensus among labor economists is that hybrid models will dominate, with 60-70% of knowledge workers expected to work in hybrid arrangements by 2026. However, the optimal balance remains contested, with evidence supporting anywhere from 1 to 3 office days per week depending on role type, team structure, and organizational culture.\n---",
+      "rubric": [
+        {
+          "criterion": "Core Argument Capture",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Summary captures the central thesis (hybrid model emerging as dominant), the productivity data supporting it, the counter-arguments (collaboration decline, promotion bias), and the contested optimal balance",
+            "3": "Captures the thesis and some supporting evidence but misses counter-arguments or nuance",
+            "1": "Only captures surface-level topic (remote work trends) without the argument structure",
+            "0": "Misidentifies or fabricates the central argument"
+          }
+        },
+        {
+          "criterion": "Quantitative Detail Retention",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Retains key numbers: 13% productivity increase, 25% collaboration decline, 19.6% vacancy rate, 35% promotion gap, and at least 2 other critical statistics with proper attribution",
+            "3": "Retains 3-4 key statistics but drops some important ones or loses attribution",
+            "1": "Retains 1-2 numbers or replaces specific data with vague language (e.g., 'significant increase')",
+            "0": "No quantitative data preserved; all numbers replaced with qualitative language"
+          }
+        },
+        {
+          "criterion": "Attribution Accuracy",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Correctly attributes findings to their sources (Stanford/Bloom, Microsoft, CBRE, HBR) and opinions to their holders (Dimon, Chetty); no misattribution",
+            "3": "Most attributions correct but 1-2 findings attributed to wrong source or unattributed",
+            "1": "Attributions mostly missing or generic ('studies show')",
+            "0": "Misattributes claims or fabricates sources"
+          }
+        },
+        {
+          "criterion": "Summary Structure and Compression",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Well-structured summary at appropriate compression (5:1 to 10:1); uses formatting (bullets or paragraphs); leads with central finding; balanced coverage across all sections of the source",
+            "3": "Reasonable structure but unbalanced coverage (e.g., over-represents early paragraphs) or slightly too long/short",
+            "1": "Unstructured wall of text or extreme compression losing essential content",
+            "0": "No meaningful compression or disorganized output"
+          }
+        }
+      ],
+      "passThreshold": 60
+    }
+  ]
+}

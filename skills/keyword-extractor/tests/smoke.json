@@ -1,0 +1,54 @@
+{
+  "version": "0.0.1",
+  "timeout": 60,
+  "tasks": [
+    {
+      "id": "smoke-01",
+      "description": "Extract keywords from a technical article about cloud-native architecture with topic clustering and domain contextualization",
+      "input": "Extract the key terms and topics from the following article:\n\nCloud-native architecture has transformed how organizations build and deploy software at scale. By leveraging containerization through Docker and orchestration via Kubernetes, teams can achieve unprecedented levels of scalability and resilience. Microservices decompose monolithic applications into independently deployable units, each with its own database and API boundary.\n\nService meshes like Istio and Linkerd provide observability, traffic management, and mutual TLS authentication between services. Combined with CI/CD pipelines using tools like GitHub Actions, ArgoCD, and Tekton, organizations can ship code multiple times per day with confidence.\n\nHowever, cloud-native adoption introduces complexity in distributed tracing, eventual consistency, and network latency. Site Reliability Engineering (SRE) practices — including error budgets, service level objectives (SLOs), and chaos engineering — help teams manage this operational complexity while maintaining high availability.",
+      "rubric": [
+        {
+          "criterion": "Keyword Coverage",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Extracts all major terms: cloud-native, containerization, Docker, Kubernetes, microservices, service mesh, Istio, CI/CD, SRE, SLOs, chaos engineering, distributed tracing; covers both explicit terms and implied concepts like DevOps and infrastructure automation",
+            "3": "Extracts most explicit technical terms but misses some named technologies or implied concepts",
+            "1": "Extracts only a few obvious terms; misses most domain-specific terminology",
+            "0": "Fails to extract meaningful keywords or returns generic words"
+          }
+        },
+        {
+          "criterion": "Topic Clustering",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Groups keywords into coherent clusters (e.g., Container Orchestration, Service Communication, CI/CD Pipeline, Reliability Engineering) with clear labels and intra-cluster coherence",
+            "3": "Some clustering present but clusters are too broad or miss obvious groupings",
+            "1": "Flat list with no meaningful grouping",
+            "0": "No clustering attempted"
+          }
+        },
+        {
+          "criterion": "Ranking Quality",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Keywords are scored and ranked with core architectural concepts (cloud-native, microservices, Kubernetes) ranked highest; supporting tools ranked lower; scores reflect actual importance in the text",
+            "3": "Rankings are present but some important terms are underweighted or generic terms are overweighted",
+            "1": "Keywords listed but not meaningfully ranked",
+            "0": "No ranking or scoring"
+          }
+        },
+        {
+          "criterion": "Output Structure",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Each keyword includes: term, score, extraction level (lexical/phrasal/semantic), cluster assignment, and entity type where applicable; output is grouped by cluster with summaries",
+            "3": "Keywords have scores and some metadata but missing cluster summaries or extraction level",
+            "1": "Basic list of keywords with minimal metadata",
+            "0": "Unstructured raw output"
+          }
+        }
+      ],
+      "passThreshold": 60
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "name": "@botlearn/openclaw-graduate",
+  "version": "0.1.0",
+  "description": "Day 7 OpenClaw journey capstone - 7-day retrospective, growth analysis, archetype detection, and continuous development planning",
+  "category": "learning",
+  "author": "BotLearn",
+  "benchmarkDimension": "learning-progress",
+  "expectedImprovement": 70,
+  "dependencies": {
+    "@botlearn/openclaw-doctor": ">=0.1.0",
+    "@botlearn/google-search": ">=0.1.0"
+  },
+  "compatibility": {
+    "openclaw": ">=0.5.0"
+  },
+  "files": {
+    "skill": "SKILL.md",
+    "knowledge": [
+      "knowledge/domain.md",
+      "knowledge/best-practices.md",
+      "knowledge/anti-patterns.md"
+    ],
+    "strategies": [
+      "strategies/main.md"
+    ],
+    "smokeTest": "tests/smoke.json",
+    "benchmark": "tests/benchmark.json"
+  }
+}

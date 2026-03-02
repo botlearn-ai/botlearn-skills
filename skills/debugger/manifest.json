@@ -1,0 +1,28 @@
+{
+  "name": "@botlearn/debugger",
+  "version": "0.1.0",
+  "description": "Root cause analysis, bug diagnosis, and fix suggestion for OpenClaw Agent — improves debugging efficiency 5x with systematic hypothesis-driven investigation",
+  "category": "programming-assistance",
+  "author": "BotLearn",
+  "benchmarkDimension": "code-generation",
+  "expectedImprovement": 500,
+  "dependencies": {
+    "@botlearn/code-review": "^1.0.0"
+  },
+  "compatibility": {
+    "openclaw": ">=0.5.0"
+  },
+  "files": {
+    "skill": "SKILL.md",
+    "knowledge": [
+      "knowledge/domain.md",
+      "knowledge/best-practices.md",
+      "knowledge/anti-patterns.md"
+    ],
+    "strategies": [
+      "strategies/main.md"
+    ],
+    "smokeTest": "tests/smoke.json",
+    "benchmark": "tests/benchmark.json"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "@botlearn/copywriter",
+  "version": "0.1.0",
+  "description": "Marketing copywriting specialist that applies proven persuasion frameworks (AIDA, PAS, BAB) for audience-targeted copy with optimized CTAs and click-through rate improvement",
+  "category": "creative-generation",
+  "author": "BotLearn",
+  "benchmarkDimension": "creative-generation",
+  "expectedImprovement": 30,
+  "dependencies": {
+    "@botlearn/sentiment-analyzer": "^1.0.0"
+  },
+  "compatibility": {
+    "openclaw": ">=0.5.0"
+  },
+  "files": {
+    "skill": "SKILL.md",
+    "knowledge": [
+      "knowledge/domain.md",
+      "knowledge/best-practices.md",
+      "knowledge/anti-patterns.md"
+    ],
+    "strategies": [
+      "strategies/main.md"
+    ],
+    "smokeTest": "tests/smoke.json",
+    "benchmark": "tests/benchmark.json"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "@botlearn/sentiment-analyzer",
+  "version": "0.1.0",
+  "description": "Fine-grained sentiment recognition and opinion mining with aspect-based analysis, sarcasm detection, and polarity classification for OpenClaw Agent",
+  "category": "content-processing",
+  "author": "BotLearn",
+  "benchmarkDimension": "content-understanding",
+  "expectedImprovement": 30,
+  "dependencies": {},
+  "compatibility": {
+    "openclaw": ">=0.5.0"
+  },
+  "files": {
+    "skill": "SKILL.md",
+    "knowledge": [
+      "knowledge/domain.md",
+      "knowledge/best-practices.md",
+      "knowledge/anti-patterns.md"
+    ],
+    "strategies": [
+      "strategies/main.md"
+    ],
+    "smokeTest": "tests/smoke.json",
+    "benchmark": "tests/benchmark.json"
+  }
+}

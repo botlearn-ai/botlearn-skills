@@ -1,0 +1,536 @@
+{
+  "version": "0.0.1",
+  "dimension": "code-generation",
+  "tasks": [
+    {
+      "id": "bench-easy-01",
+      "difficulty": "easy",
+      "description": "Generate a utility function with types and edge case handling",
+      "input": "Write a TypeScript utility function called `deepMerge` that recursively merges two objects. It should handle nested objects, arrays (concatenate by default, with an option to replace), null/undefined values, and circular reference detection. Include full TypeScript generics so the return type reflects the merged shape. Include unit tests.",
+      "rubric": [
+        {
+          "criterion": "Type Safety",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Uses TypeScript generics with proper constraints; return type correctly reflects merged shape; handles `undefined` and `null` in the type system",
+            "3": "Has generics but return type is imprecise (e.g., `Record<string, unknown>`)",
+            "1": "No generics; uses `any` for input/output",
+            "0": "No type annotations"
+          }
+        },
+        {
+          "criterion": "Edge Case Handling",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Handles nested objects, arrays (concat/replace option), null, undefined, circular references with detection, and non-object inputs",
+            "3": "Handles nested objects and arrays but misses circular references or null handling",
+            "1": "Only handles flat objects; breaks on nested or null input",
+            "0": "Does not handle any edge cases"
+          }
+        },
+        {
+          "criterion": "Test Quality",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Tests cover: flat merge, deep nesting, array concat, array replace option, null values, circular reference detection, non-object input error",
+            "3": "Tests cover flat and nested merge but miss edge cases",
+            "1": "Single test with trivial input",
+            "0": "No tests"
+          }
+        },
+        {
+          "criterion": "Code Quality",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Clean recursive implementation; small focused functions; JSDoc; no mutation of input objects",
+            "3": "Working implementation but mutates inputs or has long functions",
+            "1": "Fragile implementation with obvious bugs",
+            "0": "Non-functional code"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-easy-02",
+      "difficulty": "easy",
+      "description": "Generate a typed API endpoint with full validation and error handling",
+      "input": "Write a Node.js/Express API endpoint `PATCH /api/products/:id` that partially updates a product. The updatable fields are: name (string, 1-500 chars), price (number, positive, max 2 decimal places), category (enum: electronics, clothing, food, books, other), and tags (array of strings, max 10 tags, each tag 1-50 chars). Use Zod for validation, return proper HTTP codes, and include tests.",
+      "rubric": [
+        {
+          "criterion": "Input Validation",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Uses Zod schemas for all fields with precise constraints (char limits, decimal places, enum, array length); validates partial update (all fields optional but at least one required); validates path param as UUID",
+            "3": "Validates most fields but misses some constraints (e.g., decimal places on price, tag length)",
+            "1": "Basic presence checks only",
+            "0": "No validation"
+          }
+        },
+        {
+          "criterion": "Error Handling",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Distinct handling for: validation error (400 with field-level details), not found (404), conflict (409), database error (500); proper error response schema",
+            "3": "Handles 400 and 404 but uses generic 500 for other cases",
+            "1": "Single catch-all error handler",
+            "0": "No error handling"
+          }
+        },
+        {
+          "criterion": "Type Safety",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Types derived from Zod schema; typed request handler; typed repository interface; no `any`",
+            "3": "Has types but some derived manually (risk of schema/type mismatch)",
+            "1": "Minimal typing",
+            "0": "Untyped"
+          }
+        },
+        {
+          "criterion": "Test Coverage",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Tests: valid partial update, empty body (400), invalid field values, product not found (404), concurrent update conflict, includes mock setup",
+            "3": "Tests happy path and one error case",
+            "1": "Single test",
+            "0": "No tests"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-easy-03",
+      "difficulty": "easy",
+      "description": "Generate a data transformation pipeline with proper types",
+      "input": "Write a Python function that reads a CSV file, validates each row against a schema (name: non-empty string, age: int 0-150, email: valid format, salary: positive float), collects validation errors per row without stopping, transforms valid rows (normalize name to title case, round salary to 2 decimals), and returns a dataclass result with valid records, error records with row numbers and error details, and summary statistics (total, valid, invalid counts). Use type hints throughout. Include tests with a sample CSV.",
+      "rubric": [
+        {
+          "criterion": "Type Annotations",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Full type hints including dataclasses for input/output, TypedDict or dataclass for rows, typed error records, generic where applicable",
+            "3": "Type hints on function signatures but internal variables untyped",
+            "1": "Sparse type hints",
+            "0": "No type hints"
+          }
+        },
+        {
+          "criterion": "Validation & Error Collection",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Validates all fields per schema; collects all errors per row (not just first); includes row number and field name in error detail; continues processing after errors",
+            "3": "Validates most fields but stops at first error per row or has vague error messages",
+            "1": "Minimal validation; raises on first error",
+            "0": "No validation"
+          }
+        },
+        {
+          "criterion": "Data Transformation",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Correctly normalizes names, rounds salaries, handles edge cases (extra whitespace, case variations); transformation is a separate function from validation",
+            "3": "Applies transformations but mixed into validation logic",
+            "1": "Partial transformation",
+            "0": "No transformation"
+          }
+        },
+        {
+          "criterion": "Test Quality",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Tests with sample CSV: all valid rows, mixed valid/invalid, all invalid, empty file, malformed CSV; verifies error details and statistics",
+            "3": "Tests happy path and one error scenario",
+            "1": "Single trivial test",
+            "0": "No tests"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-01",
+      "difficulty": "medium",
+      "description": "Generate a finite state machine with typed states and transitions",
+      "input": "Implement a TypeScript state machine for an order lifecycle with states: draft, pending_payment, paid, processing, shipped, delivered, cancelled, refunded. Define valid transitions (e.g., draft->pending_payment, pending_payment->paid, pending_payment->cancelled, paid->processing, processing->shipped, shipped->delivered, delivered->refunded, and any state except delivered/refunded->cancelled). Each transition should have a guard function that receives the order context and returns whether the transition is allowed. The state machine should emit typed events on transitions, maintain a transition history log, and reject invalid transitions with descriptive errors. Include comprehensive tests for all transitions and guard conditions.",
+      "rubric": [
+        {
+          "criterion": "State Modeling",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Uses discriminated unions for states; each state carries relevant typed data; impossible states are unrepresentable; transitions are typed as a map",
+            "3": "States modeled as string enum; transitions defined but data per state is loosely typed",
+            "1": "States as plain strings with no transition constraints",
+            "0": "No formal state model"
+          }
+        },
+        {
+          "criterion": "Transition Logic",
+          "weight": 0.25,
+          "scoring": {
+            "5": "All specified transitions implemented with typed guard functions; invalid transitions rejected with descriptive error (current state, attempted transition, valid transitions listed); transition history tracked with timestamps",
+            "3": "Valid transitions enforced but guards are missing or history is incomplete",
+            "1": "Some transitions work but invalid transitions are not properly rejected",
+            "0": "No transition enforcement"
+          }
+        },
+        {
+          "criterion": "Event System",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Typed event emitter with discriminated event types per transition; supports subscribe/unsubscribe; events include before/after state and context",
+            "3": "Events emitted but untyped or missing context data",
+            "1": "Basic callback on transition but not a proper event system",
+            "0": "No events"
+          }
+        },
+        {
+          "criterion": "Test Completeness",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Tests every valid transition, every invalid transition rejection, guard function behavior, event emission, and transition history; edge cases like double-transition and concurrent access",
+            "3": "Tests most valid transitions and some invalid ones",
+            "1": "Tests only happy path (draft -> delivered)",
+            "0": "No tests"
+          }
+        }
+      ],
+      "expectedScoreWithout": 15,
+      "expectedScoreWith": 65
+    },
+    {
+      "id": "bench-med-02",
+      "difficulty": "medium",
+      "description": "Generate a CLI tool with argument parsing, validation, and error handling",
+      "input": "Create a Node.js CLI tool called `csvstat` that reads a CSV file and outputs summary statistics. Features: (1) Parse command-line arguments: --file (required, path to CSV), --columns (optional, comma-separated column names to analyze), --format (optional, 'table' or 'json', default 'table'), --output (optional, file path to write results). (2) For numeric columns: compute min, max, mean, median, std deviation, null count. For string columns: compute unique count, most frequent value, min/max length, null count. (3) Handle errors: file not found, invalid CSV, invalid column names, permission denied on output file. Use a proper argument parser (e.g., commander, yargs). Include types for all data structures and tests.",
+      "rubric": [
+        {
+          "criterion": "Argument Parsing & Validation",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Uses a proper CLI framework with typed options; validates file existence, column names against CSV headers, format enum, output path writability; shows helpful usage on error",
+            "3": "Parses arguments but validation is incomplete (e.g., doesn't check file exists before processing)",
+            "1": "Manual argument parsing with minimal validation",
+            "0": "No argument handling"
+          }
+        },
+        {
+          "criterion": "Statistical Computation",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Correctly computes all specified statistics for both numeric and string columns; handles mixed types, null/empty values, and single-row edge cases",
+            "3": "Computes most statistics correctly but misses median or std dev or has numeric precision issues",
+            "1": "Only basic stats (count, min, max)",
+            "0": "Incorrect or no computation"
+          }
+        },
+        {
+          "criterion": "Error Handling",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Distinct error handling for: file not found, CSV parse error, invalid columns, permission denied, empty file; user-friendly error messages with exit codes",
+            "3": "Handles file not found and parse errors but misses other cases",
+            "1": "Generic error handling; stack traces shown to user",
+            "0": "Unhandled errors crash the program"
+          }
+        },
+        {
+          "criterion": "Type Safety & Tests",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Full TypeScript types for CLI options, column statistics, output format; tests cover argument parsing, all stat computations, each error scenario, both output formats",
+            "3": "Types defined but tests only cover happy path",
+            "1": "Minimal types and tests",
+            "0": "No types or tests"
+          }
+        }
+      ],
+      "expectedScoreWithout": 15,
+      "expectedScoreWith": 65
+    },
+    {
+      "id": "bench-med-03",
+      "difficulty": "medium",
+      "description": "Generate a rate limiter with multiple strategies and persistence",
+      "input": "Implement a TypeScript rate limiter that supports three strategies: (1) Fixed Window — N requests per time window, (2) Sliding Window Log — precise tracking with timestamps, (3) Token Bucket — smooth rate with burst capacity. The rate limiter should: accept a strategy via dependency injection, support both in-memory and Redis-backed storage (via a StorageAdapter interface), return typed results including remaining quota, reset time, and retry-after header value, and handle edge cases (clock skew, concurrent requests, storage failures). Include tests for each strategy with time mocking.",
+      "rubric": [
+        {
+          "criterion": "Architecture",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Clean separation: RateLimiter interface, Strategy implementations, StorageAdapter interface; strategies are injectable; storage is injectable; follows open/closed principle",
+            "3": "Strategies exist but storage is hard-coded or architecture has some coupling",
+            "1": "Single monolithic implementation with strategy as a config flag",
+            "0": "No strategy separation"
+          }
+        },
+        {
+          "criterion": "Strategy Correctness",
+          "weight": 0.3,
+          "scoring": {
+            "5": "All three strategies correctly implemented with proper algorithms; fixed window handles boundary correctly; sliding window tracks individual timestamps; token bucket refills at correct rate with burst cap",
+            "3": "Two strategies correct; one has edge case bugs",
+            "1": "Only one strategy or major algorithmic errors",
+            "0": "Non-functional rate limiting"
+          }
+        },
+        {
+          "criterion": "Error Handling & Edge Cases",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Handles storage failures (fallback to allow/deny with logging), clock skew tolerance, concurrent request atomicity considerations, and typed error responses with retry-after",
+            "3": "Handles storage failures but misses concurrency or clock skew",
+            "1": "Basic error handling; crashes on storage failure",
+            "0": "No error handling"
+          }
+        },
+        {
+          "criterion": "Test Quality",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Tests each strategy independently with time mocking; tests window boundaries, burst behavior, storage adapter contract, storage failure fallback, and result types",
+            "3": "Tests basic allow/deny for each strategy but no time mocking or edge cases",
+            "1": "Minimal tests for one strategy",
+            "0": "No tests"
+          }
+        }
+      ],
+      "expectedScoreWithout": 15,
+      "expectedScoreWith": 65
+    },
+    {
+      "id": "bench-med-04",
+      "difficulty": "medium",
+      "description": "Generate a type-safe event system with middleware support",
+      "input": "Create a TypeScript event emitter that is fully type-safe: events are defined as a type map (event name -> payload type), emit/on/off/once are all type-checked, and middleware can intercept events before handlers run. Middleware should be able to transform payloads, short-circuit events, or add logging. Support wildcard subscriptions ('*') that receive all events. Include proper memory leak prevention (max listeners warning, automatic cleanup for `once`), async handler support, and comprehensive tests.",
+      "rubric": [
+        {
+          "criterion": "Type Safety",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Event map type parameter enforces correct payload types on emit, on, off, once; middleware is typed; wildcard handler receives discriminated union of all events; no 'any' usage",
+            "3": "Basic type parameter for event map but middleware or wildcard is loosely typed",
+            "1": "String-based events with 'any' payloads",
+            "0": "No type safety"
+          }
+        },
+        {
+          "criterion": "Feature Completeness",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Implements on, off, once, emit, middleware pipeline, wildcard subscription, async handler support, max listener warning, and automatic once cleanup",
+            "3": "Has on/off/emit and either middleware or wildcard but not both",
+            "1": "Basic on/emit only",
+            "0": "Incomplete implementation"
+          }
+        },
+        {
+          "criterion": "Middleware Pipeline",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Middleware executes in order; can transform payload, short-circuit (prevent handlers), add cross-cutting concerns; typed middleware signature",
+            "3": "Middleware runs but cannot modify payload or short-circuit",
+            "1": "Basic pre-emit hook without composition",
+            "0": "No middleware"
+          }
+        },
+        {
+          "criterion": "Test Quality",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Tests: type-safe emit/subscribe, once auto-cleanup, middleware transformation, middleware short-circuit, wildcard handler, async handlers, max listener warning, memory leak prevention",
+            "3": "Tests basic emit/subscribe and one advanced feature",
+            "1": "Single happy-path test",
+            "0": "No tests"
+          }
+        }
+      ],
+      "expectedScoreWithout": 15,
+      "expectedScoreWith": 65
+    },
+    {
+      "id": "bench-hard-01",
+      "difficulty": "hard",
+      "description": "Generate a complete CRUD API with authentication, authorization, pagination, and error handling",
+      "input": "Build a complete TypeScript/Express REST API for a task management system with the following: (1) Authentication: JWT-based login/register with password hashing (bcrypt), token refresh, and secure token storage guidance. (2) Authorization: role-based access control (admin, manager, member) with per-endpoint permissions. (3) CRUD for tasks: create, read (with pagination, sorting, filtering by status/assignee/date range), update, delete (soft delete). Task schema: id, title, description, status (todo/in_progress/done), priority (low/medium/high/critical), assigneeId, createdBy, createdAt, updatedAt, deletedAt. (4) Full input validation with Zod, typed request/response schemas, proper error hierarchy, and request-level logging. (5) Include tests for auth flow, RBAC, pagination, and error cases.",
+      "rubric": [
+        {
+          "criterion": "Authentication & Security",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Complete JWT flow: registration with password hashing, login returning access+refresh tokens, token refresh endpoint, middleware for protected routes, proper token expiry; no secrets in code",
+            "3": "Basic JWT login/register but missing refresh tokens or password hashing has issues",
+            "1": "Partial auth implementation with security gaps",
+            "0": "No authentication"
+          }
+        },
+        {
+          "criterion": "Authorization (RBAC)",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Role hierarchy enforced via middleware; admin: full access, manager: CRUD on team tasks, member: own tasks only; role checked per endpoint; typed permission definitions",
+            "3": "Role checking exists but not granular (e.g., only admin vs non-admin)",
+            "1": "Basic role field but no enforcement",
+            "0": "No authorization"
+          }
+        },
+        {
+          "criterion": "CRUD & Query Features",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Full CRUD with soft delete; pagination (cursor or offset) with typed page response; sorting by multiple fields; filtering by status, assignee, date range with validated query params",
+            "3": "CRUD works but pagination is basic (offset only) or filtering is limited",
+            "1": "Basic CRUD without pagination or filtering",
+            "0": "Incomplete CRUD"
+          }
+        },
+        {
+          "criterion": "Type Safety & Validation",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Zod schemas for all endpoints; types derived from schemas; typed middleware chain; typed error responses; no 'any'",
+            "3": "Validation on most endpoints but some types are manual or 'any' appears",
+            "1": "Partial validation; many untyped areas",
+            "0": "No validation or types"
+          }
+        },
+        {
+          "criterion": "Error Handling & Tests",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Custom error hierarchy (AuthError, ForbiddenError, NotFoundError, ValidationError); global error handler; tests cover: auth flow (register/login/refresh/invalid token), RBAC (each role), CRUD operations, pagination boundaries, validation errors, concurrent operations",
+            "3": "Error hierarchy exists; tests cover auth and basic CRUD",
+            "1": "Generic error handling; minimal tests",
+            "0": "No error handling or tests"
+          }
+        }
+      ],
+      "expectedScoreWithout": 15,
+      "expectedScoreWith": 60
+    },
+    {
+      "id": "bench-hard-02",
+      "difficulty": "hard",
+      "description": "Generate a resilient external service client with retry, circuit breaker, and caching",
+      "input": "Implement a TypeScript HTTP client wrapper for consuming an external payment gateway API. Requirements: (1) Typed request/response for endpoints: createCharge, getCharge, refundCharge, listCharges. (2) Retry logic with exponential backoff and jitter for transient failures (5xx, timeouts, network errors); do NOT retry 4xx errors. (3) Circuit breaker that opens after 5 failures in 60 seconds, stays open for 30 seconds, then enters half-open state allowing one probe request. (4) Response caching for GET requests with configurable TTL and cache invalidation on mutations. (5) Request/response logging with sensitive field redaction (card numbers, CVV). (6) Timeout per request with global default and per-method override. (7) Full TypeScript types, dependency injection for HTTP client and cache, and comprehensive tests including failure scenario simulation.",
+      "rubric": [
+        {
+          "criterion": "Resilience Patterns",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Correctly implements retry with exponential backoff + jitter (only for 5xx/timeout/network); circuit breaker with closed/open/half-open states and configurable thresholds; patterns compose cleanly",
+            "3": "Retry and circuit breaker present but retry doesn't distinguish 4xx from 5xx, or circuit breaker state transitions have bugs",
+            "1": "Basic retry without backoff; no circuit breaker",
+            "0": "No resilience patterns"
+          }
+        },
+        {
+          "criterion": "Type Safety & API Design",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Typed methods for each endpoint; request/response types per operation; typed error responses distinguishing client errors from server errors; generic cache types",
+            "3": "Types for main operations but error types or cache is loosely typed",
+            "1": "Minimal types; mostly `any` or `unknown`",
+            "0": "Untyped"
+          }
+        },
+        {
+          "criterion": "Caching & Invalidation",
+          "weight": 0.15,
+          "scoring": {
+            "5": "GET responses cached with configurable TTL; cache invalidated on POST/PUT/DELETE to related resource; cache adapter is injectable (in-memory default); stale-while-revalidate pattern considered",
+            "3": "Basic caching for GETs but invalidation is missing or incomplete",
+            "1": "Cache exists but no TTL or invalidation",
+            "0": "No caching"
+          }
+        },
+        {
+          "criterion": "Security & Logging",
+          "weight": 0.1,
+          "scoring": {
+            "5": "Request/response logged with sensitive fields redacted (card number masked except last 4, CVV removed); logging is configurable; no secrets in error messages",
+            "3": "Logging present but redaction is incomplete",
+            "1": "Basic logging without redaction",
+            "0": "No logging or logs contain sensitive data"
+          }
+        },
+        {
+          "criterion": "Test Comprehensiveness",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Tests: successful operations, retry on 5xx (verifies backoff timing), no retry on 4xx, circuit breaker state transitions (closed->open->half-open->closed), cache hit/miss/invalidation, timeout handling, sensitive data redaction, composed resilience (retry + circuit breaker interaction)",
+            "3": "Tests cover basic operations and either retry or circuit breaker but not both",
+            "1": "Tests only happy path",
+            "0": "No tests"
+          }
+        }
+      ],
+      "expectedScoreWithout": 10,
+      "expectedScoreWith": 60
+    },
+    {
+      "id": "bench-hard-03",
+      "difficulty": "hard",
+      "description": "Generate a plugin system with lifecycle hooks, dependency resolution, and type safety",
+      "input": "Design and implement a TypeScript plugin system for an application framework. Requirements: (1) Plugin interface with typed lifecycle hooks: onInit, onStart, onStop, onError, with async support. (2) Plugin dependency declaration and topological sort for initialization order; detect circular dependencies. (3) Plugin configuration with typed per-plugin config schemas (using Zod) and runtime validation. (4) Hook into application events via typed event bus (plugins can subscribe and emit typed events). (5) Hot-reload support: ability to unload and reload a plugin without restarting the system; proper cleanup on unload. (6) Health check: each plugin reports its health status; aggregate system health. (7) Include tests for: dependency resolution, circular dependency detection, lifecycle ordering, configuration validation, event communication between plugins, hot-reload with cleanup verification, and health aggregation.",
+      "rubric": [
+        {
+          "criterion": "Plugin Architecture",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Clean Plugin interface with typed lifecycle hooks; PluginManager handles registration, dependency resolution, and lifecycle; plugins are isolated with defined communication channels (event bus only)",
+            "3": "Plugin interface exists but lifecycle management is incomplete or plugins have direct references to each other",
+            "1": "Basic plugin loading but no lifecycle or isolation",
+            "0": "No plugin architecture"
+          }
+        },
+        {
+          "criterion": "Dependency Resolution",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Topological sort with cycle detection; clear error message naming the cycle; optional dependencies supported; initialization order respects dependency graph",
+            "3": "Topological sort works but cycle detection is missing or error messages are unclear",
+            "1": "Manual ordering required; no automatic resolution",
+            "0": "No dependency handling"
+          }
+        },
+        {
+          "criterion": "Type Safety",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Plugin configs typed via Zod schemas with inference; event bus fully typed; lifecycle hooks have typed context; generics used for plugin-specific state; no 'any'",
+            "3": "Core types are strong but event bus or config is loosely typed",
+            "1": "Basic types; 'any' in multiple places",
+            "0": "Untyped"
+          }
+        },
+        {
+          "criterion": "Advanced Features",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Hot-reload with proper cleanup (event unsubscribe, resource release); health check with per-plugin and aggregate status; graceful error isolation (one plugin failure doesn't crash others)",
+            "3": "Hot-reload or health check present but not both; cleanup is partial",
+            "1": "Neither hot-reload nor health check",
+            "0": "No advanced features"
+          }
+        },
+        {
+          "criterion": "Test Coverage",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Tests: dependency ordering, circular dependency error, lifecycle hook execution order, config validation (valid/invalid), event communication between plugins, hot-reload with cleanup verification, health aggregation, error isolation",
+            "3": "Tests cover dependency resolution and basic lifecycle",
+            "1": "Minimal tests",
+            "0": "No tests"
+          }
+        }
+      ],
+      "expectedScoreWithout": 10,
+      "expectedScoreWith": 60
+    }
+  ]
+}

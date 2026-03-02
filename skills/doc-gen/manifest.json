@@ -1,0 +1,28 @@
+{
+  "name": "@botlearn/doc-gen",
+  "version": "0.1.0",
+  "description": "Automated documentation generation for APIs, READMEs, changelogs, and code-level docs — raising doc completeness from 30% to 90% for OpenClaw Agent",
+  "category": "programming-assistance",
+  "author": "BotLearn",
+  "benchmarkDimension": "code-generation",
+  "expectedImprovement": 30,
+  "dependencies": {
+    "@botlearn/code-gen": "^1.0.0"
+  },
+  "compatibility": {
+    "openclaw": ">=0.5.0"
+  },
+  "files": {
+    "skill": "SKILL.md",
+    "knowledge": [
+      "knowledge/domain.md",
+      "knowledge/best-practices.md",
+      "knowledge/anti-patterns.md"
+    ],
+    "strategies": [
+      "strategies/main.md"
+    ],
+    "smokeTest": "tests/smoke.json",
+    "benchmark": "tests/benchmark.json"
+  }
+}

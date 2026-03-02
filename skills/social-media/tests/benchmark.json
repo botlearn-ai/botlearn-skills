@@ -1,0 +1,476 @@
+{
+  "version": "0.0.1",
+  "dimension": "creative-generation",
+  "tasks": [
+    {
+      "id": "bench-easy-01",
+      "difficulty": "easy",
+      "description": "Create a single tweet for a simple product announcement",
+      "input": "Write a tweet announcing that our open-source CLI tool 'DevFlow' just hit 10,000 GitHub stars. Keep it celebratory and authentic. Include 1-2 relevant hashtags.",
+      "rubric": [
+        {
+          "criterion": "Platform Fit",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Tweet is under 280 characters; concise, punchy, conversational tone; feels native to Twitter culture; celebratory without being corporate",
+            "3": "Under 280 characters but reads like a generic announcement; could be from any platform",
+            "1": "Exceeds character limit or uses non-Twitter formatting",
+            "0": "Not recognizable as a tweet"
+          }
+        },
+        {
+          "criterion": "Engagement Potential",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Includes elements that drive engagement: community gratitude, milestone celebration, implicit CTA (star the repo, celebrate together); emotionally resonant",
+            "3": "Decent engagement potential but missing a clear hook or CTA",
+            "1": "Flat announcement with no engagement drivers",
+            "0": "Reads as spam or self-promotion"
+          }
+        },
+        {
+          "criterion": "Hashtag Usage",
+          "weight": 0.3,
+          "scoring": {
+            "5": "1-2 relevant hashtags naturally integrated; tags match the developer/open-source community",
+            "3": "Hashtags present but slightly off-target or awkwardly placed",
+            "1": "Too many hashtags or irrelevant tags",
+            "0": "No hashtags or hashtag spam"
+          }
+        }
+      ],
+      "expectedScoreWithout": 40,
+      "expectedScoreWith": 80
+    },
+    {
+      "id": "bench-easy-02",
+      "difficulty": "easy",
+      "description": "Write an Instagram caption for a product photo",
+      "input": "Write an Instagram caption for a photo of our new ergonomic standing desk 'AltitudeDesk'. The desk features bamboo wood, electric height adjustment, and a built-in wireless charger. Target audience: remote workers and home office enthusiasts. Include relevant hashtags.",
+      "rubric": [
+        {
+          "criterion": "Platform Fit",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Caption is Instagram-native: strong hook in first line, line breaks for readability, 400-800 characters, aspirational/lifestyle tone, complements a visual",
+            "3": "Adequate caption but reads like product specs rather than lifestyle content",
+            "1": "Too long, too short, or formatted for another platform",
+            "0": "Not recognizable as an Instagram caption"
+          }
+        },
+        {
+          "criterion": "Hook & CTA",
+          "weight": 0.35,
+          "scoring": {
+            "5": "First line creates curiosity or emotional pull; ends with a clear CTA (save, comment, share, link in bio); both are platform-appropriate",
+            "3": "Hook or CTA present but not both; or both are generic",
+            "1": "Weak hook and no CTA",
+            "0": "No hook or CTA; reads as product description"
+          }
+        },
+        {
+          "criterion": "Hashtag Strategy",
+          "weight": 0.3,
+          "scoring": {
+            "5": "3-5 relevant hashtags; mix of broad (#HomeOffice) and niche (#StandingDeskSetup); placed at caption end",
+            "3": "Hashtags present but count or relevance is off",
+            "1": "Hashtag spam or irrelevant tags",
+            "0": "No hashtags"
+          }
+        }
+      ],
+      "expectedScoreWithout": 40,
+      "expectedScoreWith": 80
+    },
+    {
+      "id": "bench-easy-03",
+      "difficulty": "easy",
+      "description": "Create a simple LinkedIn poll post",
+      "input": "Create a LinkedIn post with a poll asking engineering managers about their biggest challenge with remote team management. The poll should have 4 options. Include a brief intro that encourages participation and relevant hashtags.",
+      "rubric": [
+        {
+          "criterion": "Platform Fit",
+          "weight": 0.3,
+          "scoring": {
+            "5": "LinkedIn-native tone; professional but conversational; appropriate length for a poll intro (300-600 chars); paragraph breaks for readability",
+            "3": "Reasonable LinkedIn post but the poll intro is generic or too formal",
+            "1": "Tone mismatch or poor formatting for LinkedIn",
+            "0": "Not suitable for LinkedIn"
+          }
+        },
+        {
+          "criterion": "Poll Quality",
+          "weight": 0.4,
+          "scoring": {
+            "5": "4 clear, distinct, non-overlapping poll options that resonate with engineering managers; options are concise and cover the most common challenges",
+            "3": "4 options but some overlap or are too vague",
+            "1": "Options are unclear, overlapping, or not relevant to the audience",
+            "0": "No poll options provided or completely irrelevant"
+          }
+        },
+        {
+          "criterion": "Engagement Driver",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Intro asks a thought-provoking question; includes CTA to elaborate in comments; framed to encourage sharing with peers; hashtags are relevant",
+            "3": "Basic intro with poll; some engagement element present",
+            "1": "Flat intro with no engagement drivers",
+            "0": "No intro or engagement strategy"
+          }
+        }
+      ],
+      "expectedScoreWithout": 40,
+      "expectedScoreWith": 80
+    },
+    {
+      "id": "bench-med-01",
+      "difficulty": "medium",
+      "description": "Adapt a single topic into platform-specific content for two platforms",
+      "input": "We just published a blog post titled '5 Lessons from Scaling Our API from 1K to 1M Requests Per Second'. Create social media content to promote it on both Twitter/X (as a thread) and LinkedIn (as a text post). The target audience is backend engineers and engineering leaders. Include platform-appropriate hashtags and timing recommendations.",
+      "rubric": [
+        {
+          "criterion": "Platform Differentiation",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Twitter thread and LinkedIn post are clearly distinct in tone, format, and length; each feels native to its platform; not a copy-paste between platforms",
+            "3": "Some differentiation but the core text is similar; one platform feels more natural than the other",
+            "1": "Minimal differentiation; essentially the same content on both platforms",
+            "0": "Identical content cross-posted"
+          }
+        },
+        {
+          "criterion": "Twitter Thread Quality",
+          "weight": 0.25,
+          "scoring": {
+            "5": "5-7 tweet thread; tweet 1 is a compelling hook with thread promise; one lesson per tweet; punchy, quotable language; final tweet has summary + CTA + link",
+            "3": "Thread structure present but hooks are weak or tweets are too dense",
+            "1": "Thread is really just one long tweet split arbitrarily; no narrative flow",
+            "0": "Not formatted as a thread or exceeds character limits"
+          }
+        },
+        {
+          "criterion": "LinkedIn Post Quality",
+          "weight": 0.25,
+          "scoring": {
+            "5": "1,200-1,500 chars; professional insights tone; 'see more' hook; lessons presented with leadership context; link in comments note; 3-5 relevant hashtags",
+            "3": "Reasonable LinkedIn post but generic hook or missing some elements",
+            "1": "Poorly formatted for LinkedIn or reads like a tweet",
+            "0": "Not suitable for LinkedIn"
+          }
+        },
+        {
+          "criterion": "Timing & Hashtags",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Platform-specific timing recommendations with rationale; hashtags are different between platforms and appropriate to each; correct count per platform",
+            "3": "Some timing/hashtag guidance but not platform-specific",
+            "1": "Generic timing or identical hashtags on both platforms",
+            "0": "No timing or hashtag guidance"
+          }
+        }
+      ],
+      "expectedScoreWithout": 30,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-02",
+      "difficulty": "medium",
+      "description": "Create a TikTok script with engagement optimization",
+      "input": "Write a TikTok video script (30 seconds) for a personal finance creator explaining the '50/30/20 budget rule'. The audience is Gen Z (18-25). The tone should be casual, relatable, and slightly humorous. Include text overlay suggestions, a trending sound recommendation note, and hashtags.",
+      "rubric": [
+        {
+          "criterion": "Platform Nativeness",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Script is unmistakably TikTok: direct-to-camera, conversational, uses TikTok-native language and formats (POV, 'things nobody tells you', etc.); 21-34 seconds; includes text overlay notes and sound suggestion",
+            "3": "Script works for TikTok but could be any short-form video; missing TikTok-specific elements",
+            "1": "Script reads like a YouTube explainer or Instagram Reel; not TikTok-native",
+            "0": "Not a video script; just written text"
+          }
+        },
+        {
+          "criterion": "Hook & Retention",
+          "weight": 0.3,
+          "scoring": {
+            "5": "First 3 seconds are a powerful hook (pattern interrupt, bold claim, relatable scenario); script maintains momentum throughout; high predicted completion rate",
+            "3": "Decent hook but middle section loses momentum; retention might drop",
+            "1": "Weak hook; viewer likely swipes away in first 3 seconds",
+            "0": "No hook; starts with generic intro"
+          }
+        },
+        {
+          "criterion": "Audience Fit",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Language, examples, and humor resonate with Gen Z (18-25); uses relatable scenarios (rent, student loans, going out); avoids condescending or overly formal tone",
+            "3": "Generally appropriate but tone feels slightly off for Gen Z",
+            "1": "Tone is too formal, too corporate, or talks down to the audience",
+            "0": "Completely misses the audience"
+          }
+        },
+        {
+          "criterion": "Production Notes",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Includes specific text overlay suggestions per scene, trending sound/audio recommendation, hashtags (3-5, niche + trending), and CTA (follow, comment, save)",
+            "3": "Some production notes present but incomplete",
+            "1": "Minimal or no production notes",
+            "0": "No production guidance at all"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-03",
+      "difficulty": "medium",
+      "description": "Create an Instagram carousel concept with strategic hashtags",
+      "input": "Design an Instagram carousel (8-10 slides) for a SaaS startup's account on the topic '7 Signs Your Startup Needs to Invest in DevOps'. Target audience: startup CTOs and technical co-founders. Provide the text content for each slide, hashtag strategy, and posting time recommendation.",
+      "rubric": [
+        {
+          "criterion": "Carousel Structure",
+          "weight": 0.3,
+          "scoring": {
+            "5": "8-10 slides with clear structure: cover slide (bold hook), context slide, 7 sign slides (one per slide, concise), CTA slide; each slide has one focused takeaway; readable at mobile scale",
+            "3": "Slide count and structure are acceptable but some slides are too dense or structure is unclear",
+            "1": "Poor structure; multiple points per slide; no clear flow",
+            "0": "Not a carousel format; just a text list"
+          }
+        },
+        {
+          "criterion": "Content Quality",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Each sign is specific, actionable, and resonates with startup CTOs; uses concrete examples or scenarios; builds from obvious to non-obvious signs; professional but engaging tone",
+            "3": "Content is relevant but generic; signs could apply to any company, not startup-specific",
+            "1": "Vague or irrelevant points; doesn't demonstrate DevOps expertise",
+            "0": "Content is off-topic or inaccurate"
+          }
+        },
+        {
+          "criterion": "Visual Direction",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Includes text formatting suggestions (font size, emphasis), slide layout notes, and brand consistency guidance; content is designed for visual consumption",
+            "3": "Some visual notes but minimal; content relies heavily on text",
+            "1": "No visual direction; pure text content",
+            "0": "Visual suggestions are inappropriate for Instagram"
+          }
+        },
+        {
+          "criterion": "Hashtag & Timing",
+          "weight": 0.25,
+          "scoring": {
+            "5": "3-5 hashtags following relevance pyramid (mix of broad #StartupLife and niche #DevOpsCulture); posting time with timezone and day-of-week recommendation; rationale provided",
+            "3": "Hashtags and timing present but generic or not optimized",
+            "1": "Missing hashtags or timing recommendation",
+            "0": "No hashtags and no timing"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-04",
+      "difficulty": "medium",
+      "description": "Create content with engagement prediction and A/B variant",
+      "input": "Create a Twitter/X tweet promoting a free webinar on 'How to Land Your First Developer Advocate Role'. Target audience: developers interested in DevRel. Provide the main tweet, an A/B test variant with a different hook, engagement prediction scores for both, and timing recommendation. Include hashtags.",
+      "rubric": [
+        {
+          "criterion": "Tweet Quality",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Both tweet variants are under 280 chars; different hooks (e.g., one question-based, one data-driven); both feel natural and compelling; proper Twitter formatting",
+            "3": "Two variants provided but hooks are too similar or one feels forced",
+            "1": "Only one tweet or variants are nearly identical",
+            "0": "Tweets exceed character limit or are poorly formatted"
+          }
+        },
+        {
+          "criterion": "Engagement Prediction",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Scores both variants on hook strength, value delivery, format alignment, CTA clarity, and algorithmic fit (1-5 each); explains scoring rationale; predicts which variant will perform better and why",
+            "3": "Some scoring provided but incomplete dimensions or missing rationale",
+            "1": "Vague prediction without structured scoring",
+            "0": "No engagement prediction"
+          }
+        },
+        {
+          "criterion": "Audience Targeting",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Content speaks directly to developers curious about DevRel; uses language and pain points familiar to this audience (coding + communication, community building, career transition)",
+            "3": "Generally relevant but could target any career webinar",
+            "1": "Doesn't speak to the developer-to-DevRel audience specifically",
+            "0": "Wrong audience entirely"
+          }
+        },
+        {
+          "criterion": "Hashtags & Timing",
+          "weight": 0.2,
+          "scoring": {
+            "5": "1-2 relevant hashtags per variant (DevRel, developer community); specific timing recommendation with timezone and rationale",
+            "3": "Hashtags and timing present but not optimized for the developer audience",
+            "1": "Generic or missing",
+            "0": "No hashtags or timing"
+          }
+        }
+      ],
+      "expectedScoreWithout": 30,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-hard-01",
+      "difficulty": "hard",
+      "description": "Full multi-platform content strategy for a product launch",
+      "input": "We're launching a new AI code review tool called 'ReviewBot' next Tuesday. Create a coordinated launch day content plan across all four platforms (Twitter/X, LinkedIn, Instagram, TikTok). For each platform, provide: the full post/script content, hashtags, exact posting time with timezone, and media suggestions. The target audience is software engineering teams at mid-size companies (50-500 employees). Our key differentiators: 1) Reviews PRs in under 60 seconds, 2) Learns team-specific coding standards, 3) Reduces code review bottlenecks by 70%. The tone should be confident but not hype-driven.",
+      "rubric": [
+        {
+          "criterion": "Cross-Platform Strategy",
+          "weight": 0.25,
+          "scoring": {
+            "5": "All 4 platforms covered with clearly differentiated content; posting times are staggered strategically throughout launch day; each platform leverages its unique strengths; coherent narrative across platforms without redundancy",
+            "3": "All 4 platforms covered but content feels repetitive; timing is not strategically staggered",
+            "1": "Only 2-3 platforms covered or content is essentially the same across platforms",
+            "0": "Only 1 platform or cross-posted identical content"
+          }
+        },
+        {
+          "criterion": "Content Quality Per Platform",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Each platform's content is native: Twitter thread with quotable stats, LinkedIn thought-leadership post, Instagram visual-first carousel concept, TikTok demo-style script; all within platform limits; strong hooks on every platform",
+            "3": "Content is adequate but not optimized for each platform's native format",
+            "1": "Content feels generic across platforms; not leveraging platform-specific formats",
+            "0": "Content violates platform norms or exceeds limits"
+          }
+        },
+        {
+          "criterion": "Launch Day Coordination",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Clear posting schedule with specific times per platform; considers timezone coverage for global audience; accounts for algorithm peak times; sequence creates momentum throughout the day",
+            "3": "Timing provided but not strategically sequenced",
+            "1": "Vague timing or all posts at the same time",
+            "0": "No timing coordination"
+          }
+        },
+        {
+          "criterion": "Value Proposition Communication",
+          "weight": 0.25,
+          "scoring": {
+            "5": "All 3 differentiators are communicated across the campaign; each platform highlights different angles; data points (60 sec, 70% reduction) are used effectively without feeling repetitive; tone is confident but grounded",
+            "3": "Key differentiators mentioned but not strategically distributed; some repetition",
+            "1": "Only 1-2 differentiators covered; feels like a generic product launch",
+            "0": "Value proposition unclear or missing"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 65
+    },
+    {
+      "id": "bench-hard-02",
+      "difficulty": "hard",
+      "description": "Create a content series plan with audience growth strategy",
+      "input": "Design a 5-part LinkedIn content series called 'The Uncomfortable Truths About Engineering Management' for an engineering leader building their personal brand. The series should be posted over 5 consecutive weekdays (Monday-Friday). For each installment, provide: the full post text (1,200-1,500 chars), hashtags, posting time, and explain how each post builds on the previous one. Each post should end with a teaser for the next day's post. Also provide an engagement prediction for the overall series and explain why this series format drives follower growth.",
+      "rubric": [
+        {
+          "criterion": "Series Coherence",
+          "weight": 0.25,
+          "scoring": {
+            "5": "5 posts form a clear narrative arc; each post builds on the previous; teasers create anticipation; topics progress from accessible to deep; series title and numbering are consistent",
+            "3": "5 posts on related topics but weak connective tissue between them; teasers feel forced",
+            "1": "Posts are standalone with no series feel; could be published in any order",
+            "0": "Posts are unrelated or series structure is absent"
+          }
+        },
+        {
+          "criterion": "Individual Post Quality",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Each post is 1,200-1,500 chars; strong hook; single-sentence paragraphs; personal/vulnerable tone matching 'uncomfortable truths' theme; specific examples not generic advice; CTAs that drive comments",
+            "3": "Posts are adequate LinkedIn content but don't fully deliver on the 'uncomfortable truths' promise",
+            "1": "Posts are generic management advice without the edge the series title promises",
+            "0": "Posts are poorly formatted or violate LinkedIn norms"
+          }
+        },
+        {
+          "criterion": "Growth Strategy",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Explains why the series format drives follower growth (anticipation, returning viewers, algorithm rewards consistency); engagement prediction with scoring breakdown for the series; identifies which post will likely perform best and why",
+            "3": "Some growth strategy explanation but lacks depth or specificity",
+            "1": "Minimal strategy explanation; no engagement prediction",
+            "0": "No growth strategy provided"
+          }
+        },
+        {
+          "criterion": "Scheduling & Hashtags",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Specific posting times for each day (Mon-Fri) with timezone; times vary slightly based on content type; 3-5 consistent but topic-adapted hashtags per post; mix of series-branded and topic tags",
+            "3": "Timing and hashtags provided but identical across all posts or not optimized",
+            "1": "Vague timing; inconsistent or missing hashtags",
+            "0": "No timing or hashtag plan"
+          }
+        }
+      ],
+      "expectedScoreWithout": 15,
+      "expectedScoreWith": 60
+    },
+    {
+      "id": "bench-hard-03",
+      "difficulty": "hard",
+      "description": "Adapt sensitive/complex topic for social media with tone management",
+      "input": "A cybersecurity company needs to post about a major data breach affecting 50 million users of a competitor's platform. Create content for Twitter/X (a thread explaining the breach and lessons learned) and LinkedIn (a thought-leadership post on what this means for the industry). The tone must be: informative and authoritative, NOT opportunistic or fear-mongering; empathetic toward affected users; educational about prevention without being preachy; subtly positioning the company as knowledgeable without exploiting the situation. Include hashtags, timing, and engagement predictions. Note any content that should be avoided.",
+      "rubric": [
+        {
+          "criterion": "Tone Management",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Tone is precisely calibrated: authoritative but empathetic; educational without being preachy; positions expertise without exploiting the breach; acknowledges affected users; avoids schadenfreude or competitive jabs",
+            "3": "Generally appropriate tone but slips into mild opportunism or fear-mongering in places",
+            "1": "Tone is off — either too promotional, too alarmist, or insensitive",
+            "0": "Tone is exploitative, fear-mongering, or clearly self-serving"
+          }
+        },
+        {
+          "criterion": "Content Quality",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Thread and post provide genuine educational value; explain the breach clearly; offer actionable prevention lessons; include what-to-avoid guidance; both pieces stand alone as valuable content",
+            "3": "Content is informative but surface-level; prevention advice is generic",
+            "1": "Content is primarily about the company, not education",
+            "0": "Content is misleading, inaccurate, or purely promotional"
+          }
+        },
+        {
+          "criterion": "Platform Differentiation",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Twitter thread is concise, factual, and structured for quick consumption; LinkedIn post is deeper, more reflective, with industry-level analysis; each leverages platform strengths for the sensitive topic",
+            "3": "Some differentiation but both platforms cover the same ground in similar ways",
+            "1": "Minimal differentiation; content is interchangeable",
+            "0": "Same content on both platforms"
+          }
+        },
+        {
+          "criterion": "Risk Awareness",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Explicitly notes content to avoid (naming specific victims, speculating on attack vectors without evidence, using breach images, competitive attacks); timing recommendation accounts for news cycle sensitivity; hashtags avoid trending exploitation tags",
+            "3": "Some risk awareness but incomplete; misses some potential pitfalls",
+            "1": "Minimal risk awareness; content could backfire",
+            "0": "No risk awareness; content is reckless"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 60
+    }
+  ]
+}

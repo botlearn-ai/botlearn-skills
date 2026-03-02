@@ -1,0 +1,466 @@
+{
+  "version": "0.0.1",
+  "dimension": "code-generation",
+  "tasks": [
+    {
+      "id": "bench-easy-01",
+      "difficulty": "easy",
+      "description": "Debug an off-by-one error in a Python loop",
+      "input": "My Python function is supposed to return the sum of all elements in a list, but it's returning the wrong value for some inputs.\n\n```python\ndef sum_list(numbers):\n    total = 0\n    for i in range(1, len(numbers)):\n        total += numbers[i]\n    return total\n```\n\nExample: `sum_list([10, 20, 30])` returns `50` instead of `60`. What's wrong?",
+      "rubric": [
+        {
+          "criterion": "Root Cause Identification",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Correctly identifies that range(1, len(numbers)) skips index 0, so the first element is never added; explains that range() is exclusive of the start in this context (starts at 1, not 0)",
+            "3": "Identifies the loop starts at wrong index but explanation is imprecise",
+            "1": "Mentions off-by-one but doesn't pinpoint the exact issue",
+            "0": "Incorrect root cause"
+          }
+        },
+        {
+          "criterion": "Fix Quality",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Suggests changing to range(0, len(numbers)) or range(len(numbers)) or using a for-each loop; may also mention sum() as the Pythonic alternative",
+            "3": "Correct fix but no alternatives or explanation of why it works",
+            "1": "Fix works but is overly complex",
+            "0": "Incorrect fix"
+          }
+        },
+        {
+          "criterion": "Regression Test",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Suggests tests including: empty list, single element, multiple elements, negative numbers; provides test code",
+            "3": "Suggests at least one test case",
+            "1": "Mentions testing generally but no specific cases",
+            "0": "No test suggestion"
+          }
+        }
+      ],
+      "expectedScoreWithout": 50,
+      "expectedScoreWith": 90
+    },
+    {
+      "id": "bench-easy-02",
+      "difficulty": "easy",
+      "description": "Debug an unhandled null reference in JavaScript",
+      "input": "My Express.js API endpoint crashes sometimes with this error:\n\n```\nTypeError: Cannot read properties of undefined (reading 'email')\n    at /app/routes/users.js:15:28\n```\n\nHere's the code:\n\n```javascript\napp.post('/api/users', (req, res) => {\n  const email = req.body.email;\n  const name = req.body.name;\n  // ... save to database\n  res.json({ success: true });\n});\n```\n\nIt works when I test with Postman but crashes when the frontend form is submitted.",
+      "rubric": [
+        {
+          "criterion": "Root Cause Identification",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Identifies that req.body is undefined because the JSON body parser middleware (express.json()) is missing or not applied before this route; explains why Postman works (may set Content-Type differently or there's a route ordering issue)",
+            "3": "Identifies req.body is undefined but doesn't explain the middleware issue",
+            "1": "Says body is missing but doesn't identify why",
+            "0": "Incorrect root cause"
+          }
+        },
+        {
+          "criterion": "Fix Quality",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Suggests adding app.use(express.json()) before the route; also suggests adding input validation (check req.body exists, check email/name are present); mentions Content-Type header requirement",
+            "3": "Suggests adding the middleware but no input validation",
+            "1": "Suggests a workaround like optional chaining without addressing the root cause",
+            "0": "Incorrect fix"
+          }
+        },
+        {
+          "criterion": "Debugging Process",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Reads the stack trace, identifies the line, considers the Postman vs frontend difference as a diagnostic clue, forms hypothesis about middleware/headers",
+            "3": "Some analysis shown but incomplete",
+            "1": "Jumps to conclusion without analysis",
+            "0": "No process shown"
+          }
+        }
+      ],
+      "expectedScoreWithout": 40,
+      "expectedScoreWith": 85
+    },
+    {
+      "id": "bench-easy-03",
+      "difficulty": "easy",
+      "description": "Debug a Python ModuleNotFoundError",
+      "input": "I just cloned a Python project and ran it, but I get this error:\n\n```\nTraceback (most recent call last):\n  File \"/app/main.py\", line 3, in <module>\n    from app.services.email_service import send_notification\nModuleNotFoundError: No module named 'app.services.email_service'\n```\n\nThe file structure is:\n```\nproject/\n  app/\n    __init__.py\n    main.py\n    services/\n      email_service.py\n```\n\nI'm running `python app/main.py` from the `project/` directory.",
+      "rubric": [
+        {
+          "criterion": "Root Cause Identification",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Identifies that running `python app/main.py` sets `app/` as the script directory, so `app.services.email_service` is not resolvable; explains Python's module resolution (sys.path) and that the services/ directory may also be missing __init__.py",
+            "3": "Identifies the import path issue but doesn't fully explain the sys.path mechanism",
+            "1": "Mentions import issue vaguely",
+            "0": "Incorrect root cause"
+          }
+        },
+        {
+          "criterion": "Fix Quality",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Suggests multiple fixes: (1) run with `python -m app.main` from project/, (2) add __init__.py to services/ if missing, (3) adjust the import to relative import; explains which approach is best and why",
+            "3": "Suggests one correct fix",
+            "1": "Fix is partially correct",
+            "0": "Incorrect fix"
+          }
+        },
+        {
+          "criterion": "Debugging Process",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Analyzes the traceback, checks directory structure against the import path, considers multiple possible causes (missing __init__.py, wrong working directory, wrong invocation)",
+            "3": "Some analysis but doesn't consider all possibilities",
+            "1": "Minimal analysis",
+            "0": "No process"
+          }
+        }
+      ],
+      "expectedScoreWithout": 40,
+      "expectedScoreWith": 85
+    },
+    {
+      "id": "bench-med-01",
+      "difficulty": "medium",
+      "description": "Debug a race condition in a Node.js caching layer",
+      "input": "Our Node.js API has a caching layer that sometimes returns stale data. Users report that after updating their profile, the old profile data is returned for a random amount of time (sometimes seconds, sometimes minutes). Here's the caching code:\n\n```javascript\nconst cache = new Map();\n\nasync function getUserProfile(userId) {\n  if (cache.has(userId)) {\n    return cache.get(userId);\n  }\n  const profile = await db.query('SELECT * FROM users WHERE id = $1', [userId]);\n  cache.set(userId, profile);\n  return profile;\n}\n\nasync function updateUserProfile(userId, data) {\n  await db.query('UPDATE users SET name=$1, email=$2 WHERE id=$3', [data.name, data.email, userId]);\n  // Invalidate cache after update\n  cache.delete(userId);\n  return { success: true };\n}\n```\n\nWe're running 4 Node.js worker processes behind a load balancer.",
+      "rubric": [
+        {
+          "criterion": "Root Cause Identification",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Identifies TWO issues: (1) In-memory cache is per-process, so updating on worker 1 doesn't invalidate cache on workers 2-4; (2) Even within one process there's a TOCTOU race: between cache.has() check and db.query(), another request could populate stale data. Explains load balancer routing as the amplifier",
+            "3": "Identifies the multi-process cache issue but misses the single-process race condition",
+            "1": "Mentions caching issue vaguely without pinpointing the multi-process or race condition aspect",
+            "0": "Incorrect root cause"
+          }
+        },
+        {
+          "criterion": "Fix Quality",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Suggests replacing in-memory Map with a shared cache (Redis/Memcached) with TTL; optionally suggests cache-aside with invalidation broadcast or write-through caching pattern; discusses TTL as a safety net",
+            "3": "Suggests Redis but doesn't address the race condition or TTL strategy",
+            "1": "Suggests adding a sleep or retry, or only addresses one of the two issues",
+            "0": "Incorrect fix"
+          }
+        },
+        {
+          "criterion": "Debugging Process",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Notes the 'random amount of time' symptom as a key clue pointing to multi-process behavior; considers the load balancer routing; systematically analyzes the read and write paths",
+            "3": "Some systematic analysis but misses key diagnostic clues",
+            "1": "Minimal analysis",
+            "0": "No process shown"
+          }
+        },
+        {
+          "criterion": "Regression Test",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Suggests a test that simulates concurrent read-after-write across multiple processes/connections and verifies fresh data is returned; or suggests integration test with Redis",
+            "3": "Suggests a basic read-after-write test",
+            "1": "Mentions testing generally",
+            "0": "No test suggestion"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-02",
+      "difficulty": "medium",
+      "description": "Debug a database connection pool exhaustion issue",
+      "input": "Our Java Spring Boot application starts timing out on database queries after running for about 30 minutes under load. The error we see is:\n\n```\norg.springframework.jdbc.CannotGetJdbcConnectionException: Failed to obtain JDBC Connection;\n  nested exception is java.sql.SQLTransientConnectionException:\n  HikariPool-1 - Connection is not available, request timed out after 30000ms.\n```\n\nConnection pool config:\n```yaml\nspring:\n  datasource:\n    hikari:\n      maximum-pool-size: 10\n      connection-timeout: 30000\n```\n\nThe suspicious service method:\n```java\n@Service\npublic class ReportService {\n    @Autowired\n    private JdbcTemplate jdbcTemplate;\n\n    public Report generateReport(Long reportId) {\n        Connection conn = DataSourceUtils.getConnection(jdbcTemplate.getDataSource());\n        try {\n            // Multiple queries using conn directly\n            PreparedStatement ps1 = conn.prepareStatement(\"SELECT * FROM reports WHERE id = ?\");\n            ps1.setLong(1, reportId);\n            ResultSet rs1 = ps1.executeQuery();\n            // ... process results\n\n            PreparedStatement ps2 = conn.prepareStatement(\"SELECT * FROM report_items WHERE report_id = ?\");\n            ps2.setLong(1, reportId);\n            ResultSet rs2 = ps2.executeQuery();\n            // ... process results\n\n            return buildReport(rs1, rs2);\n        } catch (SQLException e) {\n            throw new RuntimeException(e);\n        }\n    }\n}\n```\n\nThe endpoint handling about 50 requests/minute.",
+      "rubric": [
+        {
+          "criterion": "Root Cause Identification",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Identifies that DataSourceUtils.getConnection() borrows a connection from the pool but the code never releases it back (no finally block, no try-with-resources, no DataSourceUtils.releaseConnection()); connections leak on every call until the pool of 10 is exhausted; explains the 30-minute timeline based on request rate vs pool size",
+            "3": "Identifies the connection leak but doesn't explain the pool exhaustion timeline or the specific missing release mechanism",
+            "1": "Mentions connection issue but doesn't identify the leak",
+            "0": "Incorrect root cause (e.g., suggests increasing pool size)"
+          }
+        },
+        {
+          "criterion": "Fix Quality",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Suggests adding a finally block with DataSourceUtils.releaseConnection(conn, dataSource); or refactoring to use JdbcTemplate directly (which manages connections automatically); or using try-with-resources; discusses PreparedStatement/ResultSet closing too",
+            "3": "Suggests one correct fix approach",
+            "1": "Suggests increasing pool size (treats symptom) or incomplete fix",
+            "0": "Incorrect fix"
+          }
+        },
+        {
+          "criterion": "Debugging Process",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Analyzes the error message (pool timeout), notes the gradual onset pattern as characteristic of resource leaks, examines connection lifecycle in the code, identifies the missing release",
+            "3": "Some analysis but misses key diagnostic patterns",
+            "1": "Minimal analysis",
+            "0": "No process shown"
+          }
+        },
+        {
+          "criterion": "Regression Test",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Suggests a test that calls generateReport() more times than the pool size and verifies no timeout occurs; or suggests monitoring active/idle connection counts",
+            "3": "Suggests basic testing approach",
+            "1": "Mentions testing generally",
+            "0": "No test suggestion"
+          }
+        }
+      ],
+      "expectedScoreWithout": 30,
+      "expectedScoreWith": 75
+    },
+    {
+      "id": "bench-med-03",
+      "difficulty": "medium",
+      "description": "Debug an incorrect API response caused by async/await misuse",
+      "input": "My Node.js Express endpoint is supposed to return enriched product data with reviews, but the reviews array is always empty even though I can see reviews in the database.\n\n```javascript\napp.get('/api/products/:id', async (req, res) => {\n  try {\n    const product = await db.products.findById(req.params.id);\n    if (!product) return res.status(404).json({ error: 'Not found' });\n\n    // Enrich with reviews\n    product.reviews = getReviewsForProduct(product.id);\n\n    // Enrich with recommendations\n    product.recommendations = getRecommendations(product.category);\n\n    res.json(product);\n  } catch (err) {\n    res.status(500).json({ error: err.message });\n  }\n});\n\nasync function getReviewsForProduct(productId) {\n  const reviews = await db.reviews.find({ productId });\n  return reviews.map(r => ({\n    author: r.authorName,\n    rating: r.rating,\n    text: r.content,\n    date: r.createdAt\n  }));\n}\n\nasync function getRecommendations(category) {\n  const items = await db.products.find({ category, limit: 5 });\n  return items.map(i => ({ id: i.id, name: i.name }));\n}\n```\n\nWhen I log `product.reviews` right before `res.json(product)`, it shows `Promise { <pending> }`.",
+      "rubric": [
+        {
+          "criterion": "Root Cause Identification",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Identifies that getReviewsForProduct() and getRecommendations() are async functions but are called WITHOUT await, so they return Promise objects instead of resolved values; the log showing Promise { <pending> } is the definitive clue; both calls are affected",
+            "3": "Identifies the missing await for reviews but doesn't mention recommendations is also affected",
+            "1": "Mentions async issue vaguely",
+            "0": "Incorrect root cause"
+          }
+        },
+        {
+          "criterion": "Fix Quality",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Adds await to both calls; also suggests using Promise.all() for parallel execution since the two enrichments are independent, improving performance; shows the corrected code",
+            "3": "Adds await to both calls but doesn't suggest parallel optimization",
+            "1": "Only fixes one of the two calls",
+            "0": "Incorrect fix"
+          }
+        },
+        {
+          "criterion": "Debugging Process",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Uses the Promise { <pending> } log output as the key diagnostic clue, traces the function signatures to confirm they are async, identifies the pattern as a common async anti-pattern",
+            "3": "Identifies the issue but doesn't leverage the log output as evidence",
+            "1": "Minimal analysis",
+            "0": "No process shown"
+          }
+        },
+        {
+          "criterion": "Regression Test",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Suggests a test that calls the endpoint and asserts product.reviews is an array of review objects (not a Promise); verifies both reviews and recommendations are populated",
+            "3": "Suggests a basic endpoint test",
+            "1": "Mentions testing generally",
+            "0": "No test suggestion"
+          }
+        }
+      ],
+      "expectedScoreWithout": 35,
+      "expectedScoreWith": 80
+    },
+    {
+      "id": "bench-med-04",
+      "difficulty": "medium",
+      "description": "Debug a CSS/React rendering issue with conditional class application",
+      "input": "I have a React component that should highlight table rows red when an order is overdue, but the styling never applies even though I can confirm the `isOverdue` flag is true.\n\n```jsx\nfunction OrderTable({ orders }) {\n  return (\n    <table>\n      <tbody>\n        {orders.map(order => (\n          <tr\n            key={order.id}\n            className={order.isOverdue && 'overdue-row'}\n          >\n            <td>{order.id}</td>\n            <td>{order.customerName}</td>\n            <td>{order.dueDate}</td>\n            <td>{order.status}</td>\n          </tr>\n        ))}\n      </tbody>\n    </table>\n  );\n}\n```\n\n```css\n.overdue-row {\n  background-color: #ffcccc;\n  font-weight: bold;\n}\n```\n\nWhen I inspect the DOM, the `<tr>` elements have `class=\"overdue-row\"` set correctly. I also verified the CSS file is imported. But the rows still look completely normal. Other CSS classes in the same file work fine.",
+      "rubric": [
+        {
+          "criterion": "Root Cause Identification",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Identifies that the CSS class IS being applied (DOM shows it), so the issue is CSS specificity or inheritance, not React logic; specifically, <tr> background-color is often overridden by <td> or browser default table styles; or a more specific selector elsewhere overrides .overdue-row; mentions CSS specificity as the root cause category",
+            "3": "Identifies a CSS specificity issue but doesn't explain why tr background is overridden by td",
+            "1": "Incorrectly focuses on the React conditional logic which is working correctly",
+            "0": "Incorrect root cause"
+          }
+        },
+        {
+          "criterion": "Fix Quality",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Suggests targeting the <td> elements instead: `.overdue-row td { background-color: #ffcccc; }` or using !important as a quick test to confirm specificity is the issue; may also suggest inspecting computed styles in DevTools to see which rule wins",
+            "3": "Suggests a working fix but doesn't explain the specificity mechanism",
+            "1": "Suggests unrelated fixes (e.g., changing the React conditional logic)",
+            "0": "Incorrect fix"
+          }
+        },
+        {
+          "criterion": "Debugging Process",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Systematically rules out React (DOM shows class is applied), rules out CSS import (other classes work), narrows to CSS specificity/cascade issue; suggests using DevTools computed styles tab to trace the cascade",
+            "3": "Some systematic narrowing but incomplete",
+            "1": "Minimal analysis",
+            "0": "No process shown"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-hard-01",
+      "difficulty": "hard",
+      "description": "Debug a subtle memory leak in a Node.js long-running service",
+      "input": "Our Node.js microservice's memory usage grows from 150MB to 1.2GB over 24 hours, then crashes with OOM. We've taken heap snapshots at 1h, 12h, and 23h. The top retained objects at 23h are:\n\n```\nRetained Size | Object\n  412 MB      | (array) in EventEmitter._events.data\n  298 MB      | (array) in Map (connectionHandlers)\n  89 MB       | (string) in Set (processedIds)\n```\n\nHere's the relevant code:\n\n```javascript\nclass MessageProcessor extends EventEmitter {\n  constructor() {\n    super();\n    this.connectionHandlers = new Map();\n    this.processedIds = new Set();\n  }\n\n  registerConnection(connectionId, socket) {\n    const handler = (data) => {\n      this.processedIds.add(data.messageId);\n      this.emit('data', { connectionId, payload: data });\n      // ... process message\n    };\n    this.connectionHandlers.set(connectionId, handler);\n    socket.on('message', handler);\n  }\n\n  handleDisconnect(connectionId) {\n    this.connectionHandlers.delete(connectionId);\n    console.log(`Connection ${connectionId} cleaned up`);\n  }\n}\n\n// In the server setup:\nconst processor = new MessageProcessor();\n\nwsServer.on('connection', (socket) => {\n  const connId = generateId();\n  processor.registerConnection(connId, socket);\n\n  socket.on('close', () => {\n    processor.handleDisconnect(connId);\n  });\n\n  processor.on('data', (event) => {\n    metrics.record(event);\n  });\n});\n```\n\nWe handle about 500 connections/hour, with average session duration of 10 minutes.",
+      "rubric": [
+        {
+          "criterion": "Root Cause Identification",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Identifies ALL THREE leaks: (1) processor.on('data') inside the connection handler adds a NEW listener for every connection but never removes it (listeners accumulate on the EventEmitter — the 412MB); (2) socket.on('message', handler) — the handler is removed from connectionHandlers Map but the socket listener is never removed with socket.removeListener/off (partial cleanup — the 298MB may relate to closures retained by these orphaned listeners); (3) processedIds Set grows unboundedly since messageIds are never purged (the 89MB). Correlates each to the heap snapshot data",
+            "3": "Identifies 2 of the 3 leaks",
+            "1": "Identifies 1 leak",
+            "0": "Incorrect analysis or no leaks identified"
+          }
+        },
+        {
+          "criterion": "Fix Quality",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Fixes all three: (1) move processor.on('data') outside the connection loop or use a single shared listener; (2) in handleDisconnect, also call socket.removeListener('message', handler) or socket.off(); (3) add TTL-based pruning or a max-size cap to processedIds; discusses setMaxListeners warning as a clue that was likely ignored",
+            "3": "Fixes 2 of 3 leaks correctly",
+            "1": "Fixes 1 leak",
+            "0": "Incorrect fixes"
+          }
+        },
+        {
+          "criterion": "Debugging Process",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Uses heap snapshot data as primary evidence; correlates retained sizes to specific data structures in the code; calculates expected growth rate (500 conn/hr * 10min avg = ~83 concurrent, but listener count grows monotonically); explains why handleDisconnect is insufficient",
+            "3": "Uses heap snapshot data but analysis is incomplete",
+            "1": "Mentions memory leak patterns generally without connecting to the specific evidence",
+            "0": "No diagnostic process shown"
+          }
+        },
+        {
+          "criterion": "Regression Test",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Suggests a test that creates N connections, disconnects them all, then checks: EventEmitter listener count is back to baseline, connectionHandlers Map is empty, processedIds has bounded size; suggests heap snapshot comparison in CI",
+            "3": "Suggests monitoring memory or checking listener count",
+            "1": "Mentions testing generally",
+            "0": "No test suggestion"
+          }
+        }
+      ],
+      "expectedScoreWithout": 15,
+      "expectedScoreWith": 60
+    },
+    {
+      "id": "bench-hard-02",
+      "difficulty": "hard",
+      "description": "Debug a distributed system consistency issue with eventual consistency and message ordering",
+      "input": "We have an e-commerce system with an Order Service and an Inventory Service communicating via a message queue (RabbitMQ). Occasionally, customers can purchase items that are actually out of stock. The flow is:\n\n1. Order Service receives purchase request\n2. Order Service publishes `OrderCreated` event to queue\n3. Inventory Service consumes the event and decrements stock\n4. If stock goes below 0, Inventory Service publishes `StockDepleted` event\n5. Order Service consumes `StockDepleted` and should cancel the order\n\n```javascript\n// Order Service\nasync function createOrder(req, res) {\n  const order = await db.orders.create({\n    userId: req.body.userId,\n    productId: req.body.productId,\n    quantity: req.body.quantity,\n    status: 'confirmed'\n  });\n  await messageQueue.publish('order.created', {\n    orderId: order.id,\n    productId: order.productId,\n    quantity: order.quantity\n  });\n  return res.json({ order, message: 'Order confirmed' });\n}\n\n// Inventory Service\nasync function handleOrderCreated(event) {\n  const product = await db.products.findById(event.productId);\n  product.stock -= event.quantity;\n  await product.save();\n  if (product.stock < 0) {\n    await messageQueue.publish('stock.depleted', {\n      productId: event.productId,\n      orderId: event.orderId\n    });\n  }\n}\n```\n\nWe see this issue primarily during flash sales when many orders come in simultaneously for the same product. The product might have stock=5 but 20 orders get confirmed.",
+      "rubric": [
+        {
+          "criterion": "Root Cause Identification",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Identifies MULTIPLE interacting issues: (1) No stock check before confirming the order — the order is 'confirmed' immediately before inventory validation; (2) Race condition in inventory decrement — concurrent handleOrderCreated calls read the same stock value, each decrements from the same base, creating a lost-update problem (no DB-level locking or atomic operation); (3) The architecture is fundamentally flawed for this use case — stock reservation should happen synchronously, not via eventual consistency",
+            "3": "Identifies the race condition in inventory but misses the premature confirmation issue",
+            "1": "Identifies one issue but misses the systemic architecture problem",
+            "0": "Incorrect root cause"
+          }
+        },
+        {
+          "criterion": "Fix Quality",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Proposes a comprehensive fix: (1) Use optimistic locking or atomic DB operation (UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?) for the inventory decrement; (2) Change order status to 'pending' until inventory is confirmed; (3) Consider synchronous stock reservation (e.g., Saga pattern or synchronous API call) for critical-path operations; discusses trade-offs between approaches",
+            "3": "Suggests atomic DB operation but doesn't address the order confirmation flow",
+            "1": "Suggests adding a simple lock without considering the distributed nature",
+            "0": "Incorrect fix"
+          }
+        },
+        {
+          "criterion": "Debugging Process",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Analyzes the flash-sale scenario step by step: traces the timeline of concurrent requests, identifies where the data race occurs, explains why eventual consistency is insufficient for inventory reservation, references the stock=5/20-orders scenario as evidence of lost updates",
+            "3": "Some timeline analysis but incomplete",
+            "1": "Minimal analysis",
+            "0": "No process shown"
+          }
+        },
+        {
+          "criterion": "Regression Test",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Suggests a concurrent load test: create a product with stock=5, fire 20 simultaneous order requests, verify exactly 5 are confirmed and 15 are rejected/pending; verify final stock is 0 (not negative)",
+            "3": "Suggests a basic concurrency test",
+            "1": "Mentions testing generally",
+            "0": "No test suggestion"
+          }
+        }
+      ],
+      "expectedScoreWithout": 15,
+      "expectedScoreWith": 60
+    },
+    {
+      "id": "bench-hard-03",
+      "difficulty": "hard",
+      "description": "Debug a complex TypeScript type error in a generic data pipeline",
+      "input": "I'm building a type-safe data transformation pipeline in TypeScript and getting a complex type error I can't understand. The code:\n\n```typescript\ntype TransformFn<TIn, TOut> = (input: TIn) => TOut;\n\ninterface PipelineStep<TIn, TOut> {\n  name: string;\n  transform: TransformFn<TIn, TOut>;\n}\n\nclass Pipeline<TInput> {\n  private steps: PipelineStep<any, any>[] = [];\n\n  pipe<TOut>(step: PipelineStep<TInput, TOut>): Pipeline<TOut> {\n    this.steps.push(step);\n    return this as unknown as Pipeline<TOut>;\n  }\n\n  execute(input: TInput): any {\n    return this.steps.reduce((acc, step) => step.transform(acc), input);\n  }\n}\n\n// Usage:\ninterface RawData {\n  name: string;\n  age: string;\n  scores: string;\n}\n\ninterface ParsedData {\n  name: string;\n  age: number;\n  scores: number[];\n}\n\ninterface EnrichedData extends ParsedData {\n  ageGroup: 'junior' | 'senior';\n  averageScore: number;\n}\n\nconst pipeline = new Pipeline<RawData>()\n  .pipe({\n    name: 'parse',\n    transform: (raw: RawData): ParsedData => ({\n      name: raw.name,\n      age: parseInt(raw.age),\n      scores: raw.scores.split(',').map(Number)\n    })\n  })\n  .pipe({\n    name: 'enrich',\n    transform: (parsed: ParsedData): EnrichedData => ({\n      ...parsed,\n      ageGroup: parsed.age >= 18 ? 'senior' : 'junior',\n      averageScore: parsed.scores.reduce((a, b) => a + b, 0) / parsed.scores.length\n    })\n  });\n\nconst result = pipeline.execute({ name: 'Alice', age: '25', scores: '90,85,92' });\n// result type is 'any' — I want it to be EnrichedData\n// Also, the second .pipe() gives error:\n// Argument of type 'PipelineStep<ParsedData, EnrichedData>' is not assignable\n// to parameter of type 'PipelineStep<RawData, EnrichedData>'\n```\n\nHow do I fix this so the pipeline is truly type-safe with proper inference through the chain?",
+      "rubric": [
+        {
+          "criterion": "Root Cause Identification",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Identifies that the core issue is the pipe() method's type parameter: after the first pipe() call, `this` is cast to Pipeline<TOut> (Pipeline<ParsedData>), BUT the cast `as unknown as Pipeline<TOut>` doesn't actually change the object's generic type at the type level for subsequent method calls — TypeScript sees the original TInput=RawData for the second pipe(). The fundamental problem is that TypeScript cannot track mutating generic types on `this` through method chaining without a builder pattern or function composition approach",
+            "3": "Identifies the type erasure issue with the cast but doesn't fully explain why TypeScript can't track the chain",
+            "1": "Mentions generic type issue vaguely",
+            "0": "Incorrect root cause"
+          }
+        },
+        {
+          "criterion": "Fix Quality",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Proposes a proper solution: (1) Use a function-based pipe composition (like fp-ts pipe, or a standalone pipe function that returns a new Pipeline with the correct output type), OR (2) Redesign using a builder pattern where each pipe() returns a new Pipeline<TOut> instance (not casting this), OR (3) Use overloaded type signatures for chaining. Shows working code. Fixes the execute() return type to be the final output type instead of any",
+            "3": "Proposes a working fix for the type error but the pipeline isn't fully type-safe end-to-end",
+            "1": "Suggests using 'any' or type assertions to silence the error",
+            "0": "Incorrect fix"
+          }
+        },
+        {
+          "criterion": "Debugging Process",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Traces the type inference through each step of the chain, shows what TypeScript infers at each point, explains the disconnect between the runtime cast and the type system's view",
+            "3": "Some type analysis but incomplete",
+            "1": "Minimal analysis",
+            "0": "No process shown"
+          }
+        },
+        {
+          "criterion": "Regression Test",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Suggests compile-time type tests: verify that result is inferred as EnrichedData, verify that piping incompatible types produces a compile error, verify execute() input type matches the initial pipeline type",
+            "3": "Suggests a basic type assertion test",
+            "1": "Mentions testing generally",
+            "0": "No test suggestion"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 60
+    }
+  ]
+}

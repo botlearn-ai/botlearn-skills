@@ -1,0 +1,54 @@
+{
+  "version": "0.0.1",
+  "timeout": 60,
+  "tasks": [
+    {
+      "id": "smoke-01",
+      "description": "Monitor a technology subreddit for emerging trends and provide a structured trend report with velocity analysis",
+      "input": "Monitor r/technology and r/programming for any emerging trends in the last 24 hours. I want to know what topics are gaining unusual traction, which posts are showing breakout velocity, and whether any topics are spreading across both subreddits. Provide confidence scores and predicted peak timing for each trend.",
+      "rubric": [
+        {
+          "criterion": "Subreddit Monitoring & Data Collection",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Checks rising, new, and hot listings for both subreddits; collects engagement metrics (score, comments, awards, upvote_ratio) for candidate posts; notes subreddit subscriber counts for normalization",
+            "3": "Checks at least one listing type for both subreddits; collects basic metrics but misses some dimensions",
+            "1": "Only checks one subreddit or one listing type; minimal metric collection",
+            "0": "No systematic data collection from subreddit listings"
+          }
+        },
+        {
+          "criterion": "Velocity Analysis & Trend Detection",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Calculates engagement velocity (upvotes/time, comments/time); normalizes by subreddit size and time-of-day; identifies posts exceeding breakout thresholds; classifies trend lifecycle phase (Seed/Ignition/Surge/Peak/Decay)",
+            "3": "Identifies high-engagement posts but velocity calculation is approximate or unnormalized; lifecycle phase mentioned but not rigorously determined",
+            "1": "Lists popular posts by raw score without velocity or normalization analysis",
+            "0": "No velocity-based analysis; just reports current top posts"
+          }
+        },
+        {
+          "criterion": "Cross-Subreddit Correlation",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Detects topics appearing in both subreddits; classifies propagation pattern (grassroots, hub-and-spoke, etc.); calculates spread score; identifies origin subreddit",
+            "3": "Notes overlapping topics between subreddits but without formal correlation analysis or propagation classification",
+            "1": "Treats each subreddit independently with no cross-community analysis",
+            "0": "No awareness of cross-subreddit patterns"
+          }
+        },
+        {
+          "criterion": "Report Quality & Actionability",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Structured report with: trend summary, confidence score (0-100), lifecycle phase, predicted peak timing, sentiment snapshot, supporting evidence links, and risk factors; trends ranked by confidence",
+            "3": "Report includes trend descriptions and some metrics but missing confidence scores, timing predictions, or risk factors",
+            "1": "Unstructured list of trending topics without metrics or predictions",
+            "0": "No coherent report format"
+          }
+        }
+      ],
+      "passThreshold": 60
+    }
+  ]
+}

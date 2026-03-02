@@ -1,0 +1,506 @@
+{
+  "version": "0.0.1",
+  "dimension": "code-generation",
+  "tasks": [
+    {
+      "id": "bench-easy-01",
+      "difficulty": "easy",
+      "description": "Generate JSDoc for a single exported function with clear signature",
+      "input": "Generate complete JSDoc documentation for this function:\n\n```typescript\nexport async function sendEmail(\n  to: string,\n  subject: string,\n  body: string,\n  options?: { cc?: string[]; bcc?: string[]; replyTo?: string }\n): Promise<{ messageId: string; status: 'sent' | 'queued' }> {\n  if (!to.includes('@')) throw new ValidationError('Invalid recipient email');\n  if (!subject.trim()) throw new ValidationError('Subject cannot be empty');\n  const result = await mailer.send({ to, subject, body, ...options });\n  return { messageId: result.id, status: result.queued ? 'queued' : 'sent' };\n}\n```",
+      "rubric": [
+        {
+          "criterion": "Completeness",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Summary, all params (to, subject, body, options with sub-properties), return type with both status values, both ValidationErrors documented with trigger conditions",
+            "3": "Summary and params documented but missing error conditions or options sub-properties",
+            "1": "Only summary and basic param types",
+            "0": "No meaningful documentation"
+          }
+        },
+        {
+          "criterion": "Example",
+          "weight": 0.3,
+          "scoring": {
+            "5": "At least one basic usage example and one with options; shows expected return value; uses realistic email data",
+            "3": "One example but missing options usage or expected output",
+            "1": "Trivial or non-runnable example",
+            "0": "No example"
+          }
+        },
+        {
+          "criterion": "Formatting",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Proper JSDoc tags (@param, @returns, @throws, @example); consistent formatting; options sub-properties documented with @property or nested description",
+            "3": "Correct tags but inconsistent formatting",
+            "1": "Missing or incorrect JSDoc tags",
+            "0": "No JSDoc structure"
+          }
+        }
+      ],
+      "expectedScoreWithout": 35,
+      "expectedScoreWith": 80
+    },
+    {
+      "id": "bench-easy-02",
+      "difficulty": "easy",
+      "description": "Generate a changelog entry from a set of commit messages",
+      "input": "Generate a Keep a Changelog entry for version 2.3.0 (release date: 2024-09-20) from these commit messages:\n\n- feat: add batch import endpoint for CSV files (#312)\n- feat: add export to PDF functionality (#318)\n- fix: correct timezone handling in scheduled reports (#305)\n- fix: prevent duplicate webhook deliveries on retry (#309)\n- refactor: extract validation logic into shared middleware\n- chore: update CI pipeline to Node 20\n- fix: resolve memory leak in long-running WebSocket connections (#315)\n- feat(api): add pagination support to /events endpoint (#320)\n- deprecated: mark /v1/reports endpoint for removal in 3.0 (#322)\n- security: patch SSRF vulnerability in URL preview feature (CVE-2024-98765)",
+      "rubric": [
+        {
+          "criterion": "Categorization",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Correctly maps all commits to Keep a Changelog categories (Added, Changed, Fixed, Deprecated, Security); excludes non-user-facing changes (refactor, chore)",
+            "3": "Most commits correctly categorized but includes internal changes or miscategorizes some",
+            "1": "Categories present but many commits misplaced",
+            "0": "No categorization or raw commit dump"
+          }
+        },
+        {
+          "criterion": "Entry Quality",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Entries rewritten in imperative mood, human-readable, with issue/PR references preserved; security entry includes CVE reference",
+            "3": "Entries are readable but some are just cleaned-up commit messages",
+            "1": "Raw commit messages copied without rewriting",
+            "0": "Unusable entries"
+          }
+        },
+        {
+          "criterion": "Format Compliance",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Follows Keep a Changelog format exactly: version heading with date, category headings, bulleted entries, comparison link placeholder",
+            "3": "Mostly correct format but missing date or comparison link",
+            "1": "Partial format compliance",
+            "0": "No standard format"
+          }
+        }
+      ],
+      "expectedScoreWithout": 30,
+      "expectedScoreWith": 75
+    },
+    {
+      "id": "bench-easy-03",
+      "difficulty": "easy",
+      "description": "Generate a README Quick Start section for a simple npm package",
+      "input": "Generate a complete README for this npm package based on the following information:\n\n- Package name: @acme/rate-limiter\n- Description: A lightweight, in-memory rate limiter for Node.js applications with sliding window support\n- Install: npm/yarn/pnpm\n- Main export: `createLimiter(options)` returns a limiter instance\n- Options: { maxRequests: number (default 100), windowMs: number (default 60000), keyGenerator?: (req) => string }\n- Methods: `limiter.check(key): { allowed: boolean, remaining: number, resetAt: Date }`, `limiter.reset(key): void`\n- Requires Node.js >= 18\n- License: MIT\n- Author: Acme Corp",
+      "rubric": [
+        {
+          "criterion": "Structure",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Complete README with title, description, installation (all 3 managers), quick start, API reference, configuration table, license; proper heading hierarchy",
+            "3": "Most sections present but missing one of install/quick-start/API",
+            "1": "Only partial sections; no clear structure",
+            "0": "Unstructured text"
+          }
+        },
+        {
+          "criterion": "Quick Start Quality",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Copy-pasteable example under 10 lines showing createLimiter + check; includes import, setup, and usage with realistic data and expected output",
+            "3": "Example present but not immediately runnable or missing expected output",
+            "1": "Pseudocode or overly simplified example",
+            "0": "No quick start"
+          }
+        },
+        {
+          "criterion": "API Reference",
+          "weight": 0.3,
+          "scoring": {
+            "5": "All options and methods documented in tables with types, defaults, and descriptions; return types clearly specified",
+            "3": "API documented but missing some defaults or type information",
+            "1": "Incomplete API listing",
+            "0": "No API reference"
+          }
+        }
+      ],
+      "expectedScoreWithout": 35,
+      "expectedScoreWith": 80
+    },
+    {
+      "id": "bench-med-01",
+      "difficulty": "medium",
+      "description": "Generate OpenAPI 3.x specification from Express route handlers",
+      "input": "Generate a complete OpenAPI 3.0.3 specification for these Express route handlers:\n\n```typescript\nconst router = express.Router();\n\nrouter.post('/api/projects', authenticate, async (req, res) => {\n  const { name, description, visibility } = req.body;\n  // name: string (required, 1-100 chars)\n  // description: string (optional, max 500 chars)\n  // visibility: 'public' | 'private' | 'internal' (default: 'private')\n  const project = await ProjectService.create(req.user.id, { name, description, visibility });\n  res.status(201).json(project);\n});\n\nrouter.get('/api/projects/:projectId', optionalAuth, async (req, res) => {\n  const project = await ProjectService.findById(req.params.projectId);\n  if (!project) return res.status(404).json({ error: 'PROJECT_NOT_FOUND', message: 'Project not found' });\n  if (project.visibility === 'private' && project.ownerId !== req.user?.id) {\n    return res.status(403).json({ error: 'FORBIDDEN', message: 'Access denied' });\n  }\n  res.json(project);\n});\n\nrouter.get('/api/projects', optionalAuth, async (req, res) => {\n  // Query params: page (default 1), limit (default 20, max 100), visibility, search\n  const results = await ProjectService.list(req.query);\n  res.json({ data: results.items, pagination: { page: results.page, limit: results.limit, total: results.total } });\n});\n\nrouter.patch('/api/projects/:projectId', authenticate, async (req, res) => {\n  const project = await ProjectService.findById(req.params.projectId);\n  if (!project) return res.status(404).json({ error: 'PROJECT_NOT_FOUND' });\n  if (project.ownerId !== req.user.id) return res.status(403).json({ error: 'FORBIDDEN' });\n  const updated = await ProjectService.update(req.params.projectId, req.body);\n  res.json(updated);\n});\n\nrouter.delete('/api/projects/:projectId', authenticate, async (req, res) => {\n  const project = await ProjectService.findById(req.params.projectId);\n  if (!project) return res.status(404).json({ error: 'PROJECT_NOT_FOUND' });\n  if (project.ownerId !== req.user.id) return res.status(403).json({ error: 'FORBIDDEN' });\n  await ProjectService.delete(req.params.projectId);\n  res.status(204).send();\n});\n```",
+      "rubric": [
+        {
+          "criterion": "Endpoint Coverage",
+          "weight": 0.3,
+          "scoring": {
+            "5": "All 5 endpoints documented with correct HTTP methods, paths, and operationIds; authentication requirements (authenticate vs optionalAuth) correctly mapped to security schemes",
+            "3": "All endpoints present but authentication requirements not differentiated",
+            "1": "Some endpoints missing or incorrect methods",
+            "0": "Incomplete or incorrect endpoint listing"
+          }
+        },
+        {
+          "criterion": "Schema Accuracy",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Request bodies and response schemas fully defined with correct types, required fields, constraints (minLength, maxLength, enum), and defaults; pagination response schema included; Error schema defined",
+            "3": "Schemas present but missing constraints or defaults",
+            "1": "Basic schemas without proper typing",
+            "0": "No schemas defined"
+          }
+        },
+        {
+          "criterion": "Response Documentation",
+          "weight": 0.2,
+          "scoring": {
+            "5": "All response codes documented (200, 201, 204, 400, 401, 403, 404) with appropriate schemas and examples for each endpoint",
+            "3": "Success responses documented but error responses incomplete",
+            "1": "Only success responses documented",
+            "0": "Responses not properly documented"
+          }
+        },
+        {
+          "criterion": "Examples",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Request and response examples with realistic data for each endpoint; includes cURL examples",
+            "3": "Some examples present but not for all endpoints",
+            "1": "Minimal or unrealistic examples",
+            "0": "No examples"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-02",
+      "difficulty": "medium",
+      "description": "Document an undocumented class with inheritance and complex method signatures",
+      "input": "Generate complete TSDoc documentation for this class hierarchy. Cover all public methods, constructor, generics, and inheritance behavior:\n\n```typescript\nexport abstract class BaseRepository<T extends { id: string }> {\n  constructor(protected collection: Collection<T>) {}\n\n  async findById(id: string): Promise<T | null> {\n    return this.collection.findOne({ id } as any);\n  }\n\n  async findMany(filter: Partial<T>, options?: { limit?: number; offset?: number; sort?: Record<string, 1 | -1> }): Promise<T[]> {\n    let query = this.collection.find(filter as any);\n    if (options?.sort) query = query.sort(options.sort);\n    if (options?.offset) query = query.skip(options.offset);\n    if (options?.limit) query = query.limit(options.limit);\n    return query.toArray();\n  }\n\n  async count(filter?: Partial<T>): Promise<number> {\n    return this.collection.countDocuments(filter as any ?? {});\n  }\n\n  abstract validate(entity: Omit<T, 'id'>): Promise<void>;\n\n  async create(data: Omit<T, 'id'>): Promise<T> {\n    await this.validate(data);\n    const entity = { ...data, id: generateId() } as T;\n    await this.collection.insertOne(entity as any);\n    return entity;\n  }\n\n  async update(id: string, data: Partial<Omit<T, 'id'>>): Promise<T | null> {\n    const result = await this.collection.findOneAndUpdate(\n      { id } as any,\n      { $set: data } as any,\n      { returnDocument: 'after' }\n    );\n    return result ?? null;\n  }\n\n  async delete(id: string): Promise<boolean> {\n    const result = await this.collection.deleteOne({ id } as any);\n    return result.deletedCount > 0;\n  }\n}\n\nexport class OrderRepository extends BaseRepository<Order> {\n  async validate(data: Omit<Order, 'id'>): Promise<void> {\n    if (!data.customerId) throw new ValidationError('Customer ID is required');\n    if (!data.items?.length) throw new ValidationError('Order must have at least one item');\n    if (data.items.some(i => i.quantity <= 0)) throw new ValidationError('Item quantity must be positive');\n  }\n\n  async findByCustomer(customerId: string, status?: OrderStatus): Promise<Order[]> {\n    const filter: Partial<Order> = { customerId };\n    if (status) filter.status = status;\n    return this.findMany(filter, { sort: { createdAt: -1 } });\n  }\n\n  async calculateTotal(orderId: string): Promise<number> {\n    const order = await this.findById(orderId);\n    if (!order) throw new NotFoundError(`Order ${orderId} not found`);\n    return order.items.reduce((sum, item) => sum + item.price * item.quantity, 0);\n  }\n}\n```",
+      "rubric": [
+        {
+          "criterion": "Class-Level Documentation",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Both classes have class-level TSDoc: purpose, generic constraints explained, design pattern noted (Repository), inheritance relationship documented; abstract method contract explained",
+            "3": "Class-level docs present but missing generic explanation or inheritance notes",
+            "1": "Minimal class descriptions",
+            "0": "No class-level documentation"
+          }
+        },
+        {
+          "criterion": "Method Documentation",
+          "weight": 0.3,
+          "scoring": {
+            "5": "All 10 methods fully documented: summary, params with semantic meaning, return values including null/false cases, all thrown errors with conditions; abstract validate contract specified",
+            "3": "Most methods documented but some missing error conditions or null return cases",
+            "1": "Only basic summaries without param/return details",
+            "0": "Methods not documented"
+          }
+        },
+        {
+          "criterion": "Generics and Types",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Generic type parameter T documented with @typeParam; constraint `{ id: string }` explained; Partial<T>, Omit<T, 'id'> utility types explained in context; OrderStatus type referenced",
+            "3": "Generics mentioned but not fully explained",
+            "1": "Generics not addressed in documentation",
+            "0": "Type information ignored"
+          }
+        },
+        {
+          "criterion": "Examples",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Usage examples for both BaseRepository (via OrderRepository) and OrderRepository-specific methods; shows creation, querying, updating, error handling",
+            "3": "Some examples but not covering key methods",
+            "1": "One minimal example",
+            "0": "No examples"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-03",
+      "difficulty": "medium",
+      "description": "Update stale documentation to match refactored code",
+      "input": "The following function was refactored but its JSDoc was not updated. Update the documentation to accurately reflect the current code. Identify all inaccuracies in the existing docs.\n\nExisting (stale) documentation:\n```typescript\n/**\n * Fetch a user by their username.\n *\n * @param username - The user's unique username\n * @param includeProfile - Whether to include the full profile (default: false)\n * @returns The user object with optional profile\n * @throws {NotFoundError} If the username does not exist\n */\n```\n\nCurrent code:\n```typescript\nexport async function fetchUser(\n  identifier: string | { email: string },\n  options: {\n    includeProfile?: boolean;\n    includePermissions?: boolean;\n    cache?: boolean;\n  } = {}\n): Promise<UserResponse | null> {\n  const cacheKey = typeof identifier === 'string' ? identifier : identifier.email;\n\n  if (options.cache !== false) {\n    const cached = await redis.get(`user:${cacheKey}`);\n    if (cached) return JSON.parse(cached);\n  }\n\n  const user = typeof identifier === 'string'\n    ? await db.users.findOne({ id: identifier })\n    : await db.users.findOne({ email: identifier.email });\n\n  if (!user) return null;\n\n  const response: UserResponse = { ...user };\n  if (options.includeProfile) response.profile = await db.profiles.findOne({ userId: user.id });\n  if (options.includePermissions) response.permissions = await getPermissions(user.id);\n\n  if (options.cache !== false) {\n    await redis.setex(`user:${cacheKey}`, 300, JSON.stringify(response));\n  }\n\n  return response;\n}\n```",
+      "rubric": [
+        {
+          "criterion": "Inaccuracy Identification",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Identifies all inaccuracies: (1) param changed from username to identifier with union type, (2) second param restructured from boolean to options object, (3) new includePermissions and cache options, (4) returns null instead of throwing NotFoundError, (5) caching behavior added",
+            "3": "Identifies 3-4 inaccuracies",
+            "1": "Identifies 1-2 inaccuracies",
+            "0": "Fails to identify major inaccuracies"
+          }
+        },
+        {
+          "criterion": "Updated Documentation",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Complete updated JSDoc reflecting all current behavior: union type identifier, full options object with all 3 properties and defaults, null return case, caching behavior, no false NotFoundError @throws",
+            "3": "Updated docs mostly correct but missing some new behavior",
+            "1": "Partially updated; still contains stale information",
+            "0": "Documentation not meaningfully updated"
+          }
+        },
+        {
+          "criterion": "Added Context",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Documents caching behavior (TTL, key strategy), explains identifier union type usage (string ID vs email object), describes what includeProfile and includePermissions add to the response",
+            "3": "Some new behavior documented but caching or union type not fully explained",
+            "1": "Minimal additional context",
+            "0": "No new context added"
+          }
+        },
+        {
+          "criterion": "Examples",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Examples showing both identifier forms (string and {email}), with and without options, demonstrating null return",
+            "3": "One example showing basic usage",
+            "1": "Example present but outdated",
+            "0": "No examples"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-04",
+      "difficulty": "medium",
+      "description": "Generate documentation for a configuration-heavy module with many options",
+      "input": "Generate complete documentation (JSDoc + README section) for this configuration system:\n\n```typescript\nexport interface LoggerConfig {\n  level: 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';\n  format: 'json' | 'pretty' | 'compact';\n  output: 'stdout' | 'stderr' | 'file';\n  filePath?: string;\n  maxFileSize?: number;\n  maxFiles?: number;\n  includeTimestamp?: boolean;\n  includeHostname?: boolean;\n  includePid?: boolean;\n  redactPaths?: string[];\n  customLevels?: Record<string, number>;\n  hooks?: {\n    onLog?: (entry: LogEntry) => void;\n    onError?: (error: Error) => void;\n    onRotate?: (oldPath: string, newPath: string) => void;\n  };\n}\n\nexport function createLogger(config: Partial<LoggerConfig> = {}): Logger {\n  const defaults: LoggerConfig = {\n    level: 'info',\n    format: 'json',\n    output: 'stdout',\n    maxFileSize: 10 * 1024 * 1024,  // 10MB\n    maxFiles: 5,\n    includeTimestamp: true,\n    includeHostname: false,\n    includePid: false,\n    redactPaths: [],\n  };\n  // merges config with defaults, validates, returns Logger instance\n}\n\nexport class Logger {\n  trace(msg: string, data?: Record<string, unknown>): void;\n  debug(msg: string, data?: Record<string, unknown>): void;\n  info(msg: string, data?: Record<string, unknown>): void;\n  warn(msg: string, data?: Record<string, unknown>): void;\n  error(msg: string, data?: Record<string, unknown>): void;\n  fatal(msg: string, data?: Record<string, unknown>): void;\n  child(bindings: Record<string, unknown>): Logger;\n  flush(): Promise<void>;\n}\n```",
+      "rubric": [
+        {
+          "criterion": "Configuration Table",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Complete configuration table with all options: name, type, default, required/optional, description; including nested hooks properties; constraints documented (file output requires filePath)",
+            "3": "Most options documented but missing some defaults or nested properties",
+            "1": "Partial option listing",
+            "0": "No configuration documentation"
+          }
+        },
+        {
+          "criterion": "JSDoc Quality",
+          "weight": 0.25,
+          "scoring": {
+            "5": "LoggerConfig interface, createLogger function, and all Logger methods fully documented with proper tags; Partial<LoggerConfig> explained; redactPaths behavior described",
+            "3": "Most symbols documented but some methods or properties lack detail",
+            "1": "Only surface-level documentation",
+            "0": "Missing JSDoc"
+          }
+        },
+        {
+          "criterion": "Examples",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Multiple examples: basic setup, file output with rotation, pretty format for development, custom levels, child loggers, redaction usage; each example is runnable",
+            "3": "2-3 examples covering basic and one advanced scenario",
+            "1": "Single basic example",
+            "0": "No examples"
+          }
+        },
+        {
+          "criterion": "README Format",
+          "weight": 0.2,
+          "scoring": {
+            "5": "README section with configuration table, quick start, example configurations for common use cases (development, production, testing)",
+            "3": "README section present but not organized for different use cases",
+            "1": "Raw text without README formatting",
+            "0": "No README content"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-hard-01",
+      "difficulty": "hard",
+      "description": "Generate a complete documentation suite for an undocumented microservice",
+      "input": "Generate a complete documentation suite (README, API reference with OpenAPI spec, and changelog from commits) for this undocumented payment processing microservice:\n\n```typescript\n// src/routes/payments.ts\nrouter.post('/payments', authenticate, async (req, res) => {\n  // Creates a payment intent. Body: { amount: number (cents), currency: string (ISO 4217), customerId: string, metadata?: Record<string,string> }\n  // Returns 201 with PaymentIntent { id, amount, currency, status: 'pending', createdAt }\n  // Errors: 400 (validation), 402 (insufficient_funds), 409 (duplicate idempotency key)\n  // Header: Idempotency-Key (required)\n});\n\nrouter.get('/payments/:paymentId', authenticate, async (req, res) => {\n  // Returns PaymentIntent or 404\n});\n\nrouter.post('/payments/:paymentId/capture', authenticate, async (req, res) => {\n  // Captures a pending payment. Optional body: { amount?: number } for partial capture\n  // Returns updated PaymentIntent with status: 'captured'\n  // Errors: 400 (already captured), 404, 409 (payment expired)\n});\n\nrouter.post('/payments/:paymentId/refund', authenticate, async (req, res) => {\n  // Refunds a captured payment. Body: { amount?: number, reason?: string }\n  // Full refund if amount omitted. Returns Refund { id, paymentId, amount, status, createdAt }\n  // Errors: 400 (exceeds captured amount), 404, 409 (already fully refunded)\n});\n\nrouter.get('/payments', authenticate, async (req, res) => {\n  // List payments. Query: customerId, status, from, to, limit (default 20), cursor\n  // Returns { data: PaymentIntent[], cursor?: string, hasMore: boolean }\n});\n\n// Recent commits:\n// feat: add idempotency key support for payment creation (#45)\n// feat: implement partial capture for payment intents (#42)\n// feat: add cursor-based pagination to list endpoint (#40)\n// fix: correct currency validation to accept lowercase ISO codes (#38)\n// fix: race condition in concurrent refund requests (#36)\n// security: add rate limiting to payment creation endpoint\n// feat: add metadata field to payment intents (#33)\n// fix: handle webhook timeout gracefully with exponential backoff (#30)\n```\n\nThe service has no existing documentation. Generate README (with install, config, API overview), full OpenAPI spec, and changelog for version 1.3.0.",
+      "rubric": [
+        {
+          "criterion": "README Completeness",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Full README with: project description, prerequisites, installation, environment configuration (API keys, database URL, etc.), API overview with endpoint table, authentication section, error handling conventions, link to full API spec",
+            "3": "README covers basics but missing configuration or error handling sections",
+            "1": "Minimal README with just endpoint listing",
+            "0": "No README or unusable README"
+          }
+        },
+        {
+          "criterion": "OpenAPI Specification",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Complete OpenAPI 3.x spec with all 5 endpoints, correct schemas (PaymentIntent, Refund, Error, PaginatedResponse), all response codes, Idempotency-Key header, authentication scheme, request/response examples, proper use of $ref for shared schemas",
+            "3": "All endpoints documented but schemas incomplete or missing some response codes",
+            "1": "Partial endpoint coverage or incorrect schemas",
+            "0": "No OpenAPI spec or fundamentally incorrect"
+          }
+        },
+        {
+          "criterion": "Changelog Quality",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Keep a Changelog format for v1.3.0; commits correctly categorized (Added, Fixed, Security); entries rewritten for user clarity; internal changes excluded; issue refs preserved",
+            "3": "Correct format but some miscategorization or commit messages not rewritten",
+            "1": "Raw commit list or wrong format",
+            "0": "No changelog"
+          }
+        },
+        {
+          "criterion": "Cross-Document Consistency",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Schemas, endpoint names, and field descriptions are consistent across README, OpenAPI spec, and changelog; no contradictions between documents",
+            "3": "Mostly consistent but minor discrepancies",
+            "1": "Significant inconsistencies between documents",
+            "0": "Documents contradict each other"
+          }
+        },
+        {
+          "criterion": "Domain Accuracy",
+          "weight": 0.1,
+          "scoring": {
+            "5": "Payment processing concepts correctly applied: idempotency for creation, partial capture semantics, refund limits, ISO 4217 currency codes, amounts in cents",
+            "3": "Basic payment concepts correct but some nuances missed",
+            "1": "Payment domain terminology misused",
+            "0": "Fundamental misunderstanding of payment concepts"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 65
+    },
+    {
+      "id": "bench-hard-02",
+      "difficulty": "hard",
+      "description": "Generate documentation for a complex event-driven system with multiple interacting components",
+      "input": "Generate complete documentation for this event-driven notification system. The documentation must cover the public API, event flow, configuration, and error handling across all components:\n\n```typescript\n// src/events.ts\nexport type NotificationEvent =\n  | { type: 'user.signup'; payload: { userId: string; email: string; name: string } }\n  | { type: 'order.completed'; payload: { orderId: string; userId: string; total: number; items: number } }\n  | { type: 'payment.failed'; payload: { paymentId: string; userId: string; reason: string; retryable: boolean } }\n  | { type: 'subscription.expiring'; payload: { subscriptionId: string; userId: string; expiresAt: Date; plan: string } };\n\n// src/channels.ts\nexport interface NotificationChannel {\n  name: string;\n  send(userId: string, message: RenderedMessage): Promise<DeliveryResult>;\n  checkHealth(): Promise<boolean>;\n}\n\nexport class EmailChannel implements NotificationChannel { /* uses SendGrid */ }\nexport class SmsChannel implements NotificationChannel { /* uses Twilio */ }\nexport class PushChannel implements NotificationChannel { /* uses Firebase FCM */ }\nexport class SlackChannel implements NotificationChannel { /* uses Slack API */ }\n\n// src/router.ts\nexport class NotificationRouter {\n  constructor(channels: NotificationChannel[], rules: RoutingRule[]);\n  async route(event: NotificationEvent): Promise<RoutingResult>;\n  addRule(rule: RoutingRule): void;\n  removeRule(ruleId: string): void;\n}\n\nexport interface RoutingRule {\n  id: string;\n  eventType: string;\n  channels: string[];\n  condition?: (payload: any) => boolean;\n  priority: 'critical' | 'high' | 'normal' | 'low';\n  throttle?: { maxPerHour: number; key: string };\n  template: string;\n}\n\n// src/templates.ts\nexport class TemplateEngine {\n  constructor(templateDir: string);\n  render(templateName: string, data: Record<string, unknown>): Promise<RenderedMessage>;\n  registerHelper(name: string, fn: (...args: any[]) => string): void;\n  validateTemplate(templateName: string): Promise<ValidationResult>;\n}\n\n// src/index.ts\nexport class NotificationService {\n  constructor(config: NotificationConfig);\n  async emit(event: NotificationEvent): Promise<EmitResult>;\n  async getDeliveryStatus(notificationId: string): Promise<DeliveryStatus>;\n  async getUserPreferences(userId: string): Promise<UserPreferences>;\n  async updateUserPreferences(userId: string, prefs: Partial<UserPreferences>): Promise<void>;\n  on(event: 'delivered' | 'failed' | 'bounced', handler: (detail: EventDetail) => void): void;\n  shutdown(): Promise<void>;\n}\n```",
+      "rubric": [
+        {
+          "criterion": "Architecture Documentation",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Documents the event flow: Event emitted -> Router matches rules -> Template rendered -> Channel delivers; explains component relationships; includes flow diagram or clear textual description of the pipeline",
+            "3": "Components individually documented but interaction flow not clear",
+            "1": "Partial component documentation without flow",
+            "0": "No architecture description"
+          }
+        },
+        {
+          "criterion": "API Completeness",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Every class, interface, type, and method documented: NotificationService (all 6 methods), NotificationRouter (3 methods), TemplateEngine (3 methods), NotificationChannel interface, all event types, RoutingRule fields; @typeParam and generics explained",
+            "3": "Main classes documented but some methods or types missing",
+            "1": "Only NotificationService documented",
+            "0": "Severely incomplete"
+          }
+        },
+        {
+          "criterion": "Configuration and Setup",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Full configuration guide: NotificationConfig options, channel setup (API keys, credentials), routing rules creation, template directory structure, user preferences schema; includes example configuration for common setups",
+            "3": "Basic configuration covered but missing channel-specific setup",
+            "1": "Minimal configuration notes",
+            "0": "No configuration documentation"
+          }
+        },
+        {
+          "criterion": "Examples",
+          "weight": 0.2,
+          "scoring": {
+            "5": "End-to-end example: creating service, configuring channels, defining routing rules, emitting events, handling delivery callbacks; plus individual examples for each component; error handling demonstrated",
+            "3": "Basic setup and emit example but missing component-level examples",
+            "1": "Single trivial example",
+            "0": "No examples"
+          }
+        },
+        {
+          "criterion": "Error and Edge Cases",
+          "weight": 0.1,
+          "scoring": {
+            "5": "Documents: channel health check failures, delivery retries, throttle behavior, template validation errors, graceful shutdown behavior, bounced notification handling",
+            "3": "Some error cases documented but missing edge cases",
+            "1": "Only basic errors mentioned",
+            "0": "No error documentation"
+          }
+        }
+      ],
+      "expectedScoreWithout": 15,
+      "expectedScoreWith": 60
+    },
+    {
+      "id": "bench-hard-03",
+      "difficulty": "hard",
+      "description": "Generate documentation that bridges code-level and user-level understanding for a CLI tool",
+      "input": "Generate a complete documentation suite for this CLI database migration tool. Include: (1) User-facing README with install, commands, and examples, (2) API documentation for programmatic usage, (3) Contributing guide for the migration file format. The tool has zero existing documentation.\n\n```typescript\n// src/cli.ts — Command interface\n// Commands:\n//   migrate up [--to <version>] [--dry-run]    — Run pending migrations\n//   migrate down [--to <version>] [--steps <n>] — Rollback migrations\n//   migrate status                              — Show migration status table\n//   migrate create <name>                       — Create new migration file\n//   migrate validate                            — Check all migrations for errors\n//   migrate reset --confirm                     — Rollback all and re-run from scratch\n\n// src/index.ts — Programmatic API\nexport class Migrator {\n  constructor(config: MigratorConfig);\n  async up(options?: { to?: string; dryRun?: boolean }): Promise<MigrationResult[]>;\n  async down(options?: { to?: string; steps?: number }): Promise<MigrationResult[]>;\n  async status(): Promise<MigrationStatus[]>;\n  async validate(): Promise<ValidationResult[]>;\n  async reset(): Promise<MigrationResult[]>;\n  async create(name: string): Promise<string>; // returns file path\n  async lock(): Promise<void>; // distributed lock for multi-instance\n  async unlock(): Promise<void>;\n}\n\nexport interface MigratorConfig {\n  directory: string;          // path to migration files\n  connection: DatabaseConfig;  // { host, port, database, user, password, ssl? }\n  table?: string;             // migration tracking table (default: '_migrations')\n  lockTimeout?: number;       // lock wait timeout in ms (default: 30000)\n  transactionMode?: 'per-migration' | 'all-or-nothing'; // default: 'per-migration'\n}\n\n// Migration file format: migrations/20240815_120000_add_users_table.ts\nexport interface Migration {\n  name: string;\n  up(db: DatabaseClient): Promise<void>;\n  down(db: DatabaseClient): Promise<void>;\n}\n\n// Example migration file\nexport default {\n  name: '20240815_120000_add_users_table',\n  async up(db) {\n    await db.query(`CREATE TABLE users (id UUID PRIMARY KEY, email VARCHAR(255) UNIQUE NOT NULL, created_at TIMESTAMP DEFAULT NOW())`);\n    await db.query(`CREATE INDEX idx_users_email ON users(email)`);\n  },\n  async down(db) {\n    await db.query(`DROP TABLE IF EXISTS users`);\n  },\n};\n```",
+      "rubric": [
+        {
+          "criterion": "User-Facing README",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Complete CLI documentation: installation, all 6 commands with flags and descriptions, workflow examples (creating first migration, running up, checking status, rolling back), configuration file example, prerequisites (database setup)",
+            "3": "Commands listed but missing workflow examples or configuration guide",
+            "1": "Partial command listing",
+            "0": "No CLI documentation"
+          }
+        },
+        {
+          "criterion": "Programmatic API Docs",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Full Migrator class API: constructor with config documentation, all 8 methods with params/returns/errors, MigratorConfig interface with all options and defaults, MigrationResult and MigrationStatus types described; distributed locking behavior explained",
+            "3": "Main methods documented but missing config details or lock behavior",
+            "1": "Partial API coverage",
+            "0": "No API documentation"
+          }
+        },
+        {
+          "criterion": "Migration File Format Guide",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Clear guide on: naming convention (timestamp_name), file structure (Migration interface), up/down contract (idempotency, reversibility), DatabaseClient methods available, examples for common operations (create table, add column, create index, data migration)",
+            "3": "Basic format explained but missing common operation examples",
+            "1": "Only the interface shown without guidance",
+            "0": "No format guide"
+          }
+        },
+        {
+          "criterion": "Edge Cases and Safety",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Documents: dry-run behavior, transaction modes and when to use each, distributed locking for multi-instance deployments, reset safety (--confirm flag), what happens on migration failure, partial migration recovery",
+            "3": "Some safety topics covered",
+            "1": "Safety considerations not addressed",
+            "0": "No safety documentation"
+          }
+        },
+        {
+          "criterion": "Examples Quality",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Real-world examples throughout: CLI command sequences for common workflows, programmatic usage with error handling, 3+ migration file examples (DDL, data migration, index), configuration for different environments (dev, staging, prod)",
+            "3": "Some examples present but not covering real workflows",
+            "1": "Minimal trivial examples",
+            "0": "No examples"
+          }
+        }
+      ],
+      "expectedScoreWithout": 15,
+      "expectedScoreWith": 60
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "name": "@botlearn/social-media",
+  "version": "0.1.0",
+  "description": "Platform-adapted social media content creation with optimal hashtags, timing, and engagement optimization for OpenClaw Agent",
+  "category": "creative-generation",
+  "author": "BotLearn",
+  "benchmarkDimension": "creative-generation",
+  "expectedImprovement": 30,
+  "dependencies": {
+    "@botlearn/copywriter": "^1.0.0"
+  },
+  "compatibility": {
+    "openclaw": ">=0.5.0"
+  },
+  "files": {
+    "skill": "SKILL.md",
+    "knowledge": [
+      "knowledge/domain.md",
+      "knowledge/best-practices.md",
+      "knowledge/anti-patterns.md"
+    ],
+    "strategies": [
+      "strategies/main.md"
+    ],
+    "smokeTest": "tests/smoke.json",
+    "benchmark": "tests/benchmark.json"
+  }
+}

@@ -1,0 +1,496 @@
+{
+  "version": "0.0.1",
+  "dimension": "code-generation",
+  "tasks": [
+    {
+      "id": "bench-easy-01",
+      "difficulty": "easy",
+      "description": "Extract a long method into smaller, well-named helper methods",
+      "input": "Refactor this function by extracting logical sections into well-named helper methods. The function calculates shipping cost based on weight, destination zone, service tier, and applies promotional discounts.\n\n```javascript\nfunction calculateShipping(order) {\n  // Calculate total weight\n  let totalWeight = 0;\n  for (const item of order.items) {\n    totalWeight += item.weight * item.quantity;\n  }\n  \n  // Determine base rate by zone\n  let baseRate;\n  if (order.destination.zone === 'domestic') {\n    baseRate = 5.99;\n  } else if (order.destination.zone === 'canada') {\n    baseRate = 12.99;\n  } else if (order.destination.zone === 'international') {\n    baseRate = 24.99;\n  } else {\n    throw new Error('Unknown zone: ' + order.destination.zone);\n  }\n  \n  // Apply weight surcharge\n  let weightCharge = 0;\n  if (totalWeight > 50) {\n    weightCharge = (totalWeight - 50) * 0.75;\n  } else if (totalWeight > 20) {\n    weightCharge = (totalWeight - 20) * 0.50;\n  } else if (totalWeight > 5) {\n    weightCharge = (totalWeight - 5) * 0.25;\n  }\n  \n  // Apply service tier multiplier\n  let tierMultiplier;\n  if (order.serviceTier === 'express') {\n    tierMultiplier = 2.5;\n  } else if (order.serviceTier === 'priority') {\n    tierMultiplier = 1.5;\n  } else {\n    tierMultiplier = 1.0;\n  }\n  \n  let total = (baseRate + weightCharge) * tierMultiplier;\n  \n  // Apply promo discount\n  if (order.promoCode === 'FREESHIP') {\n    total = 0;\n  } else if (order.promoCode === 'HALF') {\n    total = total * 0.5;\n  }\n  \n  return { total: Math.round(total * 100) / 100, weight: totalWeight, zone: order.destination.zone };\n}\n```",
+      "rubric": [
+        {
+          "criterion": "Extraction Quality",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Extracts 4-5 well-named functions (calculateTotalWeight, getBaseRateForZone, calculateWeightSurcharge, getServiceTierMultiplier, applyPromoDiscount); each function has a single clear purpose",
+            "3": "Extracts 2-3 functions with reasonable names but some logic is still bundled together",
+            "1": "Extracts 1 function or names are vague (e.g., 'helper1', 'process')",
+            "0": "No extraction performed"
+          }
+        },
+        {
+          "criterion": "Behavioral Equivalence",
+          "weight": 0.35,
+          "scoring": {
+            "5": "All calculations produce identical results for all zone/tier/weight/promo combinations; return object structure unchanged; error behavior preserved",
+            "3": "Mostly equivalent but one edge case may differ (e.g., rounding, unknown zone error)",
+            "1": "Noticeable behavioral differences in calculation results",
+            "0": "Behavior is clearly changed"
+          }
+        },
+        {
+          "criterion": "Readability Improvement",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Main function reads as a high-level narrative; helper functions are self-documenting through names and structure; cyclomatic complexity of main function reduced to 1-3",
+            "3": "Somewhat improved readability but main function still contains conditional logic",
+            "1": "Minimal readability improvement; code is just moved around",
+            "0": "Readability is worse than original"
+          }
+        }
+      ],
+      "expectedScoreWithout": 35,
+      "expectedScoreWith": 80
+    },
+    {
+      "id": "bench-easy-02",
+      "difficulty": "easy",
+      "description": "Eliminate code duplication between two methods using Extract Method",
+      "input": "These two methods share nearly identical validation and formatting logic. Refactor to eliminate the duplication while preserving the distinct behavior of each method.\n\n```python\nclass ReportGenerator:\n    def generate_monthly_report(self, data, month, year):\n        # Validate inputs\n        if not data:\n            raise ValueError(\"Data cannot be empty\")\n        if month < 1 or month > 12:\n            raise ValueError(\"Invalid month\")\n        if year < 2000 or year > 2100:\n            raise ValueError(\"Invalid year\")\n        \n        # Filter data for the month\n        filtered = [d for d in data if d['date'].month == month and d['date'].year == year]\n        \n        # Calculate metrics\n        total_revenue = sum(d['revenue'] for d in filtered)\n        total_expenses = sum(d['expenses'] for d in filtered)\n        profit = total_revenue - total_expenses\n        avg_daily_revenue = total_revenue / max(len(filtered), 1)\n        \n        # Format header\n        header = f\"={'=' * 50}\\n\"\n        header += f\"  MONTHLY REPORT: {month:02d}/{year}\\n\"\n        header += f\"={'=' * 50}\\n\"\n        \n        # Format body\n        body = f\"  Total Revenue:   ${total_revenue:>12,.2f}\\n\"\n        body += f\"  Total Expenses:  ${total_expenses:>12,.2f}\\n\"\n        body += f\"  Net Profit:      ${profit:>12,.2f}\\n\"\n        body += f\"  Avg Daily Rev:   ${avg_daily_revenue:>12,.2f}\\n\"\n        \n        # Format footer\n        footer = f\"={'=' * 50}\\n\"\n        footer += f\"  Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')}\\n\"\n        \n        return header + body + footer\n    \n    def generate_quarterly_report(self, data, quarter, year):\n        # Validate inputs\n        if not data:\n            raise ValueError(\"Data cannot be empty\")\n        if quarter < 1 or quarter > 4:\n            raise ValueError(\"Invalid quarter\")\n        if year < 2000 or year > 2100:\n            raise ValueError(\"Invalid year\")\n        \n        # Filter data for the quarter\n        start_month = (quarter - 1) * 3 + 1\n        end_month = start_month + 2\n        filtered = [d for d in data if d['date'].year == year and start_month <= d['date'].month <= end_month]\n        \n        # Calculate metrics\n        total_revenue = sum(d['revenue'] for d in filtered)\n        total_expenses = sum(d['expenses'] for d in filtered)\n        profit = total_revenue - total_expenses\n        avg_daily_revenue = total_revenue / max(len(filtered), 1)\n        monthly_avg = total_revenue / 3\n        \n        # Format header\n        header = f\"={'=' * 50}\\n\"\n        header += f\"  QUARTERLY REPORT: Q{quarter}/{year}\\n\"\n        header += f\"={'=' * 50}\\n\"\n        \n        # Format body\n        body = f\"  Total Revenue:   ${total_revenue:>12,.2f}\\n\"\n        body += f\"  Total Expenses:  ${total_expenses:>12,.2f}\\n\"\n        body += f\"  Net Profit:      ${profit:>12,.2f}\\n\"\n        body += f\"  Avg Daily Rev:   ${avg_daily_revenue:>12,.2f}\\n\"\n        body += f\"  Monthly Avg:     ${monthly_avg:>12,.2f}\\n\"\n        \n        # Format footer\n        footer = f\"={'=' * 50}\\n\"\n        footer += f\"  Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')}\\n\"\n        \n        return header + body + footer\n```",
+      "rubric": [
+        {
+          "criterion": "Duplication Elimination",
+          "weight": 0.4,
+          "scoring": {
+            "5": "All shared logic extracted: input validation (with parameterized constraints), metric calculation, header/footer formatting; duplication reduced by 60%+",
+            "3": "Some shared logic extracted but significant duplication remains (e.g., formatting still duplicated)",
+            "1": "Minimal extraction; most duplication remains",
+            "0": "No deduplication performed"
+          }
+        },
+        {
+          "criterion": "Behavioral Equivalence",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Both methods produce identical output for all inputs; validation errors are the same; quarterly report still includes monthly_avg line that monthly does not",
+            "3": "Output is mostly equivalent but minor formatting differences exist",
+            "1": "Behavior changes are noticeable (e.g., different error messages, missing quarterly-specific metrics)",
+            "0": "Behavior is clearly different"
+          }
+        },
+        {
+          "criterion": "Design Quality",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Extracted helpers are cohesive and reusable; method-specific logic (monthly vs quarterly filtering, extra metrics) remains in the original methods; code follows DRY without over-abstracting",
+            "3": "Reasonable extraction but some helpers mix concerns or are not reusable",
+            "1": "Over-abstracted (single generic method with too many parameters) or under-abstracted",
+            "0": "No improvement in design"
+          }
+        }
+      ],
+      "expectedScoreWithout": 35,
+      "expectedScoreWith": 80
+    },
+    {
+      "id": "bench-easy-03",
+      "difficulty": "easy",
+      "description": "Replace nested conditionals with guard clauses and early returns",
+      "input": "Refactor the following deeply nested function to use guard clauses and early returns to reduce cognitive complexity.\n\n```java\npublic ProcessingResult processTransaction(Transaction txn) {\n    ProcessingResult result = new ProcessingResult();\n    if (txn != null) {\n        if (txn.getAmount() > 0) {\n            if (txn.getCurrency() != null) {\n                if (SUPPORTED_CURRENCIES.contains(txn.getCurrency())) {\n                    if (txn.getAccount() != null) {\n                        if (txn.getAccount().isActive()) {\n                            if (txn.getAccount().getBalance() >= txn.getAmount()) {\n                                if (!txn.isDuplicate()) {\n                                    // Process the transaction\n                                    txn.getAccount().debit(txn.getAmount());\n                                    txn.setStatus(\"COMPLETED\");\n                                    result.setSuccess(true);\n                                    result.setMessage(\"Transaction processed successfully\");\n                                    result.setTransactionId(txn.getId());\n                                } else {\n                                    result.setSuccess(false);\n                                    result.setMessage(\"Duplicate transaction detected\");\n                                }\n                            } else {\n                                result.setSuccess(false);\n                                result.setMessage(\"Insufficient balance\");\n                            }\n                        } else {\n                            result.setSuccess(false);\n                            result.setMessage(\"Account is inactive\");\n                        }\n                    } else {\n                        result.setSuccess(false);\n                        result.setMessage(\"Account not found\");\n                    }\n                } else {\n                    result.setSuccess(false);\n                    result.setMessage(\"Unsupported currency: \" + txn.getCurrency());\n                }\n            } else {\n                result.setSuccess(false);\n                result.setMessage(\"Currency is required\");\n            }\n        } else {\n            result.setSuccess(false);\n            result.setMessage(\"Amount must be positive\");\n        }\n    } else {\n        result.setSuccess(false);\n        result.setMessage(\"Transaction cannot be null\");\n    }\n    return result;\n}\n```",
+      "rubric": [
+        {
+          "criterion": "Nesting Reduction",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Maximum nesting depth reduced from 8 to 1-2; each validation is a guard clause with early return; happy path is at the bottom with no nesting",
+            "3": "Nesting reduced to 3-4 levels but some guards are missing",
+            "1": "Nesting reduced slightly but overall structure is still deeply nested",
+            "0": "No nesting reduction"
+          }
+        },
+        {
+          "criterion": "Behavioral Equivalence",
+          "weight": 0.35,
+          "scoring": {
+            "5": "All 9 outcome paths (8 error + 1 success) produce identical ProcessingResult values for identical inputs; same error messages, same debit call, same status update",
+            "3": "Most paths equivalent but 1-2 error conditions may differ in message or check order",
+            "1": "Several behavioral differences",
+            "0": "Core processing logic is changed"
+          }
+        },
+        {
+          "criterion": "Readability",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Validation checks read top-to-bottom as a clear precondition list; the successful processing logic is immediately visible; cognitive complexity reduced by 60%+",
+            "3": "Improved readability but some checks are grouped awkwardly or error creation is verbose",
+            "1": "Marginal readability improvement",
+            "0": "No improvement or worse"
+          }
+        }
+      ],
+      "expectedScoreWithout": 40,
+      "expectedScoreWith": 85
+    },
+    {
+      "id": "bench-med-01",
+      "difficulty": "medium",
+      "description": "Apply the Strategy pattern to replace a switch statement on payment method type",
+      "input": "Refactor this PaymentService to use the Strategy pattern. Currently, adding a new payment method requires modifying the processPayment method. The goal is to make it open for extension (new payment methods) without modifying existing code.\n\n```typescript\nclass PaymentService {\n  processPayment(order: Order, method: string, details: PaymentDetails): PaymentResult {\n    let result: PaymentResult;\n    \n    switch (method) {\n      case 'credit_card':\n        if (!details.cardNumber || !details.expiry || !details.cvv) {\n          throw new Error('Missing credit card details');\n        }\n        const cardValid = this.luhnCheck(details.cardNumber);\n        if (!cardValid) throw new Error('Invalid card number');\n        if (this.isExpired(details.expiry)) throw new Error('Card expired');\n        result = this.chargeCreditCard(details.cardNumber, details.cvv, order.total);\n        result.fee = order.total * 0.029 + 0.30;\n        break;\n        \n      case 'paypal':\n        if (!details.email) throw new Error('Missing PayPal email');\n        const paypalToken = this.getPayPalToken(details.email);\n        result = this.chargePayPal(paypalToken, order.total);\n        result.fee = order.total * 0.034 + 0.49;\n        break;\n        \n      case 'bank_transfer':\n        if (!details.routingNumber || !details.accountNumber) {\n          throw new Error('Missing bank details');\n        }\n        result = this.initiateBankTransfer(details.routingNumber, details.accountNumber, order.total);\n        result.fee = Math.min(order.total * 0.01, 5.00);\n        result.pendingDays = 3;\n        break;\n        \n      case 'crypto':\n        if (!details.walletAddress) throw new Error('Missing wallet address');\n        if (!details.cryptoCurrency) throw new Error('Missing cryptocurrency type');\n        const exchangeRate = this.getCryptoExchangeRate(details.cryptoCurrency);\n        const cryptoAmount = order.total / exchangeRate;\n        result = this.chargeCrypto(details.walletAddress, cryptoAmount, details.cryptoCurrency);\n        result.fee = order.total * 0.01;\n        result.cryptoAmount = cryptoAmount;\n        break;\n        \n      default:\n        throw new Error(`Unsupported payment method: ${method}`);\n    }\n    \n    result.orderId = order.id;\n    result.method = method;\n    result.amount = order.total;\n    result.timestamp = new Date();\n    \n    this.saveTransaction(result);\n    return result;\n  }\n  \n  // ... helper methods: luhnCheck, isExpired, chargeCreditCard, getPayPalToken, chargePayPal,\n  //     initiateBankTransfer, getCryptoExchangeRate, chargeCrypto, saveTransaction\n}\n```",
+      "rubric": [
+        {
+          "criterion": "Pattern Application",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Defines a PaymentStrategy interface with validate() and charge() methods; creates 4 concrete strategies (CreditCardStrategy, PayPalStrategy, BankTransferStrategy, CryptoStrategy); PaymentService delegates to the selected strategy; adding a 5th method requires only a new class",
+            "3": "Strategy pattern is applied but interface is poorly defined (too many methods or too few); or registration/selection mechanism is awkward",
+            "1": "Partial pattern application — some methods use strategy but others remain in switch",
+            "0": "No pattern applied; switch statement remains"
+          }
+        },
+        {
+          "criterion": "Behavioral Equivalence",
+          "weight": 0.3,
+          "scoring": {
+            "5": "All 4 payment methods produce identical results, fees, validation errors, and side effects (saveTransaction called with same data); the unsupported method error is preserved",
+            "3": "Most behavior preserved but fee calculation or validation differs for 1 method",
+            "1": "Multiple behavioral differences across payment methods",
+            "0": "Core payment processing is broken"
+          }
+        },
+        {
+          "criterion": "Open/Closed Principle",
+          "weight": 0.2,
+          "scoring": {
+            "5": "New payment methods can be added by implementing the interface and registering, with zero changes to PaymentService; demonstrates with a brief example of adding a 5th method",
+            "3": "Mostly extensible but adding a method still requires a small change to PaymentService",
+            "1": "Still requires modifying PaymentService to add new methods",
+            "0": "No improvement in extensibility"
+          }
+        },
+        {
+          "criterion": "Code Quality",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Strategy classes are focused and cohesive; common result-building logic (orderId, method, timestamp, saveTransaction) stays in PaymentService; proper typing; clean separation of concerns",
+            "3": "Reasonable quality but some common logic is duplicated in strategies or typing is incomplete",
+            "1": "Strategy classes are bloated or poorly structured",
+            "0": "Quality is worse than the original"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-02",
+      "difficulty": "medium",
+      "description": "Resolve Feature Envy by moving methods to the appropriate class and applying SRP",
+      "input": "The UserAnalytics class has severe Feature Envy — most of its methods operate primarily on data from User and Order objects rather than its own state. Refactor to move behavior to the appropriate classes while maintaining the same analytical capabilities.\n\n```python\nclass UserAnalytics:\n    def __init__(self, db_connection):\n        self.db = db_connection\n    \n    def get_user_tier(self, user):\n        total_spent = 0\n        for order in user.orders:\n            if order.status == 'completed':\n                for item in order.items:\n                    total_spent += item.price * item.quantity\n                total_spent -= order.discount\n        \n        if total_spent > 10000:\n            return 'platinum'\n        elif total_spent > 5000:\n            return 'gold'\n        elif total_spent > 1000:\n            return 'silver'\n        else:\n            return 'bronze'\n    \n    def get_user_preferred_categories(self, user):\n        category_counts = {}\n        for order in user.orders:\n            if order.status == 'completed':\n                for item in order.items:\n                    cat = item.category\n                    category_counts[cat] = category_counts.get(cat, 0) + item.quantity\n        \n        sorted_cats = sorted(category_counts.items(), key=lambda x: x[1], reverse=True)\n        return [cat for cat, count in sorted_cats[:5]]\n    \n    def get_user_avg_order_value(self, user):\n        completed = [o for o in user.orders if o.status == 'completed']\n        if not completed:\n            return 0\n        total = sum(\n            sum(item.price * item.quantity for item in o.items) - o.discount\n            for o in completed\n        )\n        return total / len(completed)\n    \n    def get_order_profit_margin(self, order):\n        revenue = sum(item.price * item.quantity for item in order.items) - order.discount\n        cost = sum(item.cost * item.quantity for item in order.items) + order.shipping_cost\n        if revenue == 0:\n            return 0\n        return (revenue - cost) / revenue\n    \n    def is_order_high_value(self, order):\n        total = sum(item.price * item.quantity for item in order.items) - order.discount\n        return total > 500\n    \n    def get_user_lifetime_value(self, user):\n        tier = self.get_user_tier(user)\n        avg_order = self.get_user_avg_order_value(user)\n        completed_count = len([o for o in user.orders if o.status == 'completed'])\n        \n        tier_multipliers = {'platinum': 1.5, 'gold': 1.3, 'silver': 1.1, 'bronze': 1.0}\n        projected_annual_orders = (completed_count / max(user.account_age_months, 1)) * 12\n        \n        return avg_order * projected_annual_orders * tier_multipliers.get(tier, 1.0) * 3\n```",
+      "rubric": [
+        {
+          "criterion": "Feature Envy Resolution",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Order-centric methods (profit_margin, is_high_value, revenue calculation) moved to Order class; User-centric methods (tier, preferred_categories, avg_order_value) moved to User class; UserAnalytics retains only cross-cutting or DB-dependent logic",
+            "3": "Some methods moved but others with clear Feature Envy remain in UserAnalytics",
+            "1": "Only 1 method moved; most Feature Envy remains",
+            "0": "No methods moved"
+          }
+        },
+        {
+          "criterion": "SRP Adherence",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Each class has a clear single responsibility: User knows about its own tier and preferences, Order knows about its own financials, UserAnalytics handles cross-entity analysis (lifetime_value)",
+            "3": "Responsibilities are better separated but some mixing remains",
+            "1": "Responsibilities are not clearly defined after refactoring",
+            "0": "No improvement in responsibility separation"
+          }
+        },
+        {
+          "criterion": "Behavioral Equivalence",
+          "weight": 0.25,
+          "scoring": {
+            "5": "All calculations produce identical results; tier thresholds unchanged; category sorting preserved; lifetime value formula unchanged; edge cases (empty orders, zero revenue, zero account age) handled identically",
+            "3": "Most calculations equivalent but 1-2 edge cases differ",
+            "1": "Multiple calculation differences",
+            "0": "Core calculations changed"
+          }
+        },
+        {
+          "criterion": "API Usability",
+          "weight": 0.2,
+          "scoring": {
+            "5": "New API is intuitive: user.get_tier(), order.profit_margin(), analytics.get_lifetime_value(user); demonstrates how callers would migrate",
+            "3": "API is reasonable but some methods are in unexpected locations",
+            "1": "API is confusing or harder to use than original",
+            "0": "No coherent API"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-03",
+      "difficulty": "medium",
+      "description": "Apply the Template Method pattern to eliminate duplication across data export classes",
+      "input": "These three export classes share the same algorithmic structure (validate, transform, format, write) but differ in their formatting and writing steps. Refactor using the Template Method pattern to eliminate the duplicated structure while preserving each format's unique behavior.\n\n```java\npublic class CsvExporter {\n    public void export(List<Record> records, String outputPath) {\n        // Validate\n        if (records == null || records.isEmpty()) {\n            throw new IllegalArgumentException(\"Records cannot be empty\");\n        }\n        if (outputPath == null || outputPath.trim().isEmpty()) {\n            throw new IllegalArgumentException(\"Output path is required\");\n        }\n        \n        // Transform: filter and sort\n        List<Record> filtered = records.stream()\n            .filter(r -> r.isActive())\n            .sorted(Comparator.comparing(Record::getTimestamp))\n            .collect(Collectors.toList());\n        \n        // Format as CSV\n        StringBuilder sb = new StringBuilder();\n        sb.append(String.join(\",\", getHeaders(filtered.get(0)))).append(\"\\n\");\n        for (Record r : filtered) {\n            sb.append(String.join(\",\", getValues(r))).append(\"\\n\");\n        }\n        String content = sb.toString();\n        \n        // Write to file\n        Files.writeString(Path.of(outputPath + \".csv\"), content);\n        log.info(\"Exported {} records to CSV: {}\", filtered.size(), outputPath);\n    }\n}\n\npublic class JsonExporter {\n    public void export(List<Record> records, String outputPath) {\n        // Validate (identical)\n        if (records == null || records.isEmpty()) {\n            throw new IllegalArgumentException(\"Records cannot be empty\");\n        }\n        if (outputPath == null || outputPath.trim().isEmpty()) {\n            throw new IllegalArgumentException(\"Output path is required\");\n        }\n        \n        // Transform: filter and sort (identical)\n        List<Record> filtered = records.stream()\n            .filter(r -> r.isActive())\n            .sorted(Comparator.comparing(Record::getTimestamp))\n            .collect(Collectors.toList());\n        \n        // Format as JSON\n        ObjectMapper mapper = new ObjectMapper();\n        mapper.enable(SerializationFeature.INDENT_OUTPUT);\n        String content = mapper.writeValueAsString(filtered);\n        \n        // Write to file\n        Files.writeString(Path.of(outputPath + \".json\"), content);\n        log.info(\"Exported {} records to JSON: {}\", filtered.size(), outputPath);\n    }\n}\n\npublic class XmlExporter {\n    public void export(List<Record> records, String outputPath) {\n        // Validate (identical)\n        if (records == null || records.isEmpty()) {\n            throw new IllegalArgumentException(\"Records cannot be empty\");\n        }\n        if (outputPath == null || outputPath.trim().isEmpty()) {\n            throw new IllegalArgumentException(\"Output path is required\");\n        }\n        \n        // Transform: filter and sort (identical)\n        List<Record> filtered = records.stream()\n            .filter(r -> r.isActive())\n            .sorted(Comparator.comparing(Record::getTimestamp))\n            .collect(Collectors.toList());\n        \n        // Format as XML\n        StringBuilder sb = new StringBuilder();\n        sb.append(\"<?xml version=\\\"1.0\\\"?>\\n<records>\\n\");\n        for (Record r : filtered) {\n            sb.append(\"  <record>\\n\");\n            for (Map.Entry<String, Object> field : r.getFields().entrySet()) {\n                sb.append(String.format(\"    <%s>%s</%s>\\n\", field.getKey(), field.getValue(), field.getKey()));\n            }\n            sb.append(\"  </record>\\n\");\n        }\n        sb.append(\"</records>\");\n        String content = sb.toString();\n        \n        // Write to file\n        Files.writeString(Path.of(outputPath + \".xml\"), content);\n        log.info(\"Exported {} records to XML: {}\", filtered.size(), outputPath);\n    }\n}\n```",
+      "rubric": [
+        {
+          "criterion": "Template Method Application",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Creates abstract BaseExporter with template method export() calling validate(), transform(), format(), write(); format() and getFileExtension() are abstract; validate() and transform() are concrete shared implementations; 3 subclasses override only format-specific methods",
+            "3": "Template method exists but too many steps are abstract (subclasses duplicate shared logic) or too few (format-specific logic trapped in base class)",
+            "1": "Partial pattern — base class exists but subclasses still have significant duplication",
+            "0": "No template method pattern applied"
+          }
+        },
+        {
+          "criterion": "Duplication Elimination",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Validation, filtering/sorting, and logging exist in exactly one place (base class); each subclass contains only format-specific code; total line count reduced by 40%+",
+            "3": "Most duplication eliminated but some shared logic is still repeated",
+            "1": "Significant duplication remains",
+            "0": "No duplication reduction"
+          }
+        },
+        {
+          "criterion": "Behavioral Equivalence",
+          "weight": 0.25,
+          "scoring": {
+            "5": "All 3 exporters produce identical output files for identical input; validation errors unchanged; file extensions correct; logging messages preserved",
+            "3": "Output is mostly identical but minor differences in file naming or logging",
+            "1": "Output format differences in 1 or more exporters",
+            "0": "Output is different"
+          }
+        },
+        {
+          "criterion": "Extensibility",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Adding a new format (e.g., YAML) requires only implementing format() and getFileExtension() in a new subclass; no changes to base class; demonstrates with brief example",
+            "3": "Mostly extensible but new formats would require touching the base class",
+            "1": "Adding a format still requires significant code",
+            "0": "No extensibility improvement"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-04",
+      "difficulty": "medium",
+      "description": "Introduce Parameter Object and Builder to replace a long parameter list",
+      "input": "Refactor this function with 12 parameters to use a Parameter Object with a Builder pattern. The function creates notification messages and is called from 8 different places in the codebase with different combinations of optional parameters.\n\n```python\ndef send_notification(\n    recipient_id,\n    recipient_email,\n    recipient_name,\n    channel,          # 'email', 'sms', 'push', 'in_app'\n    subject,\n    body,\n    priority='normal',      # 'low', 'normal', 'high', 'urgent'\n    template_id=None,\n    template_vars=None,\n    schedule_at=None,       # datetime or None for immediate\n    retry_count=3,\n    retry_delay_seconds=60,\n    attachment_urls=None,   # list of URLs\n    cc_emails=None,         # list of CC emails (email channel only)\n    track_opens=True,\n    track_clicks=True,\n    unsubscribe_group=None,\n    metadata=None           # dict of arbitrary key-value pairs\n):\n    if not recipient_id:\n        raise ValueError(\"recipient_id is required\")\n    if channel not in ('email', 'sms', 'push', 'in_app'):\n        raise ValueError(f\"Invalid channel: {channel}\")\n    if priority not in ('low', 'normal', 'high', 'urgent'):\n        raise ValueError(f\"Invalid priority: {priority}\")\n    if channel != 'email' and cc_emails:\n        raise ValueError(\"CC is only supported for email channel\")\n    if template_id and body:\n        raise ValueError(\"Cannot specify both template_id and body\")\n    if not template_id and not body:\n        raise ValueError(\"Either template_id or body is required\")\n    \n    notification = {\n        'recipient': {\n            'id': recipient_id,\n            'email': recipient_email,\n            'name': recipient_name,\n        },\n        'channel': channel,\n        'subject': subject,\n        'body': body if not template_id else render_template(template_id, template_vars or {}),\n        'priority': priority,\n        'schedule_at': schedule_at.isoformat() if schedule_at else None,\n        'retry': {'count': retry_count, 'delay_seconds': retry_delay_seconds},\n        'attachments': attachment_urls or [],\n        'cc': cc_emails or [],\n        'tracking': {'opens': track_opens, 'clicks': track_clicks},\n        'unsubscribe_group': unsubscribe_group,\n        'metadata': metadata or {},\n    }\n    \n    return queue_notification(notification)\n```\n\nExample call sites:\n```python\n# Simple immediate email\nsend_notification(user.id, user.email, user.name, 'email', 'Welcome!', 'Hello there...', template_id='welcome_v2', template_vars={'name': user.name})\n\n# Urgent push with retry\nsend_notification(user.id, user.email, user.name, 'push', 'Alert', 'Server down', priority='urgent', retry_count=5, retry_delay_seconds=30)\n\n# Scheduled email with tracking and CC\nsend_notification(user.id, user.email, user.name, 'email', 'Report', None, template_id='weekly_report', template_vars=report_data, schedule_at=next_monday, cc_emails=['boss@co.com'], track_opens=True, track_clicks=True, unsubscribe_group='reports')\n```",
+      "rubric": [
+        {
+          "criterion": "Parameter Object Design",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Creates a NotificationRequest class grouping related params logically (Recipient sub-object with id/email/name, delivery options with channel/priority/schedule, content with subject/body/template, tracking options, retry config); clear separation of required vs optional fields",
+            "3": "Parameter object exists but params are flat (no sub-grouping) or required/optional distinction is unclear",
+            "1": "Minimal parameter object that is essentially a dict/dataclass with all 12+ fields flat",
+            "0": "No parameter object created"
+          }
+        },
+        {
+          "criterion": "Builder Pattern",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Fluent builder with method chaining; required params in constructor/factory method; optional params via chainable setters; build() performs validation; call sites are significantly more readable",
+            "3": "Builder exists but is incomplete (missing some optional params) or not fluent",
+            "1": "Constructor with many params or simple setters without chaining",
+            "0": "No builder pattern"
+          }
+        },
+        {
+          "criterion": "Behavioral Equivalence",
+          "weight": 0.25,
+          "scoring": {
+            "5": "All validation rules preserved (required fields, channel/CC constraint, template/body exclusivity); notification dict structure identical; all 3 example call sites produce identical results; default values unchanged",
+            "3": "Most validation preserved but 1-2 rules differ or defaults changed",
+            "1": "Multiple validation or structural differences",
+            "0": "Core behavior changed"
+          }
+        },
+        {
+          "criterion": "Call Site Improvement",
+          "weight": 0.2,
+          "scoring": {
+            "5": "All 3 example call sites rewritten using builder; each is more readable than the original; intent is clearer (e.g., NotificationRequest.email(user).withTemplate('welcome_v2').send())",
+            "3": "Call sites use the new API but improvement is modest",
+            "1": "Call sites are not significantly more readable",
+            "0": "Call sites are not updated"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-hard-01",
+      "difficulty": "hard",
+      "description": "Decompose a God Class into multiple cohesive classes following SRP",
+      "input": "Refactor this 300-line God Class that handles user management, authentication, email notifications, audit logging, and rate limiting — all in a single class. Decompose into focused, cohesive classes while maintaining the same external behavior.\n\n```python\nclass UserManager:\n    def __init__(self, db, cache, smtp_client, config):\n        self.db = db\n        self.cache = cache\n        self.smtp = smtp_client\n        self.config = config\n        self._rate_limits = {}  # ip -> (count, window_start)\n    \n    # ---- User CRUD ----\n    def create_user(self, email, password, name):\n        if self._is_rate_limited(email):\n            self._log_audit('CREATE_USER_RATE_LIMITED', {'email': email})\n            raise RateLimitError('Too many attempts')\n        if self.db.users.find_one({'email': email}):\n            raise DuplicateError(f'User {email} already exists')\n        hashed = self._hash_password(password)\n        user = {'email': email, 'password': hashed, 'name': name, 'created_at': datetime.utcnow(), 'is_active': True, 'failed_logins': 0, 'locked_until': None}\n        user_id = self.db.users.insert_one(user).inserted_id\n        self.cache.delete(f'user_count')\n        self._log_audit('USER_CREATED', {'user_id': str(user_id), 'email': email})\n        self._send_welcome_email(email, name)\n        return str(user_id)\n    \n    def get_user(self, user_id):\n        cached = self.cache.get(f'user:{user_id}')\n        if cached:\n            return cached\n        user = self.db.users.find_one({'_id': ObjectId(user_id)})\n        if user:\n            self.cache.set(f'user:{user_id}', user, ttl=300)\n        return user\n    \n    def update_user(self, user_id, updates):\n        allowed = {'name', 'email', 'preferences'}\n        filtered = {k: v for k, v in updates.items() if k in allowed}\n        self.db.users.update_one({'_id': ObjectId(user_id)}, {'$set': filtered})\n        self.cache.delete(f'user:{user_id}')\n        self._log_audit('USER_UPDATED', {'user_id': user_id, 'fields': list(filtered.keys())})\n    \n    def delete_user(self, user_id):\n        user = self.get_user(user_id)\n        if not user:\n            raise NotFoundError(f'User {user_id} not found')\n        self.db.users.delete_one({'_id': ObjectId(user_id)})\n        self.cache.delete(f'user:{user_id}')\n        self.cache.delete('user_count')\n        self._log_audit('USER_DELETED', {'user_id': user_id, 'email': user['email']})\n        self._send_account_deleted_email(user['email'], user['name'])\n    \n    # ---- Authentication ----\n    def authenticate(self, email, password):\n        if self._is_rate_limited(email):\n            self._log_audit('AUTH_RATE_LIMITED', {'email': email})\n            raise RateLimitError('Too many login attempts')\n        user = self.db.users.find_one({'email': email})\n        if not user:\n            self._log_audit('AUTH_FAILED_NO_USER', {'email': email})\n            raise AuthError('Invalid credentials')\n        if user.get('locked_until') and user['locked_until'] > datetime.utcnow():\n            self._log_audit('AUTH_LOCKED', {'email': email})\n            raise AuthError('Account is locked')\n        if not self._verify_password(password, user['password']):\n            fails = user.get('failed_logins', 0) + 1\n            update = {'failed_logins': fails}\n            if fails >= self.config.max_failed_logins:\n                update['locked_until'] = datetime.utcnow() + timedelta(minutes=self.config.lockout_minutes)\n                self._send_account_locked_email(user['email'], user['name'])\n            self.db.users.update_one({'_id': user['_id']}, {'$set': update})\n            self._log_audit('AUTH_FAILED', {'email': email, 'failed_count': fails})\n            raise AuthError('Invalid credentials')\n        self.db.users.update_one({'_id': user['_id']}, {'$set': {'failed_logins': 0, 'last_login': datetime.utcnow()}})\n        token = self._generate_token(user)\n        self.cache.set(f'session:{token}', str(user['_id']), ttl=self.config.session_ttl)\n        self._log_audit('AUTH_SUCCESS', {'user_id': str(user['_id'])})\n        return token\n    \n    def logout(self, token):\n        user_id = self.cache.get(f'session:{token}')\n        self.cache.delete(f'session:{token}')\n        if user_id:\n            self._log_audit('LOGOUT', {'user_id': user_id})\n    \n    def reset_password(self, email):\n        user = self.db.users.find_one({'email': email})\n        if not user:\n            return  # Don't reveal user existence\n        token = self._generate_reset_token()\n        self.cache.set(f'reset:{token}', str(user['_id']), ttl=3600)\n        self._send_reset_email(email, user['name'], token)\n        self._log_audit('PASSWORD_RESET_REQUESTED', {'email': email})\n    \n    # ---- Password Helpers ----\n    def _hash_password(self, password):\n        salt = bcrypt.gensalt(rounds=12)\n        return bcrypt.hashpw(password.encode(), salt)\n    \n    def _verify_password(self, password, hashed):\n        return bcrypt.checkpw(password.encode(), hashed)\n    \n    def _generate_token(self, user):\n        return jwt.encode({'user_id': str(user['_id']), 'exp': datetime.utcnow() + timedelta(seconds=self.config.session_ttl)}, self.config.jwt_secret)\n    \n    def _generate_reset_token(self):\n        return secrets.token_urlsafe(32)\n    \n    # ---- Email ----\n    def _send_welcome_email(self, email, name):\n        self.smtp.send(to=email, subject='Welcome!', body=f'Hello {name}, welcome to our platform!')\n    \n    def _send_account_deleted_email(self, email, name):\n        self.smtp.send(to=email, subject='Account Deleted', body=f'{name}, your account has been deleted.')\n    \n    def _send_account_locked_email(self, email, name):\n        self.smtp.send(to=email, subject='Account Locked', body=f'{name}, your account has been locked due to too many failed login attempts.')\n    \n    def _send_reset_email(self, email, name, token):\n        self.smtp.send(to=email, subject='Password Reset', body=f'{name}, use this link to reset: /reset?token={token}')\n    \n    # ---- Rate Limiting ----\n    def _is_rate_limited(self, key):\n        now = time.time()\n        if key in self._rate_limits:\n            count, window_start = self._rate_limits[key]\n            if now - window_start < self.config.rate_limit_window:\n                if count >= self.config.rate_limit_max:\n                    return True\n                self._rate_limits[key] = (count + 1, window_start)\n            else:\n                self._rate_limits[key] = (1, now)\n        else:\n            self._rate_limits[key] = (1, now)\n        return False\n    \n    # ---- Audit ----\n    def _log_audit(self, action, details):\n        self.db.audit_log.insert_one({'action': action, 'details': details, 'timestamp': datetime.utcnow()})\n```",
+      "rubric": [
+        {
+          "criterion": "Class Decomposition",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Extracts 4-5 cohesive classes: UserRepository (CRUD + caching), AuthenticationService (login, logout, password reset, token management), UserNotifier (all email sending), AuditLogger (logging), RateLimiter; each has a single clear responsibility with minimal overlap",
+            "3": "Extracts 2-3 classes but some still have mixed responsibilities",
+            "1": "Only 1 class extracted; God Class retains most logic",
+            "0": "No decomposition performed"
+          }
+        },
+        {
+          "criterion": "Dependency Management",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Classes depend on each other through injection, not direct instantiation; dependency graph is acyclic; each class declares only the dependencies it needs (e.g., UserNotifier needs only smtp_client, not db or cache)",
+            "3": "Dependencies are injected but some classes receive more than they need",
+            "1": "Circular dependencies or tight coupling between extracted classes",
+            "0": "No dependency management"
+          }
+        },
+        {
+          "criterion": "Behavioral Equivalence",
+          "weight": 0.25,
+          "scoring": {
+            "5": "All 10 public operations produce identical results: create_user triggers audit + welcome email, authenticate handles rate limiting + lockout + audit, delete triggers audit + email, etc.; all error conditions and side effects preserved",
+            "3": "Most operations equivalent but 1-2 side effects (audit, email) are missing or reordered",
+            "1": "Multiple behavioral differences",
+            "0": "Core behavior changed"
+          }
+        },
+        {
+          "criterion": "Facade / Backward Compatibility",
+          "weight": 0.1,
+          "scoring": {
+            "5": "Provides a UserManager facade that delegates to extracted classes, maintaining the original API for existing callers; migration path documented",
+            "3": "Original API partially preserved but some methods have changed signatures",
+            "1": "Original API is broken; all callers must be updated",
+            "0": "No consideration for backward compatibility"
+          }
+        },
+        {
+          "criterion": "Quality Improvement",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Reports before/after metrics per class; each extracted class is under 80 lines; overall complexity distributed evenly; coupling reduced; classes are independently testable",
+            "3": "Classes are smaller but metrics not reported or some classes are still complex",
+            "1": "Marginal improvement; one class absorbs most complexity",
+            "0": "No measurable improvement"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 65
+    },
+    {
+      "id": "bench-hard-02",
+      "difficulty": "hard",
+      "description": "Refactor deeply coupled modules with circular dependencies into a clean layered architecture",
+      "input": "These three modules have circular dependencies: OrderService imports from InventoryService, InventoryService imports from NotificationService, and NotificationService imports from OrderService. Refactor to break all circular dependencies while preserving functionality.\n\n```typescript\n// order.service.ts\nimport { InventoryService } from './inventory.service';\n\nexport class OrderService {\n  constructor(\n    private inventory: InventoryService,\n    private db: Database\n  ) {}\n\n  async createOrder(userId: string, items: OrderItem[]): Promise<Order> {\n    // Check inventory for all items\n    for (const item of items) {\n      const available = await this.inventory.checkStock(item.sku, item.quantity);\n      if (!available) {\n        throw new InsufficientStockError(item.sku);\n      }\n    }\n\n    // Reserve inventory\n    const reservations = await this.inventory.reserveItems(\n      items.map(i => ({ sku: i.sku, quantity: i.quantity }))\n    );\n\n    // Create order record\n    const order = await this.db.orders.create({\n      userId,\n      items,\n      reservations: reservations.map(r => r.id),\n      status: 'pending',\n      total: items.reduce((sum, i) => sum + i.price * i.quantity, 0),\n      createdAt: new Date()\n    });\n\n    return order;\n  }\n\n  async cancelOrder(orderId: string): Promise<void> {\n    const order = await this.db.orders.findById(orderId);\n    if (!order) throw new NotFoundError('Order');\n    if (order.status === 'shipped') throw new InvalidStateError('Cannot cancel shipped order');\n\n    // Release inventory reservations\n    await this.inventory.releaseReservations(order.reservations);\n\n    order.status = 'cancelled';\n    order.cancelledAt = new Date();\n    await this.db.orders.update(order);\n  }\n\n  // Called by NotificationService to get order details for emails\n  async getOrderForNotification(orderId: string): Promise<OrderNotificationData> {\n    const order = await this.db.orders.findById(orderId);\n    const user = await this.db.users.findById(order.userId);\n    return {\n      orderId: order.id,\n      userEmail: user.email,\n      userName: user.name,\n      items: order.items,\n      total: order.total,\n      status: order.status\n    };\n  }\n}\n\n// inventory.service.ts\nimport { NotificationService } from './notification.service';\n\nexport class InventoryService {\n  constructor(\n    private notifications: NotificationService,\n    private db: Database\n  ) {}\n\n  async checkStock(sku: string, quantity: number): Promise<boolean> {\n    const product = await this.db.products.findBySku(sku);\n    return product ? product.availableQuantity >= quantity : false;\n  }\n\n  async reserveItems(items: { sku: string; quantity: number }[]): Promise<Reservation[]> {\n    const reservations: Reservation[] = [];\n    for (const item of items) {\n      const product = await this.db.products.findBySku(item.sku);\n      product.availableQuantity -= item.quantity;\n      product.reservedQuantity += item.quantity;\n      await this.db.products.update(product);\n\n      const reservation = await this.db.reservations.create({\n        sku: item.sku,\n        quantity: item.quantity,\n        expiresAt: new Date(Date.now() + 30 * 60 * 1000)\n      });\n      reservations.push(reservation);\n\n      // Notify if stock is low\n      if (product.availableQuantity <= product.reorderThreshold) {\n        await this.notifications.sendLowStockAlert(product);\n      }\n    }\n    return reservations;\n  }\n\n  async releaseReservations(reservationIds: string[]): Promise<void> {\n    for (const id of reservationIds) {\n      const reservation = await this.db.reservations.findById(id);\n      if (reservation) {\n        const product = await this.db.products.findBySku(reservation.sku);\n        product.availableQuantity += reservation.quantity;\n        product.reservedQuantity -= reservation.quantity;\n        await this.db.products.update(product);\n        await this.db.reservations.delete(id);\n\n        // Notify that stock is replenished\n        await this.notifications.sendStockReplenishedAlert(product);\n      }\n    }\n  }\n}\n\n// notification.service.ts\nimport { OrderService } from './order.service';\n\nexport class NotificationService {\n  constructor(\n    private orders: OrderService,\n    private mailer: EmailClient,\n    private sms: SmsClient\n  ) {}\n\n  async sendOrderConfirmation(orderId: string): Promise<void> {\n    // Gets order details from OrderService (circular!)\n    const orderData = await this.orders.getOrderForNotification(orderId);\n    await this.mailer.send({\n      to: orderData.userEmail,\n      subject: `Order ${orderData.orderId} Confirmed`,\n      body: `Hi ${orderData.userName}, your order of ${orderData.items.length} items ($${orderData.total}) is confirmed.`\n    });\n  }\n\n  async sendOrderCancellation(orderId: string): Promise<void> {\n    const orderData = await this.orders.getOrderForNotification(orderId);\n    await this.mailer.send({\n      to: orderData.userEmail,\n      subject: `Order ${orderData.orderId} Cancelled`,\n      body: `Hi ${orderData.userName}, your order has been cancelled. A refund will be processed.`\n    });\n  }\n\n  async sendLowStockAlert(product: Product): Promise<void> {\n    await this.mailer.send({\n      to: 'warehouse@company.com',\n      subject: `Low Stock Alert: ${product.name}`,\n      body: `Product ${product.sku} (${product.name}) has ${product.availableQuantity} units remaining (threshold: ${product.reorderThreshold}).`\n    });\n  }\n\n  async sendStockReplenishedAlert(product: Product): Promise<void> {\n    await this.mailer.send({\n      to: 'warehouse@company.com',\n      subject: `Stock Replenished: ${product.name}`,\n      body: `Product ${product.sku} (${product.name}) now has ${product.availableQuantity} available units.`\n    });\n  }\n}\n```\n\nThe circular dependency chain is: OrderService → InventoryService → NotificationService → OrderService.",
+      "rubric": [
+        {
+          "criterion": "Circular Dependency Resolution",
+          "weight": 0.3,
+          "scoring": {
+            "5": "All circular dependencies broken cleanly using one or more of: Dependency Inversion (interfaces), event-based decoupling, data passing instead of service calls; import graph is acyclic; no runtime circular references",
+            "3": "Circular dependency broken but solution introduces a new indirect cycle or uses a service locator anti-pattern",
+            "1": "Only 1 of the 3 circular links is broken",
+            "0": "Circular dependencies remain"
+          }
+        },
+        {
+          "criterion": "Architecture Quality",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Clear layered architecture: OrderService is the orchestrator; InventoryService is pure domain logic (no notification knowledge); NotificationService receives all needed data as parameters (no back-references); interfaces define boundaries; dependency flow is unidirectional",
+            "3": "Reasonable architecture but some coupling remains or layer boundaries are unclear",
+            "1": "Architecture is flat; classes are decoupled but responsibilities are unclear",
+            "0": "No architectural improvement"
+          }
+        },
+        {
+          "criterion": "Behavioral Equivalence",
+          "weight": 0.25,
+          "scoring": {
+            "5": "All operations produce identical results: createOrder checks/reserves stock and can trigger low-stock alerts; cancelOrder releases stock and can trigger replenished alerts; order confirmation/cancellation emails contain identical content; all error conditions preserved",
+            "3": "Core operations equivalent but some notification triggers are missing or reordered",
+            "1": "Multiple behavioral differences in order processing or notifications",
+            "0": "Core functionality broken"
+          }
+        },
+        {
+          "criterion": "Technique Explanation",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Explains the technique used to break each circular link; discusses trade-offs (e.g., events add complexity but enable loose coupling; DIP adds interfaces but enables testing); mentions which SOLID principles are improved",
+            "3": "Technique is applied but not well explained; trade-offs not discussed",
+            "1": "No explanation of the approach",
+            "0": "No technique applied"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 60
+    },
+    {
+      "id": "bench-hard-03",
+      "difficulty": "hard",
+      "description": "Multi-smell refactoring of a legacy data pipeline with complexity reduction target of 40%+",
+      "input": "Refactor this legacy data ingestion pipeline class. It has multiple overlapping code smells: Long Methods (process_batch is 90+ lines), duplicated parsing logic, Primitive Obsession (status strings, error codes as ints), Switch Statements on record type, and tight coupling to external systems. Target: reduce overall cyclomatic complexity by at least 40% and eliminate all duplication.\n\n```python\nclass DataPipeline:\n    def __init__(self, source_db, target_db, error_queue, metrics_client):\n        self.source = source_db\n        self.target = target_db\n        self.errors = error_queue\n        self.metrics = metrics_client\n    \n    def process_batch(self, batch_id):\n        batch = self.source.get_batch(batch_id)\n        if not batch:\n            self.metrics.increment('pipeline.batch_not_found')\n            return {'status': 'error', 'code': 404, 'message': 'Batch not found'}\n        \n        if batch['status'] != 'pending':\n            self.metrics.increment('pipeline.invalid_batch_status')\n            return {'status': 'error', 'code': 409, 'message': f\"Batch is {batch['status']}, expected pending\"}\n        \n        self.source.update_batch_status(batch_id, 'processing')\n        self.metrics.increment('pipeline.batch_started')\n        \n        results = {'processed': 0, 'failed': 0, 'skipped': 0}\n        errors_list = []\n        \n        for record in batch['records']:\n            try:\n                # Parse based on record type (duplicated validation)\n                if record['type'] == 'user':\n                    if not record.get('email'):\n                        results['skipped'] += 1\n                        errors_list.append({'record_id': record['id'], 'error': 'Missing email', 'code': 1001})\n                        continue\n                    if not record.get('name'):\n                        results['skipped'] += 1\n                        errors_list.append({'record_id': record['id'], 'error': 'Missing name', 'code': 1002})\n                        continue\n                    if record.get('email') and '@' not in record['email']:\n                        results['skipped'] += 1\n                        errors_list.append({'record_id': record['id'], 'error': 'Invalid email format', 'code': 1003})\n                        continue\n                    parsed = {\n                        'table': 'users',\n                        'data': {\n                            'email': record['email'].strip().lower(),\n                            'name': record['name'].strip(),\n                            'phone': record.get('phone', '').strip(),\n                            'created_at': record.get('created_at', datetime.utcnow().isoformat())\n                        }\n                    }\n                elif record['type'] == 'order':\n                    if not record.get('user_id'):\n                        results['skipped'] += 1\n                        errors_list.append({'record_id': record['id'], 'error': 'Missing user_id', 'code': 2001})\n                        continue\n                    if not record.get('items') or len(record['items']) == 0:\n                        results['skipped'] += 1\n                        errors_list.append({'record_id': record['id'], 'error': 'Missing items', 'code': 2002})\n                        continue\n                    if record.get('total') is not None and record['total'] < 0:\n                        results['skipped'] += 1\n                        errors_list.append({'record_id': record['id'], 'error': 'Negative total', 'code': 2003})\n                        continue\n                    total = record.get('total', sum(i.get('price', 0) * i.get('qty', 0) for i in record['items']))\n                    parsed = {\n                        'table': 'orders',\n                        'data': {\n                            'user_id': record['user_id'],\n                            'items': record['items'],\n                            'total': total,\n                            'currency': record.get('currency', 'USD'),\n                            'ordered_at': record.get('ordered_at', datetime.utcnow().isoformat())\n                        }\n                    }\n                elif record['type'] == 'product':\n                    if not record.get('sku'):\n                        results['skipped'] += 1\n                        errors_list.append({'record_id': record['id'], 'error': 'Missing SKU', 'code': 3001})\n                        continue\n                    if not record.get('name'):\n                        results['skipped'] += 1\n                        errors_list.append({'record_id': record['id'], 'error': 'Missing product name', 'code': 3002})\n                        continue\n                    if record.get('price') is not None and record['price'] < 0:\n                        results['skipped'] += 1\n                        errors_list.append({'record_id': record['id'], 'error': 'Negative price', 'code': 3003})\n                        continue\n                    parsed = {\n                        'table': 'products',\n                        'data': {\n                            'sku': record['sku'].strip().upper(),\n                            'name': record['name'].strip(),\n                            'price': record.get('price', 0),\n                            'category': record.get('category', 'uncategorized'),\n                            'updated_at': record.get('updated_at', datetime.utcnow().isoformat())\n                        }\n                    }\n                else:\n                    results['skipped'] += 1\n                    errors_list.append({'record_id': record['id'], 'error': f\"Unknown type: {record['type']}\", 'code': 9001})\n                    continue\n                \n                # Write to target (same for all types)\n                self.target.upsert(parsed['table'], parsed['data'])\n                results['processed'] += 1\n                self.metrics.increment(f\"pipeline.record_processed.{record['type']}\")\n                \n            except Exception as e:\n                results['failed'] += 1\n                errors_list.append({'record_id': record.get('id', 'unknown'), 'error': str(e), 'code': 9999})\n                self.metrics.increment('pipeline.record_failed')\n        \n        # Finalize batch\n        if results['failed'] > 0:\n            final_status = 'completed_with_errors'\n        elif results['skipped'] > 0:\n            final_status = 'completed_with_warnings'\n        else:\n            final_status = 'completed'\n        \n        self.source.update_batch_status(batch_id, final_status)\n        \n        if errors_list:\n            self.errors.publish({'batch_id': batch_id, 'errors': errors_list})\n        \n        self.metrics.gauge('pipeline.batch_processed', results['processed'])\n        self.metrics.gauge('pipeline.batch_failed', results['failed'])\n        self.metrics.gauge('pipeline.batch_skipped', results['skipped'])\n        \n        return {'status': final_status, 'code': 200, 'results': results, 'error_count': len(errors_list)}\n```",
+      "rubric": [
+        {
+          "criterion": "Smell Resolution",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Resolves all 5 identified smells: Long Method (process_batch decomposed into <20-line methods), duplication (parsing logic unified via polymorphism or registry), Primitive Obsession (status/error codes replaced with enums/value objects), Switch Statement (record type dispatch via polymorphism or strategy map), coupling (external systems behind interfaces)",
+            "3": "Resolves 3 of 5 smells adequately",
+            "1": "Resolves 1-2 smells; major issues remain",
+            "0": "No smells resolved"
+          }
+        },
+        {
+          "criterion": "Complexity Reduction",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Reports before/after cyclomatic complexity; achieves 40%+ overall reduction; process_batch main method has CC < 5; no individual method exceeds CC of 10",
+            "3": "Achieves 20-39% reduction with metrics reported",
+            "1": "Reduction below 20% or metrics not measured",
+            "0": "No complexity reduction"
+          }
+        },
+        {
+          "criterion": "Behavioral Equivalence",
+          "weight": 0.25,
+          "scoring": {
+            "5": "All record types (user, order, product) produce identical parsed output; all validation errors return same error codes and messages; batch status transitions are identical; metrics calls preserved; error queue messages unchanged; unknown type handling preserved",
+            "3": "Most behavior equivalent but 1-2 edge cases differ (e.g., different error code, missing metric)",
+            "1": "Multiple behavioral differences across record types",
+            "0": "Core pipeline behavior changed"
+          }
+        },
+        {
+          "criterion": "Extensibility",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Adding a new record type (e.g., 'invoice') requires only creating a new parser/handler class and registering it; no changes to process_batch; demonstrates with brief example",
+            "3": "Adding a new type requires small changes to process_batch",
+            "1": "Adding a new type still requires modifying the switch/if-else chain",
+            "0": "No extensibility improvement"
+          }
+        },
+        {
+          "criterion": "Refactoring Plan Quality",
+          "weight": 0.1,
+          "scoring": {
+            "5": "Presents an ordered, incremental plan with clear steps, dependency ordering, and verification checkpoints; demonstrates awareness of which smells to fix first",
+            "3": "Plan exists but ordering is suboptimal or missing verification steps",
+            "1": "No plan; jumps to final state",
+            "0": "No planning"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 60
+    }
+  ]
+}

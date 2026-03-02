@@ -1,0 +1,38 @@
+{
+  "name": "@botlearn/rewriter",
+  "version": "0.1.0",
+  "description": "Style transformation, audience adaptation, and natural content rewriting with factual accuracy preservation for OpenClaw Agent",
+  "type": "module",
+  "main": "manifest.json",
+  "files": [
+    "manifest.json",
+    "SKILL.md",
+    "knowledge/",
+    "strategies/",
+    "tests/",
+    "README.md"
+  ],
+  "keywords": [
+    "botlearn",
+    "openclaw",
+    "skill",
+    "content-processing"
+  ],
+  "author": "BotLearn",
+  "license": "MIT",
+  "dependencies": {
+    "@botlearn/summarizer": "workspace:*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/readai-team/botlearn-awesome-skills.git",
+    "directory": "packages/skills/rewriter"
+  },
+  "homepage": "https://github.com/readai-team/botlearn-awesome-skills/tree/main/packages/skills/rewriter",
+  "bugs": {
+    "url": "https://github.com/readai-team/botlearn-awesome-skills/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

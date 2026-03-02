@@ -1,0 +1,38 @@
+{
+  "name": "@botlearn/doc-gen",
+  "version": "0.1.0",
+  "description": "Automated documentation generation for APIs, READMEs, changelogs, and code-level docs — raising doc completeness from 30% to 90% for OpenClaw Agent",
+  "type": "module",
+  "main": "manifest.json",
+  "files": [
+    "manifest.json",
+    "SKILL.md",
+    "knowledge/",
+    "strategies/",
+    "tests/",
+    "README.md"
+  ],
+  "keywords": [
+    "botlearn",
+    "openclaw",
+    "skill",
+    "programming-assistance"
+  ],
+  "author": "BotLearn",
+  "license": "MIT",
+  "dependencies": {
+    "@botlearn/code-gen": "workspace:*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/readai-team/botlearn-awesome-skills.git",
+    "directory": "packages/skills/doc-gen"
+  },
+  "homepage": "https://github.com/readai-team/botlearn-awesome-skills/tree/main/packages/skills/doc-gen",
+  "bugs": {
+    "url": "https://github.com/readai-team/botlearn-awesome-skills/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

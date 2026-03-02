@@ -1,0 +1,54 @@
+{
+  "version": "0.0.1",
+  "timeout": 60,
+  "tasks": [
+    {
+      "id": "smoke-01",
+      "description": "Write a short story with clear narrative structure, character development, and emotional arc",
+      "input": "Write a short story (500-800 words) about a lighthouse keeper who discovers that the light they maintain each night is not guiding ships, but something else entirely. Genre: speculative fiction. Tone: eerie but ultimately hopeful. The story should have a clear beginning, middle, and end with at least one well-developed character.",
+      "rubric": [
+        {
+          "criterion": "Narrative Structure",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Story follows a clear three-act or equivalent structure with identifiable inciting incident, rising tension, climax, and resolution; pacing feels deliberate and controlled",
+            "3": "Story has a beginning, middle, and end but structure is loose; some pacing issues or missing beats",
+            "1": "Story meanders without clear structural progression; events feel random",
+            "0": "No discernible narrative structure"
+          }
+        },
+        {
+          "criterion": "Character Development",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Protagonist has a distinct voice, clear motivation, an internal conflict or flaw, and undergoes meaningful change by the end; characterization emerges through action and dialogue, not exposition",
+            "3": "Protagonist has some personality but lacks depth; change feels surface-level or is told rather than shown",
+            "1": "Protagonist is generic or one-dimensional; no meaningful arc",
+            "0": "No characterization; protagonist is a blank vessel"
+          }
+        },
+        {
+          "criterion": "Craft Quality",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Vivid sensory details, subtext-rich dialogue, show-don't-tell throughout, strong opening hook, satisfying closing image; prose matches the eerie-hopeful tone requested",
+            "3": "Some effective prose moments but inconsistent; occasional telling instead of showing; tone partially achieved",
+            "1": "Flat prose, heavy telling, generic descriptions; tone does not match request",
+            "0": "No craft elements; reads like a plot summary"
+          }
+        },
+        {
+          "criterion": "Genre & Prompt Fulfillment",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Speculative element is creative and integral to the plot; tone is eerie yet hopeful as requested; story is within the requested word count; all prompt elements addressed",
+            "3": "Speculative element present but underdeveloped; tone partially matches; some prompt elements missed",
+            "1": "Story barely qualifies as speculative fiction; tone mismatch; prompt largely ignored",
+            "0": "Does not address the prompt"
+          }
+        }
+      ],
+      "passThreshold": 60
+    }
+  ]
+}

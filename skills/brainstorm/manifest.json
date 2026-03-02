@@ -1,0 +1,26 @@
+{
+  "name": "@botlearn/brainstorm",
+  "version": "0.1.0",
+  "description": "Multi-dimensional ideation and brainstorming with structured creativity frameworks, feasibility assessment, and idea clustering for OpenClaw Agent",
+  "category": "creative-generation",
+  "author": "BotLearn",
+  "benchmarkDimension": "creative-generation",
+  "expectedImprovement": 40,
+  "dependencies": {},
+  "compatibility": {
+    "openclaw": ">=0.5.0"
+  },
+  "files": {
+    "skill": "SKILL.md",
+    "knowledge": [
+      "knowledge/domain.md",
+      "knowledge/best-practices.md",
+      "knowledge/anti-patterns.md"
+    ],
+    "strategies": [
+      "strategies/main.md"
+    ],
+    "smokeTest": "tests/smoke.json",
+    "benchmark": "tests/benchmark.json"
+  }
+}

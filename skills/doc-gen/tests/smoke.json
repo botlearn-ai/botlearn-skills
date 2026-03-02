@@ -1,0 +1,54 @@
+{
+  "version": "0.0.1",
+  "timeout": 60,
+  "tasks": [
+    {
+      "id": "smoke-01",
+      "description": "Generate JSDoc documentation for an undocumented TypeScript module with multiple exported functions",
+      "input": "Generate complete documentation for the following TypeScript module. It has no existing docs. Produce JSDoc comments for every exported function, including parameter descriptions, return types, thrown errors, and at least one usage example per function.\n\n```typescript\nexport interface UserCreateInput {\n  name: string;\n  email: string;\n  role?: 'admin' | 'member' | 'viewer';\n}\n\nexport interface User {\n  id: string;\n  name: string;\n  email: string;\n  role: string;\n  createdAt: Date;\n}\n\nexport class UserService {\n  constructor(private db: Database) {}\n\n  async create(input: UserCreateInput): Promise<User> {\n    if (!input.email.includes('@')) throw new ValidationError('Invalid email');\n    const existing = await this.db.users.findByEmail(input.email);\n    if (existing) throw new ConflictError('Email already registered');\n    return this.db.users.insert({ ...input, role: input.role ?? 'member' });\n  }\n\n  async findById(id: string): Promise<User | null> {\n    if (!id) throw new ValidationError('ID is required');\n    return this.db.users.findOne({ id });\n  }\n\n  async updateRole(id: string, role: 'admin' | 'member' | 'viewer'): Promise<User> {\n    const user = await this.findById(id);\n    if (!user) throw new NotFoundError(`User ${id} not found`);\n    return this.db.users.update(id, { role });\n  }\n\n  async delete(id: string): Promise<void> {\n    const user = await this.findById(id);\n    if (!user) throw new NotFoundError(`User ${id} not found`);\n    await this.db.users.softDelete(id);\n  }\n\n  async list(options?: { role?: string; limit?: number; offset?: number }): Promise<User[]> {\n    return this.db.users.find(options ?? {});\n  }\n}\n```",
+      "rubric": [
+        {
+          "criterion": "Documentation Completeness",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Every exported symbol (UserCreateInput, User, UserService, all 5 methods) has complete JSDoc with summary, param descriptions, return type, and thrown errors documented",
+            "3": "Most exports documented but some methods missing param descriptions or error documentation",
+            "1": "Only function signatures restated as comments; minimal added information",
+            "0": "No documentation generated or only partial coverage"
+          }
+        },
+        {
+          "criterion": "Example Quality",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Each method has at least one runnable example with realistic data, proper imports/setup, and expected output shown; error handling examples included for methods that throw",
+            "3": "Examples present for most methods but use placeholder data or lack expected output",
+            "1": "Only one or two trivial examples for the entire class",
+            "0": "No examples provided"
+          }
+        },
+        {
+          "criterion": "Error Documentation",
+          "weight": 0.25,
+          "scoring": {
+            "5": "All thrown errors (ValidationError, ConflictError, NotFoundError) documented with specific trigger conditions for each method; @throws tags used correctly",
+            "3": "Some errors documented but missing trigger conditions or not all error types covered",
+            "1": "Errors mentioned generically without specifics",
+            "0": "No error documentation"
+          }
+        },
+        {
+          "criterion": "Style and Formatting",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Consistent JSDoc/TSDoc formatting throughout; proper tag usage; descriptions add value beyond the type signature; interface properties documented",
+            "3": "Mostly consistent but some inconsistencies in formatting or tag usage",
+            "1": "Inconsistent style; mixes JSDoc conventions",
+            "0": "No consistent formatting"
+          }
+        }
+      ],
+      "passThreshold": 60
+    }
+  ]
+}

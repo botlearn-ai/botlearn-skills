@@ -1,0 +1,64 @@
+{
+  "version": "0.0.1",
+  "timeout": 60,
+  "tasks": [
+    {
+      "id": "smoke-01",
+      "description": "Refactor a class with multiple code smells including Long Method, Feature Envy, and duplicated logic to improve readability and reduce complexity",
+      "input": "Refactor the following OrderProcessor class. It has a single 80-line processOrder method that handles validation, discount calculation, tax computation, inventory checks, and email notifications. The discount logic is duplicated in both processOrder and a separate generateQuote method. The method accesses customer.address, customer.loyaltyTier, and customer.email more than its own fields (Feature Envy). Cyclomatic complexity is 25. Target: reduce complexity by at least 40%, eliminate duplication, and resolve Feature Envy while maintaining identical order processing behavior.\n\n```python\nclass OrderProcessor:\n    def __init__(self, db, mailer, inventory):\n        self.db = db\n        self.mailer = mailer\n        self.inventory = inventory\n\n    def process_order(self, order, customer):\n        # Validate order\n        if not order.items:\n            raise ValueError(\"Empty order\")\n        for item in order.items:\n            if item.quantity <= 0:\n                raise ValueError(f\"Invalid quantity for {item.name}\")\n            if item.price < 0:\n                raise ValueError(f\"Invalid price for {item.name}\")\n            stock = self.inventory.check(item.sku)\n            if stock < item.quantity:\n                raise ValueError(f\"Insufficient stock for {item.name}\")\n\n        # Calculate subtotal\n        subtotal = 0\n        for item in order.items:\n            subtotal += item.price * item.quantity\n\n        # Apply discount (DUPLICATED in generate_quote)\n        discount = 0\n        if customer.loyalty_tier == \"gold\":\n            if subtotal > 500:\n                discount = subtotal * 0.15\n            elif subtotal > 200:\n                discount = subtotal * 0.10\n            else:\n                discount = subtotal * 0.05\n        elif customer.loyalty_tier == \"silver\":\n            if subtotal > 500:\n                discount = subtotal * 0.10\n            elif subtotal > 200:\n                discount = subtotal * 0.07\n            else:\n                discount = subtotal * 0.03\n        elif customer.loyalty_tier == \"bronze\":\n            if subtotal > 300:\n                discount = subtotal * 0.05\n            else:\n                discount = subtotal * 0.02\n\n        discounted = subtotal - discount\n\n        # Calculate tax based on address\n        if customer.address.state in [\"CA\", \"NY\", \"TX\"]:\n            tax_rate = 0.08\n        elif customer.address.state in [\"OR\", \"MT\", \"NH\"]:\n            tax_rate = 0.0\n        else:\n            tax_rate = 0.06\n        tax = discounted * tax_rate\n        total = discounted + tax\n\n        # Reserve inventory\n        for item in order.items:\n            self.inventory.reserve(item.sku, item.quantity)\n\n        # Save order\n        order.subtotal = subtotal\n        order.discount = discount\n        order.tax = tax\n        order.total = total\n        order.status = \"confirmed\"\n        self.db.save(order)\n\n        # Send confirmation\n        self.mailer.send(\n            to=customer.email,\n            subject=f\"Order {order.id} Confirmed\",\n            body=f\"Total: ${total:.2f} (discount: ${discount:.2f})\"\n        )\n        return order\n\n    def generate_quote(self, order, customer):\n        subtotal = sum(i.price * i.quantity for i in order.items)\n        # DUPLICATED discount logic\n        discount = 0\n        if customer.loyalty_tier == \"gold\":\n            if subtotal > 500:\n                discount = subtotal * 0.15\n            elif subtotal > 200:\n                discount = subtotal * 0.10\n            else:\n                discount = subtotal * 0.05\n        elif customer.loyalty_tier == \"silver\":\n            if subtotal > 500:\n                discount = subtotal * 0.10\n            elif subtotal > 200:\n                discount = subtotal * 0.07\n            else:\n                discount = subtotal * 0.03\n        elif customer.loyalty_tier == \"bronze\":\n            if subtotal > 300:\n                discount = subtotal * 0.05\n            else:\n                discount = subtotal * 0.02\n        return {\"subtotal\": subtotal, \"discount\": discount, \"total\": subtotal - discount}\n```",
+      "rubric": [
+        {
+          "criterion": "Smell Detection",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Identifies all major smells: Long Method, Feature Envy (customer access), duplicated discount logic, Switch Statements (loyalty tier), and computes baseline cyclomatic complexity",
+            "3": "Identifies 2-3 smells but misses some or does not compute metrics",
+            "1": "Identifies only 1 smell or describes issues vaguely without naming specific smells",
+            "0": "No smell detection performed"
+          }
+        },
+        {
+          "criterion": "Refactoring Plan Quality",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Presents ordered, incremental steps: extract discount calculation, extract tax calculation, extract validation, move discount logic to customer/strategy, eliminate duplication; each step has clear rationale",
+            "3": "Provides a refactoring plan but steps are not well-ordered or some are missing",
+            "1": "Vague suggestions like 'split the method' without specific steps",
+            "0": "No plan provided; jumps directly to rewriting"
+          }
+        },
+        {
+          "criterion": "Transformation Quality",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Extracted methods/classes are well-named and cohesive; discount duplication eliminated via shared method or Strategy pattern; Feature Envy resolved by moving logic to appropriate class; complexity significantly reduced",
+            "3": "Some extractions performed but naming is poor, or duplication is only partially resolved",
+            "1": "Minimal structural changes; code is rearranged but smells remain",
+            "0": "No meaningful transformation applied"
+          }
+        },
+        {
+          "criterion": "Behavioral Equivalence",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Explicitly verifies that all discount calculations, tax rates, validation errors, inventory reservations, and email sending produce identical results; notes which tests would cover each behavior",
+            "3": "Claims equivalence but does not verify specific behaviors or misses edge cases",
+            "1": "No equivalence verification; changes may alter behavior",
+            "0": "Introduces obvious behavioral changes without acknowledging them"
+          }
+        },
+        {
+          "criterion": "Quality Metrics Improvement",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Reports before/after cyclomatic complexity, cognitive complexity, and duplication metrics; achieves 40%+ complexity reduction; duplication eliminated",
+            "3": "Reports some metrics but improvement is modest (20-39%) or not all metrics are measured",
+            "1": "No metrics reported; improvement is claimed but not quantified",
+            "0": "No measurement performed"
+          }
+        }
+      ],
+      "passThreshold": 60
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "name": "@botlearn/summarizer",
+  "version": "0.1.0",
+  "description": "Content summarization with core argument extraction, key detail retention, and accuracy self-checking for OpenClaw Agent",
+  "category": "content-processing",
+  "author": "BotLearn",
+  "benchmarkDimension": "content-understanding",
+  "expectedImprovement": 45,
+  "dependencies": {},
+  "compatibility": {
+    "openclaw": ">=0.5.0"
+  },
+  "files": {
+    "skill": "SKILL.md",
+    "knowledge": [
+      "knowledge/domain.md",
+      "knowledge/best-practices.md",
+      "knowledge/anti-patterns.md"
+    ],
+    "strategies": [
+      "strategies/main.md"
+    ],
+    "smokeTest": "tests/smoke.json",
+    "benchmark": "tests/benchmark.json"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "version": "0.0.1",
+  "timeout": 60,
+  "tasks": [
+    {
+      "id": "smoke-01",
+      "description": "Rewrite an academic paragraph for a general audience while preserving factual accuracy and avoiding AI-detection patterns",
+      "input": "Rewrite the following academic text for a general audience blog post. Maintain all factual claims but make it engaging and accessible:\n\n\"The longitudinal study conducted by Martinez et al. (2023) across 14 metropolitan areas (N=12,847) demonstrated that consistent exposure to urban green spaces was associated with a statistically significant reduction in self-reported anxiety symptoms (β = -0.34, p < 0.001). Notably, the effect was moderated by socioeconomic status, with participants in lower-income quartiles exhibiting a 23% greater reduction in anxiety scores compared to their higher-income counterparts (interaction term: β = -0.08, p = 0.012). These findings corroborate earlier cross-sectional work by Chen & Williams (2021) while extending the evidence base through a more rigorous prospective design.\"",
+      "rubric": [
+        {
+          "criterion": "Style Transformation",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Fully transforms to conversational blog style: contractions, direct address, accessible language, engaging hooks; no academic register remains",
+            "3": "Partially transformed but retains some academic phrasing or structure; readable but not fully blog-appropriate",
+            "1": "Minor word swaps but essentially still reads as academic prose",
+            "0": "No meaningful style change from the source"
+          }
+        },
+        {
+          "criterion": "Factual Accuracy",
+          "weight": 0.3,
+          "scoring": {
+            "5": "All facts preserved: researcher names, 14 cities, 12847 participants, anxiety reduction finding, 23% greater effect for lower-income, study dates; no invented claims",
+            "3": "Most facts preserved but 1-2 statistics simplified beyond recognition or a detail is dropped",
+            "1": "Several factual errors or significant omissions of key data",
+            "0": "Facts altered, reversed, or fabricated"
+          }
+        },
+        {
+          "criterion": "Naturalness & AI-Detection Resistance",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Varied sentence length, diverse openers, no AI-tell vocabulary (delve, landscape, multifaceted), no over-hedging, natural paragraph flow",
+            "3": "Some variation but occasional AI patterns visible (uniform sentence length, repetitive openers, or 1-2 AI-tell words)",
+            "1": "Reads as typical AI output: uniform rhythm, predictable structure, AI-tell vocabulary present",
+            "0": "Blatantly AI-generated patterns throughout"
+          }
+        },
+        {
+          "criterion": "Audience Adaptation",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Statistical concepts explained through plain language or analogy; no unexplained jargon; reading level appropriate for general audience (8th-10th grade); engaging and interesting",
+            "3": "Some jargon simplified but statistical notation or academic framing partially remains",
+            "1": "Jargon present without explanation; audience not meaningfully changed from source",
+            "0": "No audience adaptation attempted"
+          }
+        }
+      ],
+      "passThreshold": 60
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "name": "@botlearn/storyteller",
+  "version": "0.1.0",
+  "description": "Crafts compelling stories with narrative structure, character development, and emotional rhythm for OpenClaw Agent",
+  "category": "creative-generation",
+  "author": "BotLearn",
+  "benchmarkDimension": "creative-generation",
+  "expectedImprovement": 30,
+  "dependencies": {},
+  "compatibility": {
+    "openclaw": ">=0.5.0"
+  },
+  "files": {
+    "skill": "SKILL.md",
+    "knowledge": [
+      "knowledge/domain.md",
+      "knowledge/best-practices.md",
+      "knowledge/anti-patterns.md"
+    ],
+    "strategies": [
+      "strategies/main.md"
+    ],
+    "smokeTest": "tests/smoke.json",
+    "benchmark": "tests/benchmark.json"
+  }
+}

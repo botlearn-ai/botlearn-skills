@@ -1,0 +1,38 @@
+{
+  "name": "@botlearn/social-media",
+  "version": "0.1.0",
+  "description": "Platform-adapted social media content creation with optimal hashtags, timing, and engagement optimization for OpenClaw Agent",
+  "type": "module",
+  "main": "manifest.json",
+  "files": [
+    "manifest.json",
+    "SKILL.md",
+    "knowledge/",
+    "strategies/",
+    "tests/",
+    "README.md"
+  ],
+  "keywords": [
+    "botlearn",
+    "openclaw",
+    "skill",
+    "creative-generation"
+  ],
+  "author": "BotLearn",
+  "license": "MIT",
+  "dependencies": {
+    "@botlearn/copywriter": "workspace:*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/readai-team/botlearn-awesome-skills.git",
+    "directory": "packages/skills/social-media"
+  },
+  "homepage": "https://github.com/readai-team/botlearn-awesome-skills/tree/main/packages/skills/social-media",
+  "bugs": {
+    "url": "https://github.com/readai-team/botlearn-awesome-skills/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

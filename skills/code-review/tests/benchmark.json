@@ -1,0 +1,476 @@
+{
+  "version": "0.0.1",
+  "dimension": "code-generation",
+  "tasks": [
+    {
+      "id": "bench-easy-01",
+      "difficulty": "easy",
+      "description": "Detect XSS vulnerability in React component",
+      "input": "Review this React component for security issues:\n\n```jsx\nfunction UserProfile({ user }) {\n  return (\n    <div>\n      <h1>{user.name}</h1>\n      <div dangerouslySetInnerHTML={{ __html: user.bio }} />\n      <a href={user.website}>{user.website}</a>\n    </div>\n  );\n}\n```",
+      "rubric": [
+        {
+          "criterion": "XSS Detection",
+          "weight": 0.5,
+          "scoring": {
+            "5": "Identifies dangerouslySetInnerHTML as XSS vector; identifies javascript: protocol risk in href; explains attack scenario",
+            "3": "Identifies dangerouslySetInnerHTML but misses href issue",
+            "1": "Only vague mention of XSS",
+            "0": "Misses XSS entirely"
+          }
+        },
+        {
+          "criterion": "Fix Suggestion",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Suggests DOMPurify for HTML sanitization and URL validation/allowlisting for href",
+            "3": "Suggests removing dangerouslySetInnerHTML but no sanitization alternative",
+            "1": "Vague fix",
+            "0": "No fix"
+          }
+        },
+        {
+          "criterion": "Severity",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Correctly classifies as High/Critical severity",
+            "3": "Classifies as Medium",
+            "1": "Classifies as Low",
+            "0": "No severity"
+          }
+        }
+      ],
+      "expectedScoreWithout": 35,
+      "expectedScoreWith": 80
+    },
+    {
+      "id": "bench-easy-02",
+      "difficulty": "easy",
+      "description": "Detect missing error handling in async code",
+      "input": "Review this Node.js function for issues:\n\n```javascript\nasync function fetchUserData(userId) {\n  const response = await fetch(`https://api.example.com/users/${userId}`);\n  const data = await response.json();\n  const posts = await fetch(`https://api.example.com/users/${userId}/posts`);\n  const postsData = await posts.json();\n  return { user: data, posts: postsData };\n}\n```",
+      "rubric": [
+        {
+          "criterion": "Issue Detection",
+          "weight": 0.5,
+          "scoring": {
+            "5": "Identifies: no error handling for failed requests, no status code check, no try-catch, sequential requests that could be parallel, no timeout, no input validation",
+            "3": "Identifies 3-4 of the above",
+            "1": "Only identifies missing try-catch",
+            "0": "No issues found"
+          }
+        },
+        {
+          "criterion": "Fix Quality",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Provides complete fix with try-catch, response.ok check, Promise.all for parallel requests, timeout, input validation",
+            "3": "Provides partial fix covering error handling",
+            "1": "Minimal fix",
+            "0": "No fix"
+          }
+        },
+        {
+          "criterion": "Report Structure",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Findings organized by severity with clear action items",
+            "3": "Some organization",
+            "1": "Flat list",
+            "0": "No structure"
+          }
+        }
+      ],
+      "expectedScoreWithout": 30,
+      "expectedScoreWith": 75
+    },
+    {
+      "id": "bench-easy-03",
+      "difficulty": "easy",
+      "description": "Detect basic code smells and naming issues",
+      "input": "Review this Python function:\n\n```python\ndef p(d, t, x=None):\n    r = []\n    for i in d:\n        if i['t'] == t:\n            if x is not None:\n                if i['v'] > x:\n                    r.append(i)\n            else:\n                r.append(i)\n    if len(r) == 0:\n        return None\n    r2 = sorted(r, key=lambda i: i['v'], reverse=True)\n    return r2\n```",
+      "rubric": [
+        {
+          "criterion": "Smell Detection",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Identifies: cryptic naming (p, d, t, x, r, r2, i), deep nesting, use of dict instead of dataclass/namedtuple, returning None vs empty list inconsistency",
+            "3": "Identifies naming and nesting issues",
+            "1": "Only mentions naming",
+            "0": "No issues found"
+          }
+        },
+        {
+          "criterion": "Refactoring Suggestion",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Provides complete refactored version with descriptive names, flat structure (early return/list comprehension), type hints, and consistent return type",
+            "3": "Provides renamed version but structure unchanged",
+            "1": "Only suggests renaming",
+            "0": "No refactoring"
+          }
+        },
+        {
+          "criterion": "Severity Assessment",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Correctly rates naming/readability as Medium severity and notes no security issues",
+            "3": "Reasonable severity assessment",
+            "1": "Inflated or missing severity",
+            "0": "No severity"
+          }
+        }
+      ],
+      "expectedScoreWithout": 35,
+      "expectedScoreWith": 75
+    },
+    {
+      "id": "bench-med-01",
+      "difficulty": "medium",
+      "description": "Detect SQL injection with ORM bypass",
+      "input": "Review this Django view for security issues:\n\n```python\nfrom django.http import JsonResponse\nfrom django.db import connection\nfrom .models import Product\n\ndef search_products(request):\n    query = request.GET.get('q', '')\n    category = request.GET.get('category', '')\n    min_price = request.GET.get('min_price', 0)\n    sort = request.GET.get('sort', 'name')\n    \n    products = Product.objects.filter(\n        name__icontains=query,\n        category__name=category\n    )\n    \n    with connection.cursor() as cursor:\n        cursor.execute(\n            f\"SELECT * FROM products_product WHERE price >= {min_price} ORDER BY {sort}\"\n        )\n        filtered = cursor.fetchall()\n    \n    return JsonResponse({'products': list(products.values()), 'filtered': filtered})\n```",
+      "rubric": [
+        {
+          "criterion": "SQL Injection Detection",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Identifies both injection points: min_price (value injection) AND sort (column injection/ORDER BY injection); explains that the ORM usage above is safe but the raw query below bypasses it",
+            "3": "Identifies the f-string SQL issue but misses ORDER BY injection specifics",
+            "1": "Only vague SQL injection mention",
+            "0": "Misses SQL injection"
+          }
+        },
+        {
+          "criterion": "Additional Issues",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Identifies: redundant query (ORM + raw doing similar things), no pagination, no input validation for min_price type, missing authentication",
+            "3": "Identifies 2 additional issues",
+            "1": "Only SQL injection found",
+            "0": "No additional issues"
+          }
+        },
+        {
+          "criterion": "Fix Quality",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Provides parameterized query fix, allowlist for sort column, consolidated to single ORM query, input validation",
+            "3": "Provides parameterized fix but misses sort allowlist",
+            "1": "Generic fix suggestion",
+            "0": "No fix"
+          }
+        },
+        {
+          "criterion": "Report Structure",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Structured with severity levels, grouped findings, clear action items",
+            "3": "Some structure",
+            "1": "Flat list",
+            "0": "No structure"
+          }
+        }
+      ],
+      "expectedScoreWithout": 30,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-02",
+      "difficulty": "medium",
+      "description": "Detect N+1 query and memory issues in data processing",
+      "input": "Review this TypeScript service for performance issues:\n\n```typescript\nasync function generateReport(orgId: string): Promise<Report> {\n  const departments = await db.departments.findMany({ where: { orgId } });\n  const report: Report = { departments: [] };\n\n  for (const dept of departments) {\n    const employees = await db.employees.findMany({ where: { departmentId: dept.id } });\n    const deptData: DepartmentReport = { name: dept.name, employees: [] };\n\n    for (const emp of employees) {\n      const reviews = await db.performanceReviews.findMany({ where: { employeeId: emp.id } });\n      const projects = await db.projectAssignments.findMany({ where: { employeeId: emp.id } });\n      \n      deptData.employees.push({\n        name: emp.name,\n        reviews: reviews,\n        projects: projects,\n        avgScore: reviews.reduce((sum, r) => sum + r.score, 0) / reviews.length\n      });\n    }\n    report.departments.push(deptData);\n  }\n  return report;\n}\n```",
+      "rubric": [
+        {
+          "criterion": "N+1 Detection",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Identifies nested N+1 pattern: 1 + N + N*M + N*M queries (departments → employees → reviews + projects); calculates approximate query count for realistic org sizes",
+            "3": "Identifies N+1 but doesn't trace the full nesting depth",
+            "1": "Mentions 'too many queries' without specifics",
+            "0": "Misses the issue"
+          }
+        },
+        {
+          "criterion": "Additional Issues",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Identifies: potential division by zero (empty reviews), memory growth with large orgs, sequential reviews+projects that could be parallel, no pagination/limit, missing error handling",
+            "3": "Identifies 2-3 additional issues",
+            "1": "Only N+1 found",
+            "0": "No additional issues"
+          }
+        },
+        {
+          "criterion": "Fix Quality",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Provides fix using JOINs/includes/eager loading, Promise.all for parallel queries, division-by-zero guard, streaming or pagination for large datasets",
+            "3": "Provides JOIN-based fix but misses other improvements",
+            "1": "Generic fix",
+            "0": "No fix"
+          }
+        },
+        {
+          "criterion": "Severity",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Correctly classifies N+1 as High (in a report generation context), division-by-zero as Medium",
+            "3": "Reasonable severity",
+            "1": "Incorrect severity",
+            "0": "No severity"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-03",
+      "difficulty": "medium",
+      "description": "Detect race condition in concurrent code",
+      "input": "Review this Go HTTP handler for concurrency issues:\n\n```go\npackage main\n\nimport (\n    \"fmt\"\n    \"net/http\"\n    \"sync\"\n)\n\nvar (\n    requestCount int\n    cache        = make(map[string]string)\n)\n\nfunc handler(w http.ResponseWriter, r *http.Request) {\n    requestCount++\n    key := r.URL.Query().Get(\"key\")\n    \n    if val, ok := cache[key]; ok {\n        fmt.Fprintf(w, \"cached: %s\", val)\n        return\n    }\n    \n    result := expensiveComputation(key)\n    cache[key] = result\n    fmt.Fprintf(w, \"computed: %s\", result)\n}\n\nfunc statsHandler(w http.ResponseWriter, r *http.Request) {\n    fmt.Fprintf(w, \"requests: %d, cache size: %d\", requestCount, len(cache))\n}\n```",
+      "rubric": [
+        {
+          "criterion": "Race Condition Detection",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Identifies: unsynchronized requestCount increment (data race), unsynchronized map read/write (Go maps are not goroutine-safe; concurrent map access will panic), cache stampede (multiple goroutines computing same key simultaneously)",
+            "3": "Identifies map race condition but misses counter or stampede",
+            "1": "Mentions concurrency issues vaguely",
+            "0": "Misses race conditions"
+          }
+        },
+        {
+          "criterion": "Additional Issues",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Identifies: unbounded cache growth (no eviction), no input validation on key, cache with no TTL, missing error handling on expensiveComputation",
+            "3": "Identifies 1-2 additional issues",
+            "1": "Only race conditions found",
+            "0": "No additional issues"
+          }
+        },
+        {
+          "criterion": "Fix Quality",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Provides sync.RWMutex for cache, atomic.AddInt64 for counter, singleflight for stampede prevention, or suggests sync.Map alternative",
+            "3": "Provides mutex fix but misses singleflight or atomic",
+            "1": "Suggests 'add a lock' without code",
+            "0": "No fix"
+          }
+        },
+        {
+          "criterion": "Severity & Go-Specific Knowledge",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Correctly notes concurrent map access causes runtime panic in Go (not just data corruption); classifies as Critical",
+            "3": "Notes race condition but doesn't mention Go-specific map panic",
+            "1": "Generic concurrency advice",
+            "0": "No Go-specific knowledge"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-04",
+      "difficulty": "medium",
+      "description": "Detect authentication bypass and JWT issues",
+      "input": "Review this authentication middleware:\n\n```javascript\nconst jwt = require('jsonwebtoken');\n\nconst SECRET = 'my-secret-key-123';\n\nfunction authMiddleware(req, res, next) {\n  const token = req.headers.authorization;\n  \n  if (!token) {\n    return res.status(401).json({ error: 'No token' });\n  }\n\n  try {\n    const decoded = jwt.verify(token, SECRET);\n    req.user = decoded;\n    next();\n  } catch (err) {\n    res.status(401).json({ error: 'Invalid token' });\n  }\n}\n\nfunction adminMiddleware(req, res, next) {\n  if (req.user.role === 'admin') {\n    next();\n  }\n  res.status(403).json({ error: 'Forbidden' });\n}\n\nfunction generateToken(user) {\n  return jwt.sign({ id: user.id, role: user.role, email: user.email }, SECRET);\n}\n```",
+      "rubric": [
+        {
+          "criterion": "Security Issue Detection",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Identifies: hardcoded weak secret, no token expiration, missing 'Bearer ' prefix parsing, adminMiddleware missing return (sends both 403 and continues), no algorithm restriction (algorithm confusion attack), PII in token payload",
+            "3": "Identifies 3-4 of the above",
+            "1": "Only identifies hardcoded secret",
+            "0": "Misses major issues"
+          }
+        },
+        {
+          "criterion": "Missing Return Bug",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Identifies that adminMiddleware doesn't return after next(), causing the 403 response to always execute (sending headers after response for admin users)",
+            "3": "Notes the control flow issue but doesn't fully explain the consequence",
+            "1": "Misses the bug",
+            "0": "Not mentioned"
+          }
+        },
+        {
+          "criterion": "Fix Quality",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Provides: env variable for secret, token expiration, Bearer parsing, return statement fix, algorithm pinning ({algorithms: ['HS256']}), minimal payload",
+            "3": "Fixes most issues but misses algorithm pinning",
+            "1": "Partial fixes",
+            "0": "No fixes"
+          }
+        },
+        {
+          "criterion": "Report Structure",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Clear severity classification; Critical for secret/no-expiry/auth bypass, Medium for payload/parsing",
+            "3": "Some severity classification",
+            "1": "Flat list",
+            "0": "No structure"
+          }
+        }
+      ],
+      "expectedScoreWithout": 30,
+      "expectedScoreWith": 75
+    },
+    {
+      "id": "bench-hard-01",
+      "difficulty": "hard",
+      "description": "Comprehensive review of a file upload service with multiple vulnerability classes",
+      "input": "Review this file upload service for all categories of issues:\n\n```python\nimport os\nimport subprocess\nfrom flask import Flask, request, jsonify, send_file\n\napp = Flask(__name__)\nUPLOAD_DIR = '/uploads'\n\n@app.route('/upload', methods=['POST'])\ndef upload():\n    file = request.files['file']\n    filename = file.filename\n    filepath = os.path.join(UPLOAD_DIR, filename)\n    file.save(filepath)\n    \n    if filename.endswith('.pdf'):\n        text = subprocess.check_output(f'pdftotext {filepath} -', shell=True)\n        return jsonify({'text': text.decode(), 'path': filepath})\n    \n    return jsonify({'message': 'Uploaded', 'path': filepath})\n\n@app.route('/files/<path:filename>')\ndef serve_file(filename):\n    return send_file(os.path.join(UPLOAD_DIR, filename))\n\n@app.route('/delete', methods=['POST'])\ndef delete():\n    path = request.json['path']\n    os.remove(path)\n    return jsonify({'deleted': path})\n```",
+      "rubric": [
+        {
+          "criterion": "Vulnerability Detection Breadth",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Identifies ALL: path traversal in upload (../../), command injection in pdftotext (shell=True with unsanitized filename), path traversal in serve_file, arbitrary file deletion in /delete (any path on system), no file type/size validation, no authentication, information disclosure (filepath in response), unrestricted file upload (web shells)",
+            "3": "Identifies 5-6 vulnerabilities",
+            "1": "Identifies 2-3 vulnerabilities",
+            "0": "Misses most issues"
+          }
+        },
+        {
+          "criterion": "Attack Scenario Depth",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Describes concrete attack chains: upload a file named '../../etc/cron.d/backdoor', upload file named '; rm -rf /' for command injection, delete /etc/passwd via delete endpoint",
+            "3": "Describes some attack scenarios but not chains",
+            "1": "Generic vulnerability descriptions",
+            "0": "No attack scenarios"
+          }
+        },
+        {
+          "criterion": "Fix Completeness",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Provides: filename sanitization (werkzeug.secure_filename), file type allowlisting, size limits, subprocess with list args (no shell=True), path validation (os.path.realpath check), authentication, remove filepath from response, chroot/contained upload directory",
+            "3": "Fixes 4-5 issues with code",
+            "1": "Fixes 1-2 issues",
+            "0": "No fixes"
+          }
+        },
+        {
+          "criterion": "Severity Accuracy",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Command injection and arbitrary file deletion as Critical; path traversal as Critical; unrestricted upload as High; missing auth as High; info disclosure as Medium",
+            "3": "Mostly correct severity",
+            "1": "Severity misclassification",
+            "0": "No severity"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 65
+    },
+    {
+      "id": "bench-hard-02",
+      "difficulty": "hard",
+      "description": "Review complex async state management with subtle bugs",
+      "input": "Review this TypeScript connection pool and caching layer for correctness and performance:\n\n```typescript\nclass ConnectionPool {\n  private pool: Connection[] = [];\n  private waiting: ((conn: Connection) => void)[] = [];\n  private cache: Map<string, { data: any; timestamp: number }> = new Map();\n  private maxSize: number;\n  private cacheTimeout = 300000; // 5 min\n\n  constructor(maxSize: number) {\n    this.maxSize = maxSize;\n  }\n\n  async query(sql: string, params: any[]): Promise<any> {\n    const cacheKey = sql + JSON.stringify(params);\n    const cached = this.cache.get(cacheKey);\n    \n    if (cached && Date.now() - cached.timestamp < this.cacheTimeout) {\n      return cached.data;\n    }\n\n    const conn = await this.getConnection();\n    const result = await conn.execute(sql, params);\n    this.cache.set(cacheKey, { data: result, timestamp: Date.now() });\n    this.releaseConnection(conn);\n    return result;\n  }\n\n  private async getConnection(): Promise<Connection> {\n    if (this.pool.length > 0) {\n      return this.pool.pop()!;\n    }\n    if (this.pool.length < this.maxSize) {\n      return new Connection();\n    }\n    return new Promise(resolve => this.waiting.push(resolve));\n  }\n\n  private releaseConnection(conn: Connection) {\n    if (this.waiting.length > 0) {\n      this.waiting.shift()!(conn);\n    } else {\n      this.pool.push(conn);\n    }\n  }\n}\n```",
+      "rubric": [
+        {
+          "criterion": "Bug Detection",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Identifies ALL: getConnection size check is wrong (pool.length tracks available not total, so it creates unlimited connections), connection not released on query error (no try-finally), cache grows unboundedly, cache key collision possible with JSON.stringify, mutation writes cached to cache (shared reference), waiting queue has no timeout (can hang forever)",
+            "3": "Identifies 3-4 bugs",
+            "1": "Identifies 1-2 bugs",
+            "0": "Misses bugs"
+          }
+        },
+        {
+          "criterion": "Concurrency Analysis",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Identifies race conditions: multiple concurrent calls can pop same connection (not atomic), cache stampede (multiple requests for same expired key), TOCTOU in getConnection",
+            "3": "Identifies 1-2 concurrency issues",
+            "1": "Mentions concurrency concerns vaguely",
+            "0": "No concurrency analysis"
+          }
+        },
+        {
+          "criterion": "Fix Quality",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Provides: separate total connection counter, try-finally for connection release, cache eviction (LRU or size-limited), semaphore or mutex for pool access, timeout for waiting, defensive copy for cached data",
+            "3": "Fixes major bugs but misses concurrency fixes",
+            "1": "Partial fixes",
+            "0": "No fixes"
+          }
+        },
+        {
+          "criterion": "Overall Assessment",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Provides health score, identifies this as High-risk code due to resource management bugs, recommends using a proven pool library instead",
+            "3": "Some overall assessment",
+            "1": "Only individual findings",
+            "0": "No assessment"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 65
+    },
+    {
+      "id": "bench-hard-03",
+      "difficulty": "hard",
+      "description": "Review a multi-language microservice interaction with subtle security and reliability issues",
+      "input": "Review this API gateway handler that coordinates between microservices:\n\n```typescript\nimport express from 'express';\nimport axios from 'axios';\nimport Redis from 'ioredis';\n\nconst redis = new Redis();\nconst app = express();\n\napp.post('/api/checkout', async (req, res) => {\n  const { userId, items, paymentToken, promoCode } = req.body;\n  \n  // Step 1: Validate promo code\n  let discount = 0;\n  if (promoCode) {\n    const promo = await axios.get(`http://promo-service/validate/${promoCode}`);\n    discount = promo.data.discount;\n  }\n  \n  // Step 2: Check inventory\n  const inventory = await axios.post('http://inventory-service/check', { items });\n  if (!inventory.data.available) {\n    return res.status(400).json({ error: 'Items unavailable' });\n  }\n  \n  // Step 3: Reserve inventory\n  await axios.post('http://inventory-service/reserve', { items, userId });\n  \n  // Step 4: Calculate total\n  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);\n  const finalTotal = total - (total * discount / 100);\n  \n  // Step 5: Charge payment\n  const payment = await axios.post('http://payment-service/charge', {\n    userId, amount: finalTotal, token: paymentToken\n  });\n  \n  // Step 6: Create order\n  const order = await axios.post('http://order-service/create', {\n    userId, items, total: finalTotal, paymentId: payment.data.id\n  });\n  \n  // Step 7: Cache order\n  await redis.set(`order:${order.data.id}`, JSON.stringify(order.data));\n  \n  res.json({ orderId: order.data.id, total: finalTotal });\n});\n```",
+      "rubric": [
+        {
+          "criterion": "Distributed System Issues",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Identifies: no saga/compensation (if payment fails, inventory stays reserved; if order creation fails, payment is charged without order), no idempotency (retry creates double charge), no timeout on service calls, no circuit breaker, race condition between check and reserve (TOCTOU)",
+            "3": "Identifies 2-3 distributed system issues",
+            "1": "Only mentions error handling",
+            "0": "Misses distributed issues"
+          }
+        },
+        {
+          "criterion": "Security Issues",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Identifies: client-supplied prices (item.price from request body — price manipulation), no auth/user verification, discount could be > 100% (negative total), no input validation on items array, SSRF potential via internal service URLs, no rate limiting on checkout",
+            "3": "Identifies 3 security issues",
+            "1": "Identifies 1 security issue",
+            "0": "Misses security issues"
+          }
+        },
+        {
+          "criterion": "Reliability Fix",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Proposes: saga pattern with compensation handlers, idempotency keys, timeouts + circuit breakers, server-side price lookup, input validation, retry with backoff, dead letter queue for failed steps",
+            "3": "Proposes some reliability fixes",
+            "1": "Only suggests try-catch",
+            "0": "No reliability fixes"
+          }
+        },
+        {
+          "criterion": "Severity & Report Quality",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Critical: price manipulation, no compensation; High: no idempotency, no timeout; Medium: missing circuit breaker, redis caching issues; structured report with priorities",
+            "3": "Some severity classification",
+            "1": "Flat list",
+            "0": "No severity"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 65
+    }
+  ]
+}
