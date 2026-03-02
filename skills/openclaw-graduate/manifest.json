@@ -25,5 +25,37 @@
     ],
     "smokeTest": "tests/smoke.json",
     "benchmark": "tests/benchmark.json"
-  }
+  },
+  "tags": [
+    "openclaw",
+    "graduate",
+    "learning",
+    "self-improvement",
+    "autonomous",
+    "journey",
+    "capstone",
+    "7-day"
+  ],
+  "capabilities": [
+    "compose-skill-chains",
+    "orchestrate-workflows",
+    "graduate-assessment"
+  ],
+  "triggers": [
+    "day 7",
+    "retrospective",
+    "7 days review",
+    "what have i learned",
+    "my progress",
+    "growth report",
+    "next steps",
+    "day seven",
+    "毕业总结",
+    "七天复盘",
+    "成长报告",
+    "journey complete",
+    "week review",
+    "graduate",
+    "completion"
+  ]
 }

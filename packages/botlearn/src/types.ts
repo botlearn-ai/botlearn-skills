@@ -200,9 +200,67 @@ export interface SkillError {
 export interface ValidationResult {
   valid: boolean;
   errors: ValidationError[];
+  warnings?: ValidationWarning[];
 }
 
 export interface ValidationError {
   field: string;
   message: string;
+}
+
+export interface ValidationWarning {
+  field: string;
+  message: string;
+}
+
+// --- Skill Registry ---
+
+export interface SkillRegistryEntry {
+  name: string;
+  version: string;
+  description: string;
+  category: SkillCategory;
+  benchmarkDimension: BenchmarkDimension;
+  expectedImprovement: number;
+  tags: string[];
+  capabilities: string[];
+  triggers: string[];
+  dependencies: Record<string, string>;
+  dependents: string[];
+  compatibility: { openclaw: string };
+  npm: string;
+}
+
+export interface InstallGroup {
+  description: string;
+  skills: string[];
+}
+
+export interface SkillCatalog {
+  version: string;
+  generatedAt: string;
+  skills: SkillRegistryEntry[];
+  categories: Record<string, string[]>;
+  dependencyGraph: Record<string, string[]>;
+  installGroups: Record<string, InstallGroup>;
+}
+
+export interface SkillSearchQuery {
+  keyword?: string;
+  category?: SkillCategory;
+  tags?: string[];
+  capabilities?: string[];
+}
+
+export interface SkillSearchResult {
+  skill: SkillRegistryEntry;
+  relevance: number;
+  matchReasons: string[];
+}
+
+export interface InstallPlan {
+  installed: string[];
+  toInstall: string[];
+  targets: string[];
+  hasCycle: boolean;
 }

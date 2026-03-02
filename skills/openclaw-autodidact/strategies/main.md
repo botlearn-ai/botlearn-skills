@@ -1,7 +1,7 @@
 ---
 strategy: openclaw-autodidact
 version: 1.0.0
-steps: 10
+steps: 11
 ---
 
 # OpenClaw Autodidact Strategy
@@ -67,7 +67,67 @@ Analyze the selected task to understand:
 
 **Output**: Structured task analysis with learning objectives
 
-## Step 3: Method A - Skill Search
+## Step 3: Registry-First Skill Discovery
+
+Before searching the web, query the BotLearn Skill Registry for matching skills:
+
+### 3.1 Load Registry
+
+```javascript
+// Local (if botlearn SDK installed)
+import catalog from "botlearn/registry";
+
+// Remote fallback
+const catalog = await fetch(
+  "https://raw.githubusercontent.com/readai-team/botlearn-awesome-skills/main/skills-registry.json"
+).then(r => r.json());
+```
+
+### 3.2 Search by Task Analysis
+
+Using the structured analysis from Step 2, search the registry:
+
+```javascript
+import { searchSkills, resolveInstallOrder } from "botlearn";
+
+// Search by keywords extracted from task analysis
+const results = searchSkills(catalog, {
+  keyword: "[main task keyword]",
+  capabilities: ["[needed-capability]"],
+  tags: ["[relevant-tag]"],
+});
+
+// Filter to relevant results
+const candidates = results.filter(r => r.relevance > 3);
+```
+
+### 3.3 Resolve Dependencies and Install
+
+```javascript
+// Get install plan with dependency resolution
+const plan = resolveInstallOrder(
+  catalog,
+  candidates.map(c => c.skill.name),
+  currentlyInstalledSkills
+);
+
+// plan.toInstall is in correct topological order
+for (const skillName of plan.toInstall) {
+  await clawhub.install(skillName);
+}
+```
+
+### 3.4 Decision
+
+**IF registry returned relevant results (candidates.length > 0)**:
+- Present candidates to user with match reasons
+- Install approved skills via `clawhub install`
+- Proceed to Step 5 (Re-attempt with new skills)
+
+**IF no relevant results from registry**:
+- Fall through to Step 4 (Web Search) as fallback
+
+## Step 4: Method A - Web Skill Search (Fallback)
 
 Execute web search for relevant BotLearn skills using @botlearn/google-search:
 
@@ -118,7 +178,7 @@ For each skill found:
 
 **Limit**: Max 3 skills per cycle
 
-## Step 4: Method A - Re-attempt with New Skills
+## Step 5: Method A - Re-attempt with New Skills
 
 ### 4.1 Prepare Re-attempt
 
@@ -161,7 +221,7 @@ For original task:
 - Keep in queue for community method
 - Don't retry same skill combination
 
-## Step 5: Method B - Community Engagement
+## Step 6: Method B - Community Engagement
 
 Run in parallel with Method A or as fallback.
 
@@ -297,7 +357,7 @@ From search results, synthesize:
 - Draft question with task details
 - Get user approval before posting
 
-## Step 6: Draft and Post Community Question (Optional)
+## Step 7: Draft and Post Community Question (Optional)
 
 ### 6.1 Draft Question
 
@@ -348,7 +408,7 @@ Any suggestions or recommended skills would be greatly appreciated!
 - Set reminder to check (24h)
 - Don't spam with duplicates
 
-## Step 7: Synthesize and Apply Solutions
+## Step 8: Synthesize and Apply Solutions
 
 Combine findings from both methods:
 
@@ -397,7 +457,7 @@ IF neither succeeded:
 - [ ] Quality improved from before?
 - [ ] User satisfied with result?
 
-## Step 8: Document Learning
+## Step 9: Document Learning
 
 ### 8.1 Record Cycle Outcome
 
@@ -466,7 +526,7 @@ Update learning knowledge base:
 - Note best use cases
 - Record compatibility info
 
-## Step 9: Report to User
+## Step 10: Report to User
 
 Generate structured learning report (see SKILL.md for format):
 
@@ -513,7 +573,7 @@ Ask user:
 - Adjust approach for next cycle
 - Ask for specific feedback
 
-## Step 10: Schedule Next Cycle
+## Step 11: Schedule Next Cycle
 
 ### 10.1 Calculate Next Run
 

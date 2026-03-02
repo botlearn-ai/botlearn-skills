@@ -22,5 +22,32 @@
     ],
     "smokeTest": "tests/smoke.json",
     "benchmark": "tests/benchmark.json"
-  }
+  },
+  "tags": [
+    "twitter",
+    "intel",
+    "search",
+    "retrieval",
+    "information",
+    "twitterx",
+    "platform",
+    "intelligence"
+  ],
+  "capabilities": [
+    "monitor-trends",
+    "extract-thread-context",
+    "sentiment-tracking"
+  ],
+  "triggers": [
+    "twitter",
+    "tweet",
+    "KOL",
+    "trending",
+    "X platform",
+    "twitter intelligence",
+    "twitter analysis",
+    "influencer tracking",
+    "twitter trends",
+    "social listening"
+  ]
 }

@@ -22,5 +22,36 @@
     ],
     "smokeTest": "tests/smoke.json",
     "benchmark": "tests/benchmark.json"
-  }
+  },
+  "tags": [
+    "openclaw",
+    "examiner",
+    "evaluation",
+    "assessment",
+    "testing",
+    "capability",
+    "examination",
+    "system"
+  ],
+  "capabilities": [
+    "evaluate-performance",
+    "generate-benchmarks",
+    "score-capabilities"
+  ],
+  "triggers": [
+    "exam",
+    "test",
+    "evaluation",
+    "assessment",
+    "capability check",
+    "radar chart",
+    "能力评测",
+    "考试",
+    "能力评估",
+    "exam my agent",
+    "run exam",
+    "skill test",
+    "benchmark me",
+    "evaluate capabilities"
+  ]
 }

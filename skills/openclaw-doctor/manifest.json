@@ -22,5 +22,32 @@
     ],
     "smokeTest": "tests/smoke.json",
     "benchmark": "tests/benchmark.json"
-  }
+  },
+  "tags": [
+    "openclaw",
+    "doctor",
+    "code",
+    "programming",
+    "development",
+    "comprehensive",
+    "health",
+    "check"
+  ],
+  "capabilities": [
+    "diagnose-skill-issues",
+    "repair-configuration",
+    "health-check"
+  ],
+  "triggers": [
+    "health check",
+    "diagnose",
+    "doctor",
+    "check system",
+    "system status",
+    "troubleshoot",
+    "self-check",
+    "health report",
+    "what's wrong",
+    "fix my setup"
+  ]
 }

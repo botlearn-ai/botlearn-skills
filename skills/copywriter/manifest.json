@@ -7,7 +7,7 @@
   "benchmarkDimension": "creative-generation",
   "expectedImprovement": 30,
   "dependencies": {
-    "@botlearn/sentiment-analyzer": "^1.0.0"
+    "@botlearn/sentiment-analyzer": ">=0.1.0"
   },
   "compatibility": {
     "openclaw": ">=0.5.0"
@@ -24,5 +24,27 @@
     ],
     "smokeTest": "tests/smoke.json",
     "benchmark": "tests/benchmark.json"
-  }
+  },
+  "tags": [
+    "copywriter",
+    "creative",
+    "generation",
+    "writing",
+    "marketing",
+    "copywriting",
+    "specialist"
+  ],
+  "capabilities": [
+    "apply-persuasion-framework",
+    "optimize-cta",
+    "target-audience"
+  ],
+  "triggers": [
+    "write copy",
+    "marketing copy",
+    "landing page",
+    "ad copy",
+    "CTA",
+    "sales copy"
+  ]
 }

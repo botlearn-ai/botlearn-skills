@@ -22,5 +22,26 @@
     ],
     "smokeTest": "tests/smoke.json",
     "benchmark": "tests/benchmark.json"
-  }
+  },
+  "tags": [
+    "storyteller",
+    "creative",
+    "generation",
+    "writing",
+    "crafts",
+    "compelling",
+    "stories"
+  ],
+  "capabilities": [
+    "craft-narrative",
+    "develop-characters",
+    "build-plot"
+  ],
+  "triggers": [
+    "write a story",
+    "tell a story",
+    "create a narrative",
+    "fiction",
+    "storytelling"
+  ]
 }

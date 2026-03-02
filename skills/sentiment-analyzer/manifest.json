@@ -22,5 +22,30 @@
     ],
     "smokeTest": "tests/smoke.json",
     "benchmark": "tests/benchmark.json"
-  }
+  },
+  "tags": [
+    "sentiment",
+    "analyzer",
+    "content",
+    "processing",
+    "nlp",
+    "fine-grained",
+    "recognition",
+    "opinion"
+  ],
+  "capabilities": [
+    "detect-sentiment",
+    "analyze-emotion",
+    "score-polarity"
+  ],
+  "triggers": [
+    "sentiment",
+    "opinion mining",
+    "analyze tone",
+    "polarity",
+    "sentiment analysis",
+    "emotional tone",
+    "opinion detection",
+    "feeling analysis"
+  ]
 }

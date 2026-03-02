@@ -43,7 +43,24 @@ export type {
   // Validation
   ValidationResult,
   ValidationError,
+  ValidationWarning,
+
+  // Registry & Catalog
+  SkillRegistryEntry,
+  SkillCatalog,
+  SkillSearchQuery,
+  SkillSearchResult,
+  InstallPlan,
+  InstallGroup,
 } from "./types.js";
 
 // Utilities
 export { validateManifest, VALID_CATEGORIES, VALID_DIMENSIONS } from "./validator.js";
+
+// Catalog
+export {
+  searchSkills,
+  resolveInstallOrder,
+  listByCategory,
+  getDependencyTree,
+} from "./catalog.js";

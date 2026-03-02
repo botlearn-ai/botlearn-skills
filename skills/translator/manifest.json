@@ -22,5 +22,28 @@
     ],
     "smokeTest": "tests/smoke.json",
     "benchmark": "tests/benchmark.json"
-  }
+  },
+  "tags": [
+    "translator",
+    "content",
+    "processing",
+    "nlp",
+    "context-aware",
+    "human-level",
+    "translation"
+  ],
+  "capabilities": [
+    "detect-language",
+    "translate-text",
+    "preserve-tone"
+  ],
+  "triggers": [
+    "translate",
+    "translation",
+    "翻译",
+    "convert to [language]",
+    "say this in",
+    "how do you say",
+    "localize"
+  ]
 }

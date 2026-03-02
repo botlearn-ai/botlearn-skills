@@ -22,5 +22,28 @@
     ],
     "smokeTest": "tests/smoke.json",
     "benchmark": "tests/benchmark.json"
-  }
+  },
+  "tags": [
+    "summarizer",
+    "content",
+    "processing",
+    "nlp",
+    "summarization",
+    "core",
+    "argument"
+  ],
+  "capabilities": [
+    "extract-key-points",
+    "compress-content",
+    "multi-doc-synthesis"
+  ],
+  "triggers": [
+    "summarize",
+    "summary",
+    "key points",
+    "TLDR",
+    "digest",
+    "main ideas",
+    "boil down"
+  ]
 }

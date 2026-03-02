@@ -22,5 +22,27 @@
     ],
     "smokeTest": "tests/smoke.json",
     "benchmark": "tests/benchmark.json"
-  }
+  },
+  "tags": [
+    "google",
+    "search",
+    "retrieval",
+    "information",
+    "advanced",
+    "query",
+    "construction"
+  ],
+  "capabilities": [
+    "construct-search-query",
+    "rank-results",
+    "extract-snippets"
+  ],
+  "triggers": [
+    "search for",
+    "find information",
+    "look up",
+    "google",
+    "search the web",
+    "find sources"
+  ]
 }

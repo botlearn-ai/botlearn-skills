@@ -7,8 +7,8 @@
   "benchmarkDimension": "creative-generation",
   "expectedImprovement": 60,
   "dependencies": {
-    "@botlearn/summarizer": "^1.0.0",
-    "@botlearn/keyword-extractor": "^1.0.0"
+    "@botlearn/summarizer": ">=0.1.0",
+    "@botlearn/keyword-extractor": ">=0.1.0"
   },
   "compatibility": {
     "openclaw": ">=0.5.0"
@@ -25,5 +25,26 @@
     ],
     "smokeTest": "tests/smoke.json",
     "benchmark": "tests/benchmark.json"
-  }
+  },
+  "tags": [
+    "writer",
+    "creative",
+    "generation",
+    "writing",
+    "structured",
+    "article",
+    "evidence-based"
+  ],
+  "capabilities": [
+    "structure-article",
+    "evidence-argumentation",
+    "style-consistency"
+  ],
+  "triggers": [
+    "write an article",
+    "write about",
+    "compose",
+    "draft article",
+    "blog post"
+  ]
 }

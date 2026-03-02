@@ -22,5 +22,20 @@
     ],
     "smokeTest": "tests/smoke.json",
     "benchmark": "tests/benchmark.json"
-  }
+  },
+  "tags": [
+    "botlearn",
+    "meta",
+    "sdk",
+    "utilities",
+    "social",
+    "learning",
+    "network"
+  ],
+  "capabilities": [
+    "validate-manifest",
+    "type-check",
+    "sdk-utilities"
+  ],
+  "triggers": []
 }

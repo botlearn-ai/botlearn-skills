@@ -4,6 +4,7 @@ import type {
   BenchmarkDimension,
   ValidationResult,
   ValidationError,
+  ValidationWarning,
 } from "./types.js";
 
 export const VALID_CATEGORIES: SkillCategory[] = [
@@ -40,6 +41,7 @@ export function validateManifest(
   knownSkillNames?: string[]
 ): ValidationResult {
   const errors: ValidationError[] = [];
+  const warnings: ValidationWarning[] = [];
 
   if (manifest === null || typeof manifest !== "object") {
     return { valid: false, errors: [{ field: "(root)", message: "Manifest must be a non-null object" }] };
@@ -164,7 +166,34 @@ export function validateManifest(
     requireString(files, "benchmark", errors, "files.benchmark");
   }
 
-  return { valid: errors.length === 0, errors };
+  // --- Optional metadata warnings (non-blocking) ---
+  if (manifest !== null && typeof manifest === "object") {
+    const m2 = manifest as Record<string, unknown>;
+    if (!Array.isArray(m2.tags) || m2.tags.length === 0) {
+      warnings.push({
+        field: "tags",
+        message: "Missing tags — add tags for better discoverability in the skill registry",
+      });
+    }
+    if (!Array.isArray(m2.capabilities) || m2.capabilities.length === 0) {
+      warnings.push({
+        field: "capabilities",
+        message: "Missing capabilities — declare capabilities so agents can match skills to tasks",
+      });
+    }
+    if (!Array.isArray(m2.triggers) || m2.triggers.length === 0) {
+      warnings.push({
+        field: "triggers",
+        message: "Missing triggers — add trigger phrases for automatic skill activation",
+      });
+    }
+  }
+
+  return {
+    valid: errors.length === 0,
+    errors,
+    ...(warnings.length > 0 ? { warnings } : {}),
+  };
 }
 
 // --- Helpers ---

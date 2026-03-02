@@ -7,7 +7,7 @@
   "benchmarkDimension": "content-understanding",
   "expectedImprovement": 35,
   "dependencies": {
-    "@botlearn/summarizer": "^1.0.0"
+    "@botlearn/summarizer": ">=0.1.0"
   },
   "compatibility": {
     "openclaw": ">=0.5.0"
@@ -24,5 +24,26 @@
     ],
     "smokeTest": "tests/smoke.json",
     "benchmark": "tests/benchmark.json"
-  }
+  },
+  "tags": [
+    "rewriter",
+    "content",
+    "processing",
+    "nlp",
+    "style",
+    "transformation",
+    "audience"
+  ],
+  "capabilities": [
+    "transform-style",
+    "adapt-audience",
+    "preserve-facts"
+  ],
+  "triggers": [
+    "rewrite",
+    "rephrase",
+    "paraphrase",
+    "reword",
+    "adapt for audience"
+  ]
 }

@@ -22,5 +22,28 @@
     ],
     "smokeTest": "tests/smoke.json",
     "benchmark": "tests/benchmark.json"
-  }
+  },
+  "tags": [
+    "brainstorm",
+    "creative",
+    "generation",
+    "writing",
+    "multi-dimensional",
+    "ideation",
+    "brainstorming"
+  ],
+  "capabilities": [
+    "generate-ideas",
+    "lateral-thinking",
+    "concept-mapping"
+  ],
+  "triggers": [
+    "brainstorm",
+    "generate ideas",
+    "ideation",
+    "think of ways",
+    "creative solutions",
+    "come up with ideas",
+    "brainstorming session"
+  ]
 }

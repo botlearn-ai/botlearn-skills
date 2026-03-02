@@ -8,6 +8,11 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./registry": {
+      "types": "./dist/index.d.ts",
+      "import": "./registry/skills-registry.json",
+      "require": "./registry/skills-registry.json"
     }
   },
   "main": "./dist/index.cjs",
@@ -15,6 +20,7 @@
   "types": "./dist/index.d.ts",
   "files": [
     "dist",
+    "registry",
     "README.md"
   ],
   "scripts": {

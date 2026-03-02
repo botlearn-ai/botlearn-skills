@@ -22,5 +22,30 @@
     ],
     "smokeTest": "tests/smoke.json",
     "benchmark": "tests/benchmark.json"
-  }
+  },
+  "tags": [
+    "rss",
+    "manager",
+    "search",
+    "retrieval",
+    "information",
+    "multi-source",
+    "rssatom",
+    "feed"
+  ],
+  "capabilities": [
+    "discover-feeds",
+    "aggregate-content",
+    "filter-updates"
+  ],
+  "triggers": [
+    "rss",
+    "feed",
+    "subscribe",
+    "digest",
+    "news feed",
+    "aggregator",
+    "syndication",
+    "feed reader"
+  ]
 }

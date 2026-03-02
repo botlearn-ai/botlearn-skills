@@ -22,5 +22,29 @@
     ],
     "smokeTest": "tests/smoke.json",
     "benchmark": "tests/benchmark.json"
-  }
+  },
+  "tags": [
+    "reddit",
+    "tracker",
+    "search",
+    "retrieval",
+    "information",
+    "community",
+    "monitoring",
+    "engagement"
+  ],
+  "capabilities": [
+    "track-subreddits",
+    "detect-trending-posts",
+    "extract-discussions"
+  ],
+  "triggers": [
+    "reddit",
+    "subreddit",
+    "trending",
+    "community",
+    "hotspot",
+    "reddit trends",
+    "what's hot on reddit"
+  ]
 }

@@ -22,5 +22,29 @@
     ],
     "smokeTest": "tests/smoke.json",
     "benchmark": "tests/benchmark.json"
-  }
+  },
+  "tags": [
+    "keyword",
+    "extractor",
+    "content",
+    "processing",
+    "nlp",
+    "semantic-level",
+    "extraction",
+    "topic"
+  ],
+  "capabilities": [
+    "extract-keywords",
+    "identify-topics",
+    "compute-relevance"
+  ],
+  "triggers": [
+    "extract keywords",
+    "key terms",
+    "topic extraction",
+    "keyword analysis",
+    "find keywords",
+    "identify topics",
+    "extract key phrases"
+  ]
 }

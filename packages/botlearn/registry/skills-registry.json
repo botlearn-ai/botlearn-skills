@@ -1,0 +1,1175 @@
+{
+  "version": "0.1.0",
+  "generatedAt": "2026-03-02T09:37:10.466Z",
+  "skills": [
+    {
+      "name": "@botlearn/academic-search",
+      "version": "0.1.0",
+      "description": "Academic paper discovery across arXiv, Google Scholar, and Semantic Scholar with abstract screening, citation analysis, and research synthesis for OpenClaw Agent",
+      "category": "information-retrieval",
+      "benchmarkDimension": "information-retrieval",
+      "expectedImprovement": 35,
+      "tags": [
+        "academic",
+        "search",
+        "retrieval",
+        "information",
+        "paper",
+        "discovery",
+        "across"
+      ],
+      "capabilities": [
+        "search-academic-papers",
+        "analyze-citations",
+        "screen-abstracts"
+      ],
+      "triggers": [
+        "find papers",
+        "academic search",
+        "research",
+        "literature review",
+        "arxiv",
+        "scholar",
+        "scholarly articles",
+        "cite",
+        "citation",
+        "peer-reviewed",
+        "scientific literature"
+      ],
+      "dependencies": {
+        "@botlearn/google-search": ">=0.1.0"
+      },
+      "dependents": [],
+      "compatibility": {
+        "openclaw": ">=0.5.0"
+      },
+      "npm": "https://www.npmjs.com/package/@botlearn/academic-search"
+    },
+    {
+      "name": "@botlearn/botlearn",
+      "version": "0.1.0",
+      "description": "Social learning network integration for AI agents — register, post, comment, vote, and collaborate on BotLearn community",
+      "category": "meta",
+      "benchmarkDimension": "meta-skill",
+      "expectedImprovement": 40,
+      "tags": [
+        "botlearn",
+        "meta",
+        "sdk",
+        "utilities",
+        "social",
+        "learning",
+        "network"
+      ],
+      "capabilities": [
+        "validate-manifest",
+        "type-check",
+        "sdk-utilities"
+      ],
+      "triggers": [],
+      "dependencies": {},
+      "dependents": [],
+      "compatibility": {
+        "openclaw": ">=0.5.0"
+      },
+      "npm": "https://www.npmjs.com/package/@botlearn/botlearn"
+    },
+    {
+      "name": "@botlearn/brainstorm",
+      "version": "0.1.0",
+      "description": "Multi-dimensional ideation and brainstorming with structured creativity frameworks, feasibility assessment, and idea clustering for OpenClaw Agent",
+      "category": "creative-generation",
+      "benchmarkDimension": "creative-generation",
+      "expectedImprovement": 40,
+      "tags": [
+        "brainstorm",
+        "creative",
+        "generation",
+        "writing",
+        "multi-dimensional",
+        "ideation",
+        "brainstorming"
+      ],
+      "capabilities": [
+        "generate-ideas",
+        "lateral-thinking",
+        "concept-mapping"
+      ],
+      "triggers": [
+        "brainstorm",
+        "generate ideas",
+        "ideation",
+        "think of ways",
+        "creative solutions",
+        "come up with ideas",
+        "brainstorming session"
+      ],
+      "dependencies": {},
+      "dependents": [],
+      "compatibility": {
+        "openclaw": ">=0.5.0"
+      },
+      "npm": "https://www.npmjs.com/package/@botlearn/brainstorm"
+    },
+    {
+      "name": "@botlearn/code-gen",
+      "version": "0.1.0",
+      "description": "Complete code generation with proper architecture, error handling, type safety, and test accompaniment for OpenClaw Agent",
+      "category": "programming-assistance",
+      "benchmarkDimension": "code-generation",
+      "expectedImprovement": 50,
+      "tags": [
+        "code",
+        "gen",
+        "programming",
+        "development",
+        "complete",
+        "generation",
+        "proper"
+      ],
+      "capabilities": [
+        "generate-code",
+        "scaffold-project",
+        "implement-algorithm"
+      ],
+      "triggers": [
+        "write code",
+        "generate function",
+        "create API",
+        "implement feature",
+        "code this"
+      ],
+      "dependencies": {},
+      "dependents": [
+        "@botlearn/doc-gen"
+      ],
+      "compatibility": {
+        "openclaw": ">=0.5.0"
+      },
+      "npm": "https://www.npmjs.com/package/@botlearn/code-gen"
+    },
+    {
+      "name": "@botlearn/code-review",
+      "version": "0.1.0",
+      "description": "Systematic code review identifying security vulnerabilities, performance issues, and code smells with human-level coverage for OpenClaw Agent",
+      "category": "programming-assistance",
+      "benchmarkDimension": "code-generation",
+      "expectedImprovement": 35,
+      "tags": [
+        "code",
+        "review",
+        "programming",
+        "development",
+        "systematic",
+        "identifying",
+        "security"
+      ],
+      "capabilities": [
+        "detect-issues",
+        "suggest-improvements",
+        "assess-quality"
+      ],
+      "triggers": [
+        "review code",
+        "code review",
+        "check this code",
+        "find bugs",
+        "security audit",
+        "review my code",
+        "check for vulnerabilities",
+        "code quality"
+      ],
+      "dependencies": {},
+      "dependents": [
+        "@botlearn/debugger",
+        "@botlearn/refactor"
+      ],
+      "compatibility": {
+        "openclaw": ">=0.5.0"
+      },
+      "npm": "https://www.npmjs.com/package/@botlearn/code-review"
+    },
+    {
+      "name": "@botlearn/copywriter",
+      "version": "0.1.0",
+      "description": "Marketing copywriting specialist that applies proven persuasion frameworks (AIDA, PAS, BAB) for audience-targeted copy with optimized CTAs and click-through rate improvement",
+      "category": "creative-generation",
+      "benchmarkDimension": "creative-generation",
+      "expectedImprovement": 30,
+      "tags": [
+        "copywriter",
+        "creative",
+        "generation",
+        "writing",
+        "marketing",
+        "copywriting",
+        "specialist"
+      ],
+      "capabilities": [
+        "apply-persuasion-framework",
+        "optimize-cta",
+        "target-audience"
+      ],
+      "triggers": [
+        "write copy",
+        "marketing copy",
+        "landing page",
+        "ad copy",
+        "CTA",
+        "sales copy"
+      ],
+      "dependencies": {
+        "@botlearn/sentiment-analyzer": ">=0.1.0"
+      },
+      "dependents": [
+        "@botlearn/social-media"
+      ],
+      "compatibility": {
+        "openclaw": ">=0.5.0"
+      },
+      "npm": "https://www.npmjs.com/package/@botlearn/copywriter"
+    },
+    {
+      "name": "@botlearn/debugger",
+      "version": "0.1.0",
+      "description": "Root cause analysis, bug diagnosis, and fix suggestion for OpenClaw Agent — improves debugging efficiency 5x with systematic hypothesis-driven investigation",
+      "category": "programming-assistance",
+      "benchmarkDimension": "code-generation",
+      "expectedImprovement": 500,
+      "tags": [
+        "debugger",
+        "code",
+        "programming",
+        "development",
+        "root",
+        "cause",
+        "analysis"
+      ],
+      "capabilities": [
+        "diagnose-bugs",
+        "root-cause-analysis",
+        "suggest-fixes"
+      ],
+      "triggers": [
+        "debug",
+        "fix bug",
+        "why is this failing",
+        "error",
+        "stack trace",
+        "exception",
+        "not working",
+        "unexpected behavior",
+        "crash",
+        "broken"
+      ],
+      "dependencies": {
+        "@botlearn/code-review": ">=0.1.0"
+      },
+      "dependents": [],
+      "compatibility": {
+        "openclaw": ">=0.5.0"
+      },
+      "npm": "https://www.npmjs.com/package/@botlearn/debugger"
+    },
+    {
+      "name": "@botlearn/doc-gen",
+      "version": "0.1.0",
+      "description": "Automated documentation generation for APIs, READMEs, changelogs, and code-level docs — raising doc completeness from 30% to 90% for OpenClaw Agent",
+      "category": "programming-assistance",
+      "benchmarkDimension": "code-generation",
+      "expectedImprovement": 30,
+      "tags": [
+        "doc",
+        "gen",
+        "code",
+        "programming",
+        "development",
+        "automated",
+        "documentation",
+        "generation"
+      ],
+      "capabilities": [
+        "generate-api-docs",
+        "create-readme",
+        "write-changelogs"
+      ],
+      "triggers": [
+        "generate docs",
+        "document this",
+        "write README",
+        "API documentation",
+        "changelog",
+        "add JSDoc",
+        "OpenAPI spec",
+        "document the API",
+        "write documentation"
+      ],
+      "dependencies": {
+        "@botlearn/code-gen": ">=0.1.0"
+      },
+      "dependents": [],
+      "compatibility": {
+        "openclaw": ">=0.5.0"
+      },
+      "npm": "https://www.npmjs.com/package/@botlearn/doc-gen"
+    },
+    {
+      "name": "@botlearn/google-search",
+      "version": "0.1.0",
+      "description": "Advanced Google search query construction, result filtering, and relevance ranking for OpenClaw Agent",
+      "category": "information-retrieval",
+      "benchmarkDimension": "information-retrieval",
+      "expectedImprovement": 30,
+      "tags": [
+        "google",
+        "search",
+        "retrieval",
+        "information",
+        "advanced",
+        "query",
+        "construction"
+      ],
+      "capabilities": [
+        "construct-search-query",
+        "rank-results",
+        "extract-snippets"
+      ],
+      "triggers": [
+        "search for",
+        "find information",
+        "look up",
+        "google",
+        "search the web",
+        "find sources"
+      ],
+      "dependencies": {},
+      "dependents": [
+        "@botlearn/academic-search",
+        "@botlearn/openclaw-autodidact",
+        "@botlearn/openclaw-graduate"
+      ],
+      "compatibility": {
+        "openclaw": ">=0.5.0"
+      },
+      "npm": "https://www.npmjs.com/package/@botlearn/google-search"
+    },
+    {
+      "name": "@botlearn/keyword-extractor",
+      "version": "0.1.0",
+      "description": "Semantic-level keyword extraction, topic clustering, and domain-aware term ranking for OpenClaw Agent",
+      "category": "content-processing",
+      "benchmarkDimension": "content-understanding",
+      "expectedImprovement": 40,
+      "tags": [
+        "keyword",
+        "extractor",
+        "content",
+        "processing",
+        "nlp",
+        "semantic-level",
+        "extraction",
+        "topic"
+      ],
+      "capabilities": [
+        "extract-keywords",
+        "identify-topics",
+        "compute-relevance"
+      ],
+      "triggers": [
+        "extract keywords",
+        "key terms",
+        "topic extraction",
+        "keyword analysis",
+        "find keywords",
+        "identify topics",
+        "extract key phrases"
+      ],
+      "dependencies": {},
+      "dependents": [
+        "@botlearn/writer"
+      ],
+      "compatibility": {
+        "openclaw": ">=0.5.0"
+      },
+      "npm": "https://www.npmjs.com/package/@botlearn/keyword-extractor"
+    },
+    {
+      "name": "@botlearn/openclaw-autodidact",
+      "version": "0.1.0",
+      "description": "Autonomous self-learning skill that continuously improves OpenClaw Agent by identifying unsolved tasks, searching for solutions, installing new skills, and engaging with the BotLearn community",
+      "category": "creative-generation",
+      "benchmarkDimension": "creative-generation",
+      "expectedImprovement": 50,
+      "tags": [
+        "openclaw",
+        "autodidact",
+        "creative",
+        "generation",
+        "writing",
+        "autonomous",
+        "self-learning",
+        "skill"
+      ],
+      "capabilities": [
+        "self-assess-capability",
+        "discover-skills",
+        "autonomous-learning"
+      ],
+      "triggers": [
+        "learn",
+        "improve yourself",
+        "self-study",
+        "get better",
+        "find solutions",
+        "study mode",
+        "research task",
+        "autodidact",
+        "continuous learning"
+      ],
+      "dependencies": {
+        "@botlearn/google-search": ">=0.1.0"
+      },
+      "dependents": [],
+      "compatibility": {
+        "openclaw": ">=0.5.0"
+      },
+      "npm": "https://www.npmjs.com/package/@botlearn/openclaw-autodidact"
+    },
+    {
+      "name": "@botlearn/openclaw-doctor",
+      "version": "0.1.0",
+      "description": "Comprehensive health check and diagnostic system for OpenClaw Agent, including data collection, analysis, troubleshooting, and automated repairs",
+      "category": "programming-assistance",
+      "benchmarkDimension": "logical-reasoning",
+      "expectedImprovement": 40,
+      "tags": [
+        "openclaw",
+        "doctor",
+        "code",
+        "programming",
+        "development",
+        "comprehensive",
+        "health",
+        "check"
+      ],
+      "capabilities": [
+        "diagnose-skill-issues",
+        "repair-configuration",
+        "health-check"
+      ],
+      "triggers": [
+        "health check",
+        "diagnose",
+        "doctor",
+        "check system",
+        "system status",
+        "troubleshoot",
+        "self-check",
+        "health report",
+        "what's wrong",
+        "fix my setup"
+      ],
+      "dependencies": {},
+      "dependents": [
+        "@botlearn/openclaw-graduate"
+      ],
+      "compatibility": {
+        "openclaw": ">=0.5.0"
+      },
+      "npm": "https://www.npmjs.com/package/@botlearn/openclaw-doctor"
+    },
+    {
+      "name": "@botlearn/openclaw-examiner",
+      "version": "0.1.0",
+      "description": "OpenClaw Agent capability examination system - standardized testing, scoring, and radar chart generation for multi-dimensional capability assessment",
+      "category": "evaluation",
+      "benchmarkDimension": "capability-assessment",
+      "expectedImprovement": 50,
+      "tags": [
+        "openclaw",
+        "examiner",
+        "evaluation",
+        "assessment",
+        "testing",
+        "capability",
+        "examination",
+        "system"
+      ],
+      "capabilities": [
+        "evaluate-performance",
+        "generate-benchmarks",
+        "score-capabilities"
+      ],
+      "triggers": [
+        "exam",
+        "test",
+        "evaluation",
+        "assessment",
+        "capability check",
+        "radar chart",
+        "能力评测",
+        "考试",
+        "能力评估",
+        "exam my agent",
+        "run exam",
+        "skill test",
+        "benchmark me",
+        "evaluate capabilities"
+      ],
+      "dependencies": {},
+      "dependents": [],
+      "compatibility": {
+        "openclaw": ">=0.5.0"
+      },
+      "npm": "https://www.npmjs.com/package/@botlearn/openclaw-examiner"
+    },
+    {
+      "name": "@botlearn/openclaw-graduate",
+      "version": "0.1.0",
+      "description": "Day 7 OpenClaw journey capstone - 7-day retrospective, growth analysis, archetype detection, and continuous development planning",
+      "category": "learning",
+      "benchmarkDimension": "learning-progress",
+      "expectedImprovement": 70,
+      "tags": [
+        "openclaw",
+        "graduate",
+        "learning",
+        "self-improvement",
+        "autonomous",
+        "journey",
+        "capstone",
+        "7-day"
+      ],
+      "capabilities": [
+        "compose-skill-chains",
+        "orchestrate-workflows",
+        "graduate-assessment"
+      ],
+      "triggers": [
+        "day 7",
+        "retrospective",
+        "7 days review",
+        "what have i learned",
+        "my progress",
+        "growth report",
+        "next steps",
+        "day seven",
+        "毕业总结",
+        "七天复盘",
+        "成长报告",
+        "journey complete",
+        "week review",
+        "graduate",
+        "completion"
+      ],
+      "dependencies": {
+        "@botlearn/openclaw-doctor": ">=0.1.0",
+        "@botlearn/google-search": ">=0.1.0"
+      },
+      "dependents": [],
+      "compatibility": {
+        "openclaw": ">=0.5.0"
+      },
+      "npm": "https://www.npmjs.com/package/@botlearn/openclaw-graduate"
+    },
+    {
+      "name": "@botlearn/reddit-tracker",
+      "version": "0.1.0",
+      "description": "Reddit community monitoring, engagement velocity tracking, cross-subreddit correlation, and early trend detection for OpenClaw Agent",
+      "category": "information-retrieval",
+      "benchmarkDimension": "information-retrieval",
+      "expectedImprovement": 30,
+      "tags": [
+        "reddit",
+        "tracker",
+        "search",
+        "retrieval",
+        "information",
+        "community",
+        "monitoring",
+        "engagement"
+      ],
+      "capabilities": [
+        "track-subreddits",
+        "detect-trending-posts",
+        "extract-discussions"
+      ],
+      "triggers": [
+        "reddit",
+        "subreddit",
+        "trending",
+        "community",
+        "hotspot",
+        "reddit trends",
+        "what's hot on reddit"
+      ],
+      "dependencies": {},
+      "dependents": [],
+      "compatibility": {
+        "openclaw": ">=0.5.0"
+      },
+      "npm": "https://www.npmjs.com/package/@botlearn/reddit-tracker"
+    },
+    {
+      "name": "@botlearn/refactor",
+      "version": "0.1.0",
+      "description": "Automated code refactoring with design pattern application, complexity reduction, and behavioral equivalence verification for OpenClaw Agent",
+      "category": "programming-assistance",
+      "benchmarkDimension": "code-generation",
+      "expectedImprovement": 40,
+      "tags": [
+        "refactor",
+        "code",
+        "programming",
+        "development",
+        "automated",
+        "refactoring",
+        "design"
+      ],
+      "capabilities": [
+        "apply-patterns",
+        "reduce-complexity",
+        "verify-equivalence"
+      ],
+      "triggers": [
+        "refactor",
+        "clean up code",
+        "improve code quality",
+        "apply design pattern",
+        "reduce complexity",
+        "simplify code",
+        "restructure code",
+        "reduce duplication"
+      ],
+      "dependencies": {
+        "@botlearn/code-review": ">=0.1.0"
+      },
+      "dependents": [],
+      "compatibility": {
+        "openclaw": ">=0.5.0"
+      },
+      "npm": "https://www.npmjs.com/package/@botlearn/refactor"
+    },
+    {
+      "name": "@botlearn/rewriter",
+      "version": "0.1.0",
+      "description": "Style transformation, audience adaptation, and natural content rewriting with factual accuracy preservation for OpenClaw Agent",
+      "category": "content-processing",
+      "benchmarkDimension": "content-understanding",
+      "expectedImprovement": 35,
+      "tags": [
+        "rewriter",
+        "content",
+        "processing",
+        "nlp",
+        "style",
+        "transformation",
+        "audience"
+      ],
+      "capabilities": [
+        "transform-style",
+        "adapt-audience",
+        "preserve-facts"
+      ],
+      "triggers": [
+        "rewrite",
+        "rephrase",
+        "paraphrase",
+        "reword",
+        "adapt for audience"
+      ],
+      "dependencies": {
+        "@botlearn/summarizer": ">=0.1.0"
+      },
+      "dependents": [],
+      "compatibility": {
+        "openclaw": ">=0.5.0"
+      },
+      "npm": "https://www.npmjs.com/package/@botlearn/rewriter"
+    },
+    {
+      "name": "@botlearn/rss-manager",
+      "version": "0.1.0",
+      "description": "Multi-source RSS/Atom feed aggregation, deduplication, importance scoring, topic clustering, and daily digest generation for OpenClaw Agent",
+      "category": "information-retrieval",
+      "benchmarkDimension": "information-retrieval",
+      "expectedImprovement": 30,
+      "tags": [
+        "rss",
+        "manager",
+        "search",
+        "retrieval",
+        "information",
+        "multi-source",
+        "rssatom",
+        "feed"
+      ],
+      "capabilities": [
+        "discover-feeds",
+        "aggregate-content",
+        "filter-updates"
+      ],
+      "triggers": [
+        "rss",
+        "feed",
+        "subscribe",
+        "digest",
+        "news feed",
+        "aggregator",
+        "syndication",
+        "feed reader"
+      ],
+      "dependencies": {},
+      "dependents": [],
+      "compatibility": {
+        "openclaw": ">=0.5.0"
+      },
+      "npm": "https://www.npmjs.com/package/@botlearn/rss-manager"
+    },
+    {
+      "name": "@botlearn/self-improving-agent-1.0.11",
+      "version": "1.0.11",
+      "description": "Continuous self-improvement skill for AI agents — captures learnings, errors, and feature requests to enable iterative growth",
+      "category": "meta",
+      "benchmarkDimension": "meta-skill",
+      "expectedImprovement": 45,
+      "tags": [
+        "self",
+        "improving",
+        "agent",
+        "1.0.11",
+        "meta",
+        "sdk",
+        "utilities",
+        "continuous"
+      ],
+      "capabilities": [
+        "self-improve",
+        "iterative-refinement",
+        "performance-tracking"
+      ],
+      "triggers": [],
+      "dependencies": {},
+      "dependents": [],
+      "compatibility": {
+        "openclaw": ">=0.5.0"
+      },
+      "npm": "https://www.npmjs.com/package/@botlearn/self-improving-agent-1.0.11"
+    },
+    {
+      "name": "@botlearn/sentiment-analyzer",
+      "version": "0.1.0",
+      "description": "Fine-grained sentiment recognition and opinion mining with aspect-based analysis, sarcasm detection, and polarity classification for OpenClaw Agent",
+      "category": "content-processing",
+      "benchmarkDimension": "content-understanding",
+      "expectedImprovement": 30,
+      "tags": [
+        "sentiment",
+        "analyzer",
+        "content",
+        "processing",
+        "nlp",
+        "fine-grained",
+        "recognition",
+        "opinion"
+      ],
+      "capabilities": [
+        "detect-sentiment",
+        "analyze-emotion",
+        "score-polarity"
+      ],
+      "triggers": [
+        "sentiment",
+        "opinion mining",
+        "analyze tone",
+        "polarity",
+        "sentiment analysis",
+        "emotional tone",
+        "opinion detection",
+        "feeling analysis"
+      ],
+      "dependencies": {},
+      "dependents": [
+        "@botlearn/copywriter"
+      ],
+      "compatibility": {
+        "openclaw": ">=0.5.0"
+      },
+      "npm": "https://www.npmjs.com/package/@botlearn/sentiment-analyzer"
+    },
+    {
+      "name": "@botlearn/social-media",
+      "version": "0.1.0",
+      "description": "Platform-adapted social media content creation with optimal hashtags, timing, and engagement optimization for OpenClaw Agent",
+      "category": "creative-generation",
+      "benchmarkDimension": "creative-generation",
+      "expectedImprovement": 30,
+      "tags": [
+        "social",
+        "media",
+        "creative",
+        "generation",
+        "writing",
+        "platform-adapted",
+        "content",
+        "creation"
+      ],
+      "capabilities": [
+        "adapt-platform-format",
+        "optimize-hashtags",
+        "schedule-timing"
+      ],
+      "triggers": [
+        "social media post",
+        "tweet",
+        "LinkedIn post",
+        "Instagram caption",
+        "TikTok script",
+        "create a post",
+        "social content",
+        "post for"
+      ],
+      "dependencies": {
+        "@botlearn/copywriter": ">=0.1.0"
+      },
+      "dependents": [],
+      "compatibility": {
+        "openclaw": ">=0.5.0"
+      },
+      "npm": "https://www.npmjs.com/package/@botlearn/social-media"
+    },
+    {
+      "name": "@botlearn/storyteller",
+      "version": "0.1.0",
+      "description": "Crafts compelling stories with narrative structure, character development, and emotional rhythm for OpenClaw Agent",
+      "category": "creative-generation",
+      "benchmarkDimension": "creative-generation",
+      "expectedImprovement": 30,
+      "tags": [
+        "storyteller",
+        "creative",
+        "generation",
+        "writing",
+        "crafts",
+        "compelling",
+        "stories"
+      ],
+      "capabilities": [
+        "craft-narrative",
+        "develop-characters",
+        "build-plot"
+      ],
+      "triggers": [
+        "write a story",
+        "tell a story",
+        "create a narrative",
+        "fiction",
+        "storytelling"
+      ],
+      "dependencies": {},
+      "dependents": [],
+      "compatibility": {
+        "openclaw": ">=0.5.0"
+      },
+      "npm": "https://www.npmjs.com/package/@botlearn/storyteller"
+    },
+    {
+      "name": "@botlearn/summarizer",
+      "version": "0.1.0",
+      "description": "Content summarization with core argument extraction, key detail retention, and accuracy self-checking for OpenClaw Agent",
+      "category": "content-processing",
+      "benchmarkDimension": "content-understanding",
+      "expectedImprovement": 45,
+      "tags": [
+        "summarizer",
+        "content",
+        "processing",
+        "nlp",
+        "summarization",
+        "core",
+        "argument"
+      ],
+      "capabilities": [
+        "extract-key-points",
+        "compress-content",
+        "multi-doc-synthesis"
+      ],
+      "triggers": [
+        "summarize",
+        "summary",
+        "key points",
+        "TLDR",
+        "digest",
+        "main ideas",
+        "boil down"
+      ],
+      "dependencies": {},
+      "dependents": [
+        "@botlearn/rewriter",
+        "@botlearn/writer"
+      ],
+      "compatibility": {
+        "openclaw": ">=0.5.0"
+      },
+      "npm": "https://www.npmjs.com/package/@botlearn/summarizer"
+    },
+    {
+      "name": "@botlearn/translator",
+      "version": "0.1.0",
+      "description": "Context-aware, human-level translation with terminology consistency, register adaptation, and cultural localization for OpenClaw Agent",
+      "category": "content-processing",
+      "benchmarkDimension": "content-understanding",
+      "expectedImprovement": 30,
+      "tags": [
+        "translator",
+        "content",
+        "processing",
+        "nlp",
+        "context-aware",
+        "human-level",
+        "translation"
+      ],
+      "capabilities": [
+        "detect-language",
+        "translate-text",
+        "preserve-tone"
+      ],
+      "triggers": [
+        "translate",
+        "translation",
+        "翻译",
+        "convert to [language]",
+        "say this in",
+        "how do you say",
+        "localize"
+      ],
+      "dependencies": {},
+      "dependents": [],
+      "compatibility": {
+        "openclaw": ">=0.5.0"
+      },
+      "npm": "https://www.npmjs.com/package/@botlearn/translator"
+    },
+    {
+      "name": "@botlearn/twitter-intel",
+      "version": "0.1.0",
+      "description": "Twitter/X platform intelligence gathering — tracking KOLs, extracting trending topics, analyzing engagement signals, detecting bot activity, and synthesizing actionable insights for OpenClaw Agent",
+      "category": "information-retrieval",
+      "benchmarkDimension": "information-retrieval",
+      "expectedImprovement": 30,
+      "tags": [
+        "twitter",
+        "intel",
+        "search",
+        "retrieval",
+        "information",
+        "twitterx",
+        "platform",
+        "intelligence"
+      ],
+      "capabilities": [
+        "monitor-trends",
+        "extract-thread-context",
+        "sentiment-tracking"
+      ],
+      "triggers": [
+        "twitter",
+        "tweet",
+        "KOL",
+        "trending",
+        "X platform",
+        "twitter intelligence",
+        "twitter analysis",
+        "influencer tracking",
+        "twitter trends",
+        "social listening"
+      ],
+      "dependencies": {},
+      "dependents": [],
+      "compatibility": {
+        "openclaw": ">=0.5.0"
+      },
+      "npm": "https://www.npmjs.com/package/@botlearn/twitter-intel"
+    },
+    {
+      "name": "@botlearn/writer",
+      "version": "0.1.0",
+      "description": "Structured article writing with evidence-based argumentation, consistent style, and quality improvement of 60% for OpenClaw Agent",
+      "category": "creative-generation",
+      "benchmarkDimension": "creative-generation",
+      "expectedImprovement": 60,
+      "tags": [
+        "writer",
+        "creative",
+        "generation",
+        "writing",
+        "structured",
+        "article",
+        "evidence-based"
+      ],
+      "capabilities": [
+        "structure-article",
+        "evidence-argumentation",
+        "style-consistency"
+      ],
+      "triggers": [
+        "write an article",
+        "write about",
+        "compose",
+        "draft article",
+        "blog post"
+      ],
+      "dependencies": {
+        "@botlearn/summarizer": ">=0.1.0",
+        "@botlearn/keyword-extractor": ">=0.1.0"
+      },
+      "dependents": [],
+      "compatibility": {
+        "openclaw": ">=0.5.0"
+      },
+      "npm": "https://www.npmjs.com/package/@botlearn/writer"
+    }
+  ],
+  "categories": {
+    "information-retrieval": [
+      "@botlearn/academic-search",
+      "@botlearn/google-search",
+      "@botlearn/reddit-tracker",
+      "@botlearn/rss-manager",
+      "@botlearn/twitter-intel"
+    ],
+    "meta": [
+      "@botlearn/botlearn",
+      "@botlearn/self-improving-agent-1.0.11"
+    ],
+    "creative-generation": [
+      "@botlearn/brainstorm",
+      "@botlearn/copywriter",
+      "@botlearn/openclaw-autodidact",
+      "@botlearn/social-media",
+      "@botlearn/storyteller",
+      "@botlearn/writer"
+    ],
+    "programming-assistance": [
+      "@botlearn/code-gen",
+      "@botlearn/code-review",
+      "@botlearn/debugger",
+      "@botlearn/doc-gen",
+      "@botlearn/openclaw-doctor",
+      "@botlearn/refactor"
+    ],
+    "content-processing": [
+      "@botlearn/keyword-extractor",
+      "@botlearn/rewriter",
+      "@botlearn/sentiment-analyzer",
+      "@botlearn/summarizer",
+      "@botlearn/translator"
+    ],
+    "evaluation": [
+      "@botlearn/openclaw-examiner"
+    ],
+    "learning": [
+      "@botlearn/openclaw-graduate"
+    ]
+  },
+  "dependencyGraph": {
+    "@botlearn/academic-search": [
+      "@botlearn/google-search"
+    ],
+    "@botlearn/botlearn": [],
+    "@botlearn/brainstorm": [],
+    "@botlearn/code-gen": [],
+    "@botlearn/code-review": [],
+    "@botlearn/copywriter": [
+      "@botlearn/sentiment-analyzer"
+    ],
+    "@botlearn/debugger": [
+      "@botlearn/code-review"
+    ],
+    "@botlearn/doc-gen": [
+      "@botlearn/code-gen"
+    ],
+    "@botlearn/google-search": [],
+    "@botlearn/keyword-extractor": [],
+    "@botlearn/openclaw-autodidact": [
+      "@botlearn/google-search"
+    ],
+    "@botlearn/openclaw-doctor": [],
+    "@botlearn/openclaw-examiner": [],
+    "@botlearn/openclaw-graduate": [
+      "@botlearn/openclaw-doctor",
+      "@botlearn/google-search"
+    ],
+    "@botlearn/reddit-tracker": [],
+    "@botlearn/refactor": [
+      "@botlearn/code-review"
+    ],
+    "@botlearn/rewriter": [
+      "@botlearn/summarizer"
+    ],
+    "@botlearn/rss-manager": [],
+    "@botlearn/self-improving-agent-1.0.11": [],
+    "@botlearn/sentiment-analyzer": [],
+    "@botlearn/social-media": [
+      "@botlearn/copywriter"
+    ],
+    "@botlearn/storyteller": [],
+    "@botlearn/summarizer": [],
+    "@botlearn/translator": [],
+    "@botlearn/twitter-intel": [],
+    "@botlearn/writer": [
+      "@botlearn/summarizer",
+      "@botlearn/keyword-extractor"
+    ]
+  },
+  "installGroups": {
+    "starter-pack": {
+      "description": "Essential skills for getting started — search, summarize, and translate",
+      "skills": [
+        "@botlearn/google-search",
+        "@botlearn/summarizer",
+        "@botlearn/translator"
+      ]
+    },
+    "developer-pack": {
+      "description": "Full programming assistance — code generation, review, debug, refactor, and docs",
+      "skills": [
+        "@botlearn/code-gen",
+        "@botlearn/code-review",
+        "@botlearn/debugger",
+        "@botlearn/refactor",
+        "@botlearn/doc-gen"
+      ]
+    },
+    "content-pack": {
+      "description": "Content processing toolkit — summarize, translate, rewrite, and extract keywords",
+      "skills": [
+        "@botlearn/summarizer",
+        "@botlearn/translator",
+        "@botlearn/rewriter",
+        "@botlearn/keyword-extractor",
+        "@botlearn/sentiment-analyzer"
+      ]
+    },
+    "creative-pack": {
+      "description": "Creative writing suite — write, brainstorm, tell stories, and produce marketing copy",
+      "skills": [
+        "@botlearn/writer",
+        "@botlearn/brainstorm",
+        "@botlearn/storyteller",
+        "@botlearn/copywriter",
+        "@botlearn/social-media"
+      ]
+    },
+    "research-pack": {
+      "description": "Multi-source research — web, academic, RSS, Twitter, and Reddit",
+      "skills": [
+        "@botlearn/google-search",
+        "@botlearn/academic-search",
+        "@botlearn/rss-manager",
+        "@botlearn/twitter-intel",
+        "@botlearn/reddit-tracker"
+      ]
+    }
+  }
+}

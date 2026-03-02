@@ -22,5 +22,26 @@
     ],
     "smokeTest": "tests/smoke.json",
     "benchmark": "tests/benchmark.json"
-  }
+  },
+  "tags": [
+    "code",
+    "gen",
+    "programming",
+    "development",
+    "complete",
+    "generation",
+    "proper"
+  ],
+  "capabilities": [
+    "generate-code",
+    "scaffold-project",
+    "implement-algorithm"
+  ],
+  "triggers": [
+    "write code",
+    "generate function",
+    "create API",
+    "implement feature",
+    "code this"
+  ]
 }

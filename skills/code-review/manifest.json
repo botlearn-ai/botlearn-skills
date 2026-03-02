@@ -22,5 +22,29 @@
     ],
     "smokeTest": "tests/smoke.json",
     "benchmark": "tests/benchmark.json"
-  }
+  },
+  "tags": [
+    "code",
+    "review",
+    "programming",
+    "development",
+    "systematic",
+    "identifying",
+    "security"
+  ],
+  "capabilities": [
+    "detect-issues",
+    "suggest-improvements",
+    "assess-quality"
+  ],
+  "triggers": [
+    "review code",
+    "code review",
+    "check this code",
+    "find bugs",
+    "security audit",
+    "review my code",
+    "check for vulnerabilities",
+    "code quality"
+  ]
 }

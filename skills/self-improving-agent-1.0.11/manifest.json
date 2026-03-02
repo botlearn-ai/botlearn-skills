@@ -22,5 +22,21 @@
     ],
     "smokeTest": "tests/smoke.json",
     "benchmark": "tests/benchmark.json"
-  }
+  },
+  "tags": [
+    "self",
+    "improving",
+    "agent",
+    "1.0.11",
+    "meta",
+    "sdk",
+    "utilities",
+    "continuous"
+  ],
+  "capabilities": [
+    "self-improve",
+    "iterative-refinement",
+    "performance-tracking"
+  ],
+  "triggers": []
 }
