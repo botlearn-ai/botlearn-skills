@@ -1,0 +1,491 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OpenClaw Examiner Self-Evaluation Report",
+  "description": "Schema for the full self-evaluation report produced by openclaw-examiner v3, including complete exam paper detail for every self-answered question",
+  "type": "object",
+  "required": ["version", "evaluation_type", "session_id", "timestamp", "mode", "overall", "dimensions", "exam_paper", "recommendations"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "3.0.0"
+    },
+    "evaluation_type": {
+      "type": "string",
+      "const": "self_test",
+      "description": "Indicates this is a self-evaluation (Agent answered its own questions)"
+    },
+    "session_id": {
+      "type": "string",
+      "pattern": "^exam-[0-9]{8}-[0-9]{6}$",
+      "description": "Unique session identifier (exam-YYYYMMDD-HHmmss)"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["full", "adaptive", "e2e", "quick", "dimension", "practice"]
+    },
+    "duration_seconds": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "agent_id": {
+      "type": "string",
+      "description": "OpenClaw Agent instance identifier"
+    },
+    "overall": {
+      "$ref": "#/definitions/overallScore"
+    },
+    "dimensions": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/dimensionResult" },
+      "minItems": 1,
+      "maxItems": 10,
+      "description": "Per-dimension aggregated results"
+    },
+    "exam_paper": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/questionDetail" },
+      "description": "Complete exam paper: every question with full detail (question text, self-generated answer, scoring breakdown with raw/adjusted scores, reference)"
+    },
+    "reliability": {
+      "$ref": "#/definitions/reliabilityReport"
+    },
+    "scoring_transparency": {
+      "$ref": "#/definitions/scoringTransparency"
+    },
+    "benchmarks": {
+      "$ref": "#/definitions/benchmarkComparison"
+    },
+    "trend": {
+      "$ref": "#/definitions/trendData"
+    },
+    "recommendations": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/recommendation" }
+    },
+    "previous_session_id": {
+      "type": "string",
+      "description": "Previous session ID for trend comparison"
+    }
+  },
+  "definitions": {
+    "overallScore": {
+      "type": "object",
+      "required": ["score", "raw_overall_score", "self_evaluation_adjustment", "level", "percentile"],
+      "properties": {
+        "score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Adjusted overall score (after -5% correction)"
+        },
+        "raw_overall_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Raw overall score (before correction)"
+        },
+        "self_evaluation_adjustment": {
+          "type": "number",
+          "default": -5,
+          "description": "Global correction percentage applied to CoT self-judged scores (default: -5)"
+        },
+        "level": {
+          "type": "string",
+          "enum": ["Beginner", "Competent", "Proficient", "Advanced", "Expert"]
+        },
+        "percentile": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "confidence_interval": {
+          "type": "number",
+          "description": "± value for confidence interval"
+        },
+        "reliability_index": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "questions_self_answered": {
+          "type": "integer",
+          "description": "Number of questions answered by the Agent itself"
+        },
+        "questions_total": {
+          "type": "integer"
+        }
+      }
+    },
+    "dimensionResult": {
+      "type": "object",
+      "required": ["dimension", "weight", "score", "weighted_score"],
+      "properties": {
+        "dimension": {
+          "type": "string",
+          "description": "Dimension name"
+        },
+        "weight": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "weighted_score": {
+          "type": "number",
+          "description": "score × weight contribution to overall"
+        },
+        "score_by_difficulty": {
+          "type": "object",
+          "properties": {
+            "easy": { "type": "number" },
+            "medium": { "type": "number" },
+            "hard": { "type": "number" }
+          }
+        },
+        "question_count": {
+          "type": "integer"
+        },
+        "strengths": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "weaknesses": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "status": {
+          "type": "string",
+          "enum": ["excellent", "good", "average", "below_average", "weak"]
+        },
+        "vs_benchmark_avg": {
+          "type": "number",
+          "description": "Delta vs population average"
+        },
+        "vs_benchmark_top10": {
+          "type": "number",
+          "description": "Delta vs top 10%"
+        }
+      }
+    },
+    "questionDetail": {
+      "type": "object",
+      "required": ["question_id", "sequence", "dimension", "difficulty", "question", "scoring"],
+      "description": "Complete detail for a single exam question — shown in the full exam paper section",
+      "properties": {
+        "question_id": {
+          "type": "string",
+          "description": "Unique question ID (e.g., TE-MED-001)"
+        },
+        "sequence": {
+          "type": "integer",
+          "description": "Question order in the exam (1-indexed)"
+        },
+        "dimension": {
+          "type": "string"
+        },
+        "dimension_weight": {
+          "type": "number"
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": ["easy", "medium", "hard"]
+        },
+        "difficulty_multiplier": {
+          "type": "number",
+          "description": "1.0 for easy, 1.2 for medium, 1.5 for hard"
+        },
+        "question": {
+          "type": "object",
+          "required": ["title", "body"],
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "Short question title"
+            },
+            "body": {
+              "type": "string",
+              "description": "Full question text including requirements and context"
+            },
+            "context": {
+              "type": "string",
+              "description": "Additional context or data provided with the question"
+            },
+            "expected_output": {
+              "type": "string",
+              "description": "Description of expected answer structure"
+            },
+            "time_suggestion_minutes": {
+              "type": "number"
+            }
+          }
+        },
+        "agent_answer": {
+          "type": "object",
+          "description": "The Agent's self-generated answer (produced in Examinee role)",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": ["self_answered", "skipped", "timed_out"]
+            },
+            "raw_text": {
+              "type": "string",
+              "description": "The Agent's self-generated answer text"
+            },
+            "parsed_content": {
+              "description": "Structured extracted answer (if JSON or parseable)",
+              "type": ["object", "string", "null"]
+            },
+            "confidence": {
+              "type": "string",
+              "enum": ["high", "medium", "low"],
+              "description": "Agent's self-assessed confidence in its own answer"
+            },
+            "time_spent_seconds": {
+              "type": "integer"
+            }
+          }
+        },
+        "scoring": {
+          "type": "object",
+          "required": ["criteria", "question_score", "verification_level"],
+          "properties": {
+            "verification_level": {
+              "type": "string",
+              "enum": ["programmatic", "reference_match", "cot_self_judge", "unverified"],
+              "description": "How this score was verified: 🔬 programmatic, 📖 reference, 🧠 CoT self-judge, ⚠️ unverified"
+            },
+            "criteria": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/criterionScore" },
+              "description": "Per-criterion breakdown with Chain-of-Thought justification"
+            },
+            "question_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Adjusted question score after -5% correction (0-100)"
+            },
+            "raw_question_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Raw question score before correction (0-100)"
+            },
+            "calculation": {
+              "type": "string",
+              "description": "Human-readable formula showing raw and adjusted score computation, e.g. 'Raw: 4×0.35 + 3×0.30 + 3×0.30 = 3.35 × 20 = 67/100; Adjusted: 67 × 0.95 = 64/100'"
+            }
+          }
+        },
+        "reference": {
+          "type": "object",
+          "description": "Reference answer or key points the ideal answer should contain",
+          "properties": {
+            "key_points": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Key elements an ideal answer should cover"
+            },
+            "ideal_approach": {
+              "type": "string",
+              "description": "Brief description of the ideal approach"
+            },
+            "common_mistakes": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Common mistakes to avoid"
+            }
+          }
+        },
+        "feedback": {
+          "type": "object",
+          "properties": {
+            "summary": {
+              "type": "string",
+              "description": "1-2 sentence overall feedback"
+            },
+            "strengths": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "improvements": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "learning_resource": {
+              "type": "string",
+              "description": "Recommended resource or skill for improvement"
+            }
+          }
+        }
+      }
+    },
+    "criterionScore": {
+      "type": "object",
+      "required": ["name", "weight", "score", "chain_of_thought"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Criterion name (e.g., Relevance, Correctness)"
+        },
+        "weight": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5,
+          "description": "Integer score 0-5"
+        },
+        "weighted_contribution": {
+          "type": "number",
+          "description": "score × weight"
+        },
+        "chain_of_thought": {
+          "type": "object",
+          "required": ["evidence", "reasoning", "key_factor"],
+          "properties": {
+            "evidence": {
+              "type": "string",
+              "description": "What was observed in the answer"
+            },
+            "reasoning": {
+              "type": "string",
+              "description": "Why this score and not higher/lower"
+            },
+            "key_factor": {
+              "type": "string",
+              "description": "The single most important element that determined the score"
+            }
+          }
+        },
+        "rubric_anchor": {
+          "type": "string",
+          "description": "The rubric description for this score level (from best-practices.md)"
+        }
+      }
+    },
+    "reliabilityReport": {
+      "type": "object",
+      "properties": {
+        "overall_index": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "dimensions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "dimension": { "type": "string" },
+              "pass_at_1": { "type": "number" },
+              "pass_at_3": { "type": "number" },
+              "pass_at_5": { "type": "number" },
+              "consistency_index": { "type": "number" }
+            }
+          }
+        }
+      }
+    },
+    "scoringTransparency": {
+      "type": "object",
+      "required": ["programmatic_pct", "reference_match_pct", "cot_self_judge_pct"],
+      "properties": {
+        "programmatic_pct": {
+          "type": "number",
+          "description": "% of criteria scored by code execution / URL verification"
+        },
+        "reference_match_pct": {
+          "type": "number",
+          "description": "% of criteria scored by reference answer comparison"
+        },
+        "cot_self_judge_pct": {
+          "type": "number",
+          "description": "% of criteria scored by LLM self-evaluation with CoT"
+        },
+        "unverified_pct": {
+          "type": "number"
+        },
+        "disclaimer": {
+          "type": "string",
+          "description": "Bias disclaimer for self-judged scores"
+        }
+      }
+    },
+    "benchmarkComparison": {
+      "type": "object",
+      "properties": {
+        "population_size": { "type": "integer" },
+        "dimensions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "dimension": { "type": "string" },
+              "your_score": { "type": "number" },
+              "avg": { "type": "number" },
+              "top_10_pct": { "type": "number" },
+              "gap_to_top10": { "type": "number" }
+            }
+          }
+        }
+      }
+    },
+    "trendData": {
+      "type": "object",
+      "properties": {
+        "sessions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "session_id": { "type": "string" },
+              "date": { "type": "string", "format": "date" },
+              "overall_score": { "type": "number" },
+              "dimension_scores": { "type": "object" }
+            }
+          }
+        },
+        "growth_rate_per_session": { "type": "number" },
+        "projected_next": { "type": "number" }
+      }
+    },
+    "recommendation": {
+      "type": "object",
+      "required": ["priority", "dimension", "action"],
+      "properties": {
+        "priority": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "dimension": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string"
+        },
+        "skill_to_install": {
+          "type": "string"
+        },
+        "expected_gain": {
+          "type": "number"
+        },
+        "timeframe": {
+          "type": "string",
+          "enum": ["7d", "30d", "90d"]
+        }
+      }
+    }
+  }
+}

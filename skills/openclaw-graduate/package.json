@@ -1,7 +1,7 @@
 {
   "name": "@botlearn/openclaw-graduate",
-  "version": "0.1.0",
-  "description": "Day 7 OpenClaw journey capstone - 7-day retrospective, growth analysis, and continuous development planning",
+  "version": "2.0.0",
+  "description": "7-day journey graduation companion — daily hook encouragement, browser tracking, growth statistics, graduation exam, and personalized ceremony",
   "type": "module",
   "main": "manifest.json",
   "files": [
@@ -10,6 +10,12 @@
     "knowledge/",
     "strategies/",
     "tests/",
+    "hooks/",
+    "scripts/",
+    "references/",
+    "assets/",
+    "requirement.md",
+    "setup.md",
     "README.md"
   ],
   "keywords": [
@@ -17,10 +23,14 @@
     "openclaw",
     "skill",
     "learning",
-    "day7",
-    "retrospective",
-    "growth",
-    "graduate"
+    "graduate",
+    "journey",
+    "7-day",
+    "hook",
+    "exam",
+    "ceremony",
+    "milestone",
+    "companion"
   ],
   "author": "BotLearn",
   "license": "MIT",

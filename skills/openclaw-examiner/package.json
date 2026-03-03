@@ -1,7 +1,7 @@
 {
   "name": "@botlearn/openclaw-examiner",
-  "version": "0.1.0",
-  "description": "OpenClaw Agent capability examination system - standardized testing, scoring, and radar chart generation for multi-dimensional capability assessment",
+  "version": "3.0.0",
+  "description": "OpenClaw Agent self-evaluation system v3 — autonomous self-test via role-switching pattern with CLEAR-inspired 10-dimension assessment, integrity safeguards, and multi-format reporting",
   "author": "BotLearn",
   "license": "MIT",
   "main": "SKILL.md",
@@ -10,17 +10,26 @@
     "manifest.json",
     "knowledge",
     "strategies",
-    "tests"
+    "tests",
+    "assets"
   ],
   "scripts": {},
   "keywords": [
     "openclaw",
     "agent",
+    "self-evaluation",
+    "self-test",
     "examination",
     "assessment",
     "evaluation",
     "radar-chart",
-    "capability"
+    "heat-map",
+    "capability",
+    "CLEAR-framework",
+    "adaptive-testing",
+    "reliability",
+    "agent-as-judge",
+    "role-switching"
   ],
   "dependencies": {}
 }

@@ -5,294 +5,52 @@ priority: high
 ttl: 30d
 ---
 
-# OpenClaw Anti-Patterns & Common Issues
+# Common Anti-Patterns
 
-## Configuration Anti-Patterns
+## Configuration
 
-### 1. Hardcoded Paths
-❌ **Bad**:
-```json
-{
-  "dataDir": "/Users/john/openclaw/data"
-}
-```
+1. **Hardcoded paths** — Use `$OPENCLAW_HOME` instead of absolute paths
+2. **Excessive timeouts** (>60s) — Hides performance issues; use 30s default
+3. **Disabled logging** — Always keep at least `warn` level in production
+4. **Excessive maxConcurrent** (>10) — Causes resource exhaustion; cap at 10 (agents.defaults.maxConcurrent)
 
-✅ **Good**:
-```json
-{
-  "dataDir": "$OPENCLAW_HOME/data"
-}
-```
+## Skill Management
 
-### 2. Excessive Timeouts
-❌ **Bad**: Timeout set to 5 minutes for simple operations
-```
-Issue: Hides performance problems
-Fix: Set appropriate timeouts (30s for most operations)
-```
+5. **Unused skills installed** — 0 sessions in >30 days → uninstall to save resources
+6. **Ignoring dependencies** — Always use `clawhub install` for dependency resolution
+7. **Mixed major versions** — One version per skill; uninstall duplicates
+8. **Pinning all versions** — Use `^` ranges to receive patch/security updates
 
-### 3. Disabled Logging
-❌ **Bad**:
-```json
-{
-  "logging": {
-    "level": "none"
-  }
-}
-```
+## Memory & Logging
 
-✅ **Good**: Use `warn` or `error` in production, `debug` for troubleshooting
-
-### 4. Unlimited Concurrency
-❌ **Bad**:
-```json
-{
-  "concurrency": 999
-}
-```
-
-✅ **Good**: Base on installed skills and resources (10-50)
-
-## Skill Management Anti-Patterns
-
-### 1. Installing Unused Skills
-```
-Problem: Installing skills "just in case"
-Impact: Wasted memory, slower startup, dependency bloat
-Detection: Skills with 0 sessions in >30 days
-Fix: Uninstall unused skills
-```
-
-### 2. Ignoring Skill Dependencies
-```
-Problem: Manually installing skill without dependencies
-Impact: Skill fails at runtime with cryptic errors
-Detection: Check manifest.json dependencies field
-Fix: Use `clawhub install` which resolves dependencies
-```
-
-### 3. Mixing Major Versions
-```
-Problem: Having @botlearn/code-gen@1.x and @botlearn/code-gen@2.x
-Impact: Unpredictable behavior, conflicts
-Detection: Duplicate skill names with different versions
-Fix: Uninstall older version
-```
-
-### 4. Pinning All Dependencies
-```
-Problem: Using exact versions for all skill dependencies
-Impact: Miss security updates, bug fixes
-Detection: package.json has only exact versions (1.2.3)
-Fix: Use semantic ranges (^1.2.3)
-```
-
-## Memory Anti-Patterns
-
-### 1. Infinite TTL Documents
-```
-Problem: Setting TTL to "never" for all knowledge
-Impact: Memory grows unbounded
-Detection: Large number of documents with no expiry
-Fix: Set appropriate TTL (30d default, adjust by importance)
-```
-
-### 2. Duplicate Knowledge Injection
-```
-Problem: Re-injecting same knowledge on every session
-Impact: Memory bloat, slower lookups
-Detection: Duplicate content with different IDs
-Fix: Check before injecting
-```
-
-### 3. Large Single Documents
-```
-Problem: Single knowledge document >10MB
-Impact: Slow retrieval, memory pressure
-Detection: Document size >1MB
-Fix: Split into smaller, focused documents
-```
-
-## Logging Anti-Patterns
-
-### 1. Logging Sensitive Data
-```
-Problem: API keys, tokens, passwords in logs
-Impact: Security vulnerability
-Detection: Scan logs for patterns (Bearer, token, secret, key)
-Fix: Redact sensitive fields before logging
-```
-
-### 2. Verbose Production Logging
-```
-Problem: Debug logs in production
-Impact: Log file bloat, performance degradation
-Detection: Log growth rate >100MB/day
-Fix: Set appropriate log level per environment
-```
-
-### 3. Missing Structured Logging
-```
-Problem: Free-text log messages
-Impact: Hard to parse and analyze
-Detection: Log lines not matching JSON pattern
-Fix: Use structured logging with consistent fields
-```
-
-### 4. No Log Rotation
-```
-Problem: Single log file growing forever
-Impact: Disk exhaustion
-Detection: Log files >1GB
-Fix: Enable log rotation with size limits
-```
-
-## Common Error Patterns
-
-### Pattern 1: Cascade Failures
-```
-Symptom: Multiple skills failing simultaneously
-Cause: Shared dependency (e.g., network service) down
-Detection: Correlated error timestamps
-Fix: Check shared services first
-```
-
-### Pattern 2: Memory Leaks
-```
-Symptom: Gradual memory increase over time
-Cause: Unclosed connections, cached data
-Detection: Memory graph shows upward trend
-Fix: Restart service, identify leak source
-```
-
-### Pattern 3: Race Conditions
-```
-Symptom: Intermittent failures, hard to reproduce
-Cause: Concurrent access to shared resource
-Detection: Errors correlate with high concurrency
-Fix: Add locking or reduce concurrency
-```
-
-### Pattern 4: Dependency Hell
-```
-Symptom: Cannot install skill due to conflicting dependencies
-Cause: Two skills require incompatible versions of same dependency
-Detection: npm install fails with ERESOLVE
-Fix: Use npm overrides, contact skill maintainers
-```
-
-## Performance Anti-Patterns
-
-### 1. Synchronous I/O
-```
-Problem: Blocking operations in skill execution
-Impact: Poor concurrency, slow response
-Detection: Long execution times, high CPU wait
-Fix: Use async/await throughout
-```
-
-### 2. N+1 Queries
-```
-Problem: Querying inside a loop
-Impact: Exponential time complexity
-Detection: Query count >> expected
-Fix: Batch queries, use joins
-```
-
-### 3. Redundant Processing
-```
-Problem: Processing same data multiple times
-Impact: Wasted CPU, slower response
-Detection: Similar operations with same inputs
-Fix: Cache results, avoid duplication
-```
+9. **Infinite TTL documents** — Set appropriate TTL (30d default); avoid memory bloat
+10. **Sensitive data in logs** — Redact tokens/keys before logging
+11. **No log rotation** — Enable rotation (max 100MB/file, 10 files); prevent disk exhaustion
+12. **Verbose production logs** — Debug level in production causes log bloat (>100MB/day)
 
 ## Security Anti-Patterns
 
-### 1. Plain Text Credentials
-```
-Problem: API keys in config files
-Detection: Scan for "key", "secret", "token", "password"
-Fix: Use environment variables or secret management
-```
+13. **Plaintext credentials in config** — Store API keys, tokens, passwords as `${ENV_VAR}` references, never as literal strings in JSON configs
+14. **World-readable sensitive files** — Config and key files must be 0600, not 0644; check `umask` settings
+15. **Ignoring npm audit warnings** — Critical CVEs in dependencies enable known exploits; run `npm audit` monthly
+16. **Gateway bind=lan without auth** — Exposes API to local network without authentication; use `loopback` bind or enable `token`/`password` auth
+17. **Control UI on non-loopback** — `/openclaw` control UI accessible from network; disable `controlUI` or restrict bind
+18. **No .gitignore for secrets** — `.env`, `*.key`, `*.pem`, credential files must be in `.gitignore`
+19. **Secrets tracked in git** — Even after deletion from tree, secrets remain in git history; rotate exposed credentials
+20. **No auth on tailnet bind** — If Gateway is accessible via tailnet, always enable token or password auth
+21. **No credential rotation** — Static credentials increase exposure risk; rotate quarterly at minimum
 
-### 2. Disabled SSL Verification
-```
-Problem: Setting rejectUnauthorized: false
-Detection: Search for "rejectUnauthorized" in code/config
-Fix: Use proper certificates
-```
+## Red Flags (Investigate Immediately)
 
-### 3. Wildcard CORS
-```
-Problem: Access-Control-Allow-Origin: *
-Detection: CORS configuration with "*"
-Fix: Specify allowed origins
-```
-
-## Diagnosis Anti-Patterns
-
-### 1. Treating Symptoms, Not Root Cause
-```
-❌ Bad: Restart service when it crashes
-✅ Good: Find why it crashes and fix the bug
-```
-
-### 2. Shotgun Debugging
-```
-❌ Bad: Random changes hoping something works
-✅ Good: Form hypothesis, test, verify
-```
-
-### 3. Ignoring Warnings
-```
-❌ Bad: Only looking at errors
-✅ Good: Warnings often precede errors
-```
-
-### 4. Not Reproducing Issues
-```
-❌ Bad: Fixing without understanding
-✅ Good: Reproduce in controlled environment
-```
-
-## Red Flags (Immediate Investigation Needed)
-
-| Red Flag | Indicates | Action |
-|----------|-----------|--------|
-| Startup time >30s | Configuration issue | Run full diagnostic |
-| Memory usage >80% | Memory leak or over-allocation | Check memory trends |
-| Error rate >5% | Systemic issue | Review logs immediately |
-| Disk space <10% | Capacity issue | Clean up, expand storage |
-| Unusual skill failures | Skill incompatibility | Check skill versions |
-| Strange log entries | Security breach | Investigate urgently |
-
-## Common User Mistakes
-
-### 1. Not Reading Error Messages
-```
-Users often skip error details and try generic fixes
-Result: Wasted time, frustration
-Education: Encourage reading full error output
-```
-
-### 2. Skipping Updates
-```
-Fear of breaking changes leads to outdated versions
-Result: Missing security patches, bug fixes
-Education: Explain changelog, backup procedures
-```
-
-### 3. Manual Overwrites
-```
-Manually editing auto-generated files
-Result: Changes lost on next update
-Education: Use configuration files, not generated files
-```
-
-### 4. Ignoring Backup
-```
-No backup before major changes
-Result: Cannot recover from failures
-Education: Emphasize backup before any modification
-```
+| Signal | Likely Cause |
+|--------|--------------|
+| Startup > 30s | Config or dependency issue |
+| Memory > 80% | Leak or over-allocation |
+| Error rate > 5% | Systemic failure |
+| Disk < 10% | Capacity exhaustion |
+| Repeated skill failures | Version incompatibility |
+| Credentials in logs | Missing redaction filter |
+| World-readable key files | Deployment script issue |
+| OOM/SIGKILL in logs | Memory leak or insufficient heap |
+| Error spike (>3× average) | External service outage or bad deploy |
+| Tracked secrets in git | Immediate credential rotation needed |

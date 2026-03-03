@@ -1,0 +1,113 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OpenClaw Doctor Checkup Data Structure",
+  "description": "JSON Schema for checkup directory contents in data/checkups/YYYY-MM-DD-HHmmss/",
+  "type": "object",
+  "required": ["checkup_dir", "metadata", "files"],
+  "properties": {
+    "checkup_dir": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}-\\d{6}$",
+      "description": "Directory name in YYYY-MM-DD-HHmmss format"
+    },
+    "metadata": {
+      "$ref": "#/definitions/checkupMetadata"
+    },
+    "files": {
+      "type": "object",
+      "required": ["analysis.json"],
+      "properties": {
+        "env.json": { "type": "boolean", "description": "collect-env.sh output" },
+        "config.json": { "type": "boolean", "description": "collect-config.sh output" },
+        "logs.json": { "type": "boolean", "description": "collect-logs.sh output" },
+        "skills.json": { "type": "boolean", "description": "collect-skills.sh output" },
+        "health.json": { "type": "boolean", "description": "collect-health.sh output" },
+        "precheck.json": { "type": "boolean", "description": "collect-precheck.sh output" },
+        "channels.json": { "type": "boolean", "description": "collect-channels.sh output" },
+        "tools.json": { "type": "boolean", "description": "collect-tools.sh output" },
+        "analysis.json": { "type": "boolean", "const": true, "description": "10-dimension analysis result" }
+      }
+    }
+  },
+  "definitions": {
+    "checkupMetadata": {
+      "type": "object",
+      "required": ["timestamp", "checkup_id", "version", "overall_status", "dimensions"],
+      "properties": {
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp of checkup"
+        },
+        "checkup_id": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}-\\d{6}$",
+          "description": "Checkup identifier matching directory name"
+        },
+        "version": {
+          "type": "string",
+          "const": "4.0.0",
+          "description": "Doctor skill version"
+        },
+        "overall_status": {
+          "type": "string",
+          "enum": ["pass", "warning", "error"],
+          "description": "Traffic-light overall status"
+        },
+        "dimensions": {
+          "type": "object",
+          "description": "Per-dimension status summary",
+          "patternProperties": {
+            ".*": {
+              "type": "object",
+              "required": ["status"],
+              "properties": {
+                "status": { "type": "string", "enum": ["pass", "warning", "error"] },
+                "message": { "type": "string" }
+              }
+            }
+          }
+        },
+        "summary": {
+          "type": "object",
+          "properties": {
+            "pass_count": { "type": "integer", "minimum": 0 },
+            "warning_count": { "type": "integer", "minimum": 0 },
+            "error_count": { "type": "integer", "minimum": 0 },
+            "total": { "type": "integer", "const": 10 }
+          }
+        },
+        "retain_days": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 90,
+          "description": "Number of days to retain this checkup"
+        }
+      }
+    },
+    "dimensionAnalysis": {
+      "type": "object",
+      "required": ["id", "label", "status", "message"],
+      "properties": {
+        "id": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "label": { "type": "string" },
+        "label_en": { "type": "string" },
+        "status": { "type": "string", "enum": ["pass", "warning", "error"] },
+        "message": { "type": "string", "description": "One-line status description" },
+        "details": { "type": "string", "description": "Extended details for L3 analysis" },
+        "issues": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["msg"],
+            "properties": {
+              "msg": { "type": "string" },
+              "severity": { "type": "string", "enum": ["error", "warning", "info"] },
+              "fix_ref": { "type": "string", "description": "Reference to fix-playbooks.md section" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

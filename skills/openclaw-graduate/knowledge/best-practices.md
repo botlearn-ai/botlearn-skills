@@ -5,346 +5,189 @@ priority: high
 ttl: 90d
 ---
 
-# Day 7 Graduation Best Practices
+# Graduation Best Practices
 
-## Conducting a Meaningful Graduation Ceremony
+## 1. Data Collection
 
-### 1. Data Collection Best Practices
-
-#### Complete Snapshot Comparison
+### Complete Snapshot Comparison
 ```
 Day 1: Baseline (saved or reconstructed)
 Day 7: Current state (live collection)
 
-Key Data Points:
-- Skills installed and used
-- Configuration changes
-- Documents in memory
-- Tasks completed
-- Workflow patterns
+Key: Skills, config, documents, tasks, workflows
 ```
 
-#### Session Analysis
-```
-Review:
-- Total sessions
-- Request types
-- Peak usage times
-- Skills usage frequency
-- Success indicators
-```
+Always show the math, explain the why. Every claim backed by evidence.
 
-### 2. Growth Visualization Best Practices
-
-#### Score Calculation
+### Parallel Script Execution
+Run all collection scripts in parallel for speed:
 ```
-Use the 4C framework:
-- Core (15%): Model optimization
-- Context (35%): Memory and personalization ⭐
-- Constitution (20%): Agent identity
-- Capabilities (30%): Skills and workflows
+collect-journey.sh + collect-growth.sh + collect-activity.sh + track-browser.sh
+```
+Combine results after all complete. Handle individual script failures gracefully.
 
-Always show the math, explain the why.
+## 2. Growth Visualization
+
+```
+Use the 4C framework with consistent symbols:
+✅ Achieved (80-100)  ⚠️ Developing (60-79)
+🟡 Needs Work (40-59)  🔴 Critical (<40)
 ```
 
-#### Visual Indicators
-```
-Consistent symbols:
-✅ Achieved (80-100)
-⚠️ Developing (60-79)
-🟡 Needs Work (40-59)
-🔴 Critical (<40)
-🎯 Milestone
-🎓 Graduation
-🌟 Breakthrough
-```
+## 3. Achievement Identification
 
-### 3. Achievement Identification Best Practices
-
-#### Categorize Achievements
-```markdown
-**Technical Achievements**:
-Skills installed, workflows established, configs optimized
-
-**Personal Achievements**:
-Overcoming confusion, building trust, finding use cases
-
-**Breakthrough Moments**:
-First "wow this works!" moment
-First agent anticipation
-First complex workflow success
-```
-
-#### Highlight Transformation
 ```
 BEFORE: "I have this thing but don't know what to do"
-AFTER: "My agent can [X], [Y], and [Z]"
+AFTER:  "My agent can [X], [Y], and [Z]"
 
 Make it tangible, specific, undeniable.
 ```
 
-### 4. Archetype Detection Best Practices
+## 4. Archetype Detection
 
-#### Detection Algorithm
-```
-Builder Score =
-  (skillsInstalled > 10 ? 25 : 0) +
-  (technicalSkillsRatio × 20) +
-  (documentationRead × 15) +
-  (customSkillAttempts × 25) +
-  (experimentationFreq × 15)
-
-Operator Score =
-  (repetitiveTasks × 30) +
-  (workflowOptimization × 25) +
-  (automationKeywords × 20) +
-  (efficiencyFocus × 25)
-
-Explorer Score =
-  (skillVariety × 30) +
-  (skillChurn × 20) +
-  (discoveryLanguage × 20) +
-  (sharingBehavior × 30)
-
-Specialist Score =
-  (domainFocus × 35) +
-  (domainDepth × 35) +
-  (expertiseLanguage × 30)
-```
-
-#### Presentation
-```
-For each archetype:
+Present with evidence:
 1. Clear name and definition
-2. Why it fits THIS user (evidence)
-3. Strengths of this type
-4. Typical growth path
-5. Community resources
-6. Next steps aligned
+2. Why it fits THIS user (specific evidence)
+3. Strengths + growth path
+4. Community resources
+5. Acknowledge hybrid archetypes when scores are close
+
+## 5. Hook Content Best Practices
+
+### Token Budget: ≤ 150 Tokens
+Hook content must be concise. Every word counts.
+
+```
+✅ "Day 3 — Give your agent a personality. Create SOUL.md."
+❌ "Day 3 — Today we recommend that you consider the possibility of perhaps creating..."
 ```
 
-### 5. Growth Path Planning Best Practices
+### Progressive Warmth (7-Day Arc)
+| Day | Tone | Relationship |
+|-----|------|-------------|
+| 1-2 | Friendly guide | "Let me show you..." |
+| 3-4 | Encouraging coach | "You're doing great..." |
+| 5-6 | Proud mentor | "Look how far you've come..." |
+| 7 | Celebratory host | "Welcome to your graduation!" |
 
-#### Personalized Recommendations
+### No Repetition
+Each day's hook content MUST be different. Never repeat the same tip or message. If the user saw "try a new skill" on Day 2, don't say it again on Day 3.
+
+### Graceful Absence
+If `journey-start.json` doesn't exist, inject nothing. Don't error, don't inject placeholder content.
+
+## 6. Emotional Value: 7-Day Warmth Curve
+
+### Warmth Progression
 ```
-❌ Avoid: "Keep learning and exploring"
-✅ Provide: "Based on your research workflow, add
-  @botlearn/academic-search to enable paper discovery"
-
-Always specific, personalized, actionable.
-```
-
-#### Next Phase Framework
-```
-Immediate (7 days):
-- 2-3 specific actions
-- Low friction, high value
-- Builds on current success
-
-Short-term (30 days):
-- 2-3 goals
-- Next complexity level
-- Expands capabilities
-
-Medium-term (90 days):
-- 1-2 major milestones
-- Transformational outcomes
-- Leadership opportunities
+Day 1: 🌟 Excitement (welcome, possibility)
+Day 2: 🔍 Curiosity (explore, discover)
+Day 3: 🌱 Growth (personalize, deepen)
+Day 4: 🤝 Trust (boundaries, security)
+Day 5: 🔄 Mastery (workflows, patterns)
+Day 6: ⏰ Anticipation (countdown, reflection)
+Day 7: 🎓 Celebration (ceremony, pride)
 ```
 
-### 6. Community Integration Best Practices
+### Low Engagement Response
+- Don't shame: "No pressure, your agent is waiting."
+- Don't rush: "Even 5 minutes today builds on yesterday."
+- Don't abandon: "Welcome back! Pick up right where you left off."
 
-#### Warm Welcome Approach
+### High Achievement Response
+- Don't overpromise: Be celebratory but realistic
+- Do identify what worked: "Your consistent daily usage made the difference"
+- Do suggest contribution: "Your workflow could help other operators"
+
+## 7. Exam Management Best Practices
+
+### Reflection Questions: No Standard Answer
+Reflection questions (R1-R5) have no single correct answer. Score on:
+- **Depth**: Goes beyond surface-level
+- **Specificity**: References actual journey events
+- **Self-awareness**: Honest about strengths and gaps
+- **Forward-looking**: Connects reflection to future action
+
+### Before Exam
+- Set expectations: "This is for reflection, not perfection"
+- Offer mode choice: full (15), quick (6), or practice (3)
+- No time pressure: Unlimited time
+
+### During Exam
+- Encourage: "For reflection questions, there's no wrong answer"
+- One question at a time: Don't overwhelm
+
+### After Exam
+- Celebrate attempt regardless of score
+- Highlight strengths per category
+- Frame growth areas as "next focus" not "failures"
+- Below-threshold scores: "The exam is a mirror, not a gate"
+
+## 8. Browser Tracking Best Practices
+
+### Privacy First
+- Only query `botlearn.ai` domain — never inspect other URLs
+- Copy DB to `/tmp` — never lock the browser's database
+- Optional feature — always degrade gracefully
+- Never report specific pages visited beyond botlearn.ai
+
+### Communication
 ```
-❌ "Join our Discord at discord.gg/xyz"
-
-✅ "Based on your workflow focus, you'll find like-minded
-  Operators in #operators. Many share workflows like yours.
-  Here's a recent discussion about [specific topic]..."
-
-Make it specific, welcoming, relevant.
-```
-
-#### Specific Connection Points
-```
-For each user:
-- Specific channels to join
-- Why relevant to THEM
-- What to do there
-- Expected outcome
-```
-
-### 7. Graduation Ceremony Best Practices
-
-#### Executive Summary First
-```
-Start with:
-1. One-sentence journey summary
-2. Key growth metric (before/after)
-3. Agent archetype
-4. Primary achievement
-5. Next step (one action)
-
-Then expand.
-```
-
-#### Data-Backed Claims
-```
-✅ "Your agent is 3x more capable (8 skills vs 2, 23 tasks vs 0)"
-✅ "You've established 3 repeatable workflows (specific names)"
-
-❌ "Your agent is much better"
-❌ "You've done great"
-
-Every claim needs evidence.
-```
-
-### 8. Emotional Intelligence Best Practices
-
-#### Validate the Journey
-```
-Acknowledge:
-- Initial uncertainty (normal to feel lost)
-- Progress made (came far in 7 days)
-- Challenges overcome (many struggle with X)
-- Future potential (just getting started)
+✅ "We noticed you visited botlearn.ai 5 times this week — great engagement!"
+❌ "We saw you browsed botlearn.ai/community/post/123 at 3:42 AM"
 ```
 
-#### Celebrate Appropriately
-```
-Do celebrate:
-- Tangible achievements (specific skills, tasks)
-- Personal growth (trust, understanding)
-- Unique patterns (their specific approach)
+### Failure Mode
+If browser tracking fails (no sqlite3, permission denied, no history):
+- Mark as "unavailable"
+- Don't mention the feature at all in the report
+- Score community engagement from other sources (API, self-report)
 
-Don't overcelebrate:
-- Basic participation
-- Things not yet achieved
-- Generic platitudes
-```
+## 9. Report Structure
 
-#### Build Future Excitement
 ```
-"What you built in 7 days is just the foundation.
-In 30 days, you could have [specific advanced outcome].
-In 90 days, [specific transformative outcome].
-
-Make it:
-- Specific (not vague "more productivity")
-- Achievable (based on archetype)
-- Exciting (appeals to interests)
-- Connected (builds on what they have)
+Section Order:
+1. Executive Summary (one-sentence + key metric + archetype)
+2. Transformation Table (Day 1 vs Day 7)
+3. Graduation Achievements (4 phases checklist)
+4. Milestone Grade (Gold/Silver/Bronze/Participant)
+5. Agent Archetype (detection + evidence)
+6. 4C Analysis (detailed scores)
+7. Exam Results (if taken)
+8. Next Phase Planning (7/30/90 day paths)
+9. Community Welcome (curated resources)
+10. Graduation Certificate (ASCII diploma)
+11. Graduation Message (inspiring farewell)
 ```
 
-### 9. Report Structure Best Practices
+## 10. Follow-Up
 
-#### Visual Hierarchy
+### Save Graduation Data
 ```
-# Main headers
-## Subheaders
-### Bullet points
-**Bold** for emphasis
-`code` for technical
-> Blockquotes for insights
-```
-
-#### Section Order
-```
-1. Executive Summary
-2. Transformation Table
-3. Graduation Achievements
-4. Agent Archetype
-5. 4C Analysis
-6. Next Phase Planning
-7. Community Welcome
-8. Key Insights
-9. Graduation Message
+~/.openclaw/data/graduate/
+├── journey-start.json    # Journey metadata
+├── day1-baseline.json    # Day 1 scores
+├── graduation-report.json # Final report
+├── exam-result.json      # Exam scores
+└── ceremony-completed    # Completion marker
 ```
 
-### 10. Follow-Up Best Practices
-
-#### Document for Future
-```
-Save the graduation report:
-- Export as markdown
-- Store in workspace
-- Reference in check-ins
-- Baseline for 30-day review
-```
-
-#### Schedule Check-Ins
-```
-Recommended:
-- 14 days: Casual "How's it going?"
-- 30 days: Progress review
-- 90 days: Major evaluation
-```
-
-## Avoid These Common Pitfalls
-
-### Don't Focus on Knowledge Over Outcomes
-❌ "You learned about skills, memory, and configuration"
-✅ "Your agent can now [X], [Y], and [Z]"
-
-### Don't Use Generic Templates
-❌ Same report with names swapped
-✅ Personalized based on actual usage
-
-### Don't Ignore the Emotional Journey
-❌ Pure data dump
-✅ Validate challenges, celebrate growth
-
-### Don't Leave Users Hanging
-❌ "Here's your report, good luck!"
-✅ "Here's your next step and how to get help"
-
-### Don't Overwhelm
-❌ "Here are 50 things you could do"
-✅ "Here are 3 specific aligned actions"
+### Schedule Check-Ins
+- 14 days: "How's your agent evolving?"
+- 30 days: "Progress check"
+- 90 days: "Major milestone review"
 
 ## Successful Graduation Checklist
 
-- [ ] Day 1 and Day 7 snapshots collected
-- [ ] 4C analysis completed with scores
-- [ ] Growth metrics calculated and visualized
+- [ ] Day 1 baseline collected/reconstructed
+- [ ] 4C analysis with scores and evidence
+- [ ] Milestones tracked and graded
 - [ ] Archetype identified with evidence
-- [ ] Achievements documented specifically
+- [ ] Exam offered (optional)
+- [ ] Ceremony personalized to archetype
+- [ ] Browser engagement noted (if available)
+- [ ] Community activity tracked (if available)
 - [ ] Personalized next steps provided
-- [ ] Community resources curated
-- [ ] Future vision created with excitement
-- [ ] Report saved for reference
+- [ ] Certificate generated
+- [ ] Graduation data saved
 - [ ] Follow-up scheduled
-
-## Graduation Message Best Practices
-
-### What to Include
-```markdown
-1. Acknowledge the journey (7 days is significant)
-2. Highlight specific transformation (before/after)
-3. Celebrate unique achievements (not generic)
-4. Validate challenges overcome
-5. Create excitement for future
-6. Provide one immediate next step
-7. Welcome to larger community
-8. Offer continued support
-```
-
-### Tone and Voice
-```
-- Celebratory but grounded
-- Confident but not overpromising
-- Personalized not templated
-- Future-focused not past-obsessed
-- Welcoming not overwhelming
-```
-
-### The "Diploma" Moment
-```
-Create a visible proof of completion:
-- Specific achievement highlighted
-- Transformation quantified
-- Archetype claimed
-- Next step clear
-- Community welcome extended
-
-This is their graduation—make it feel like one!

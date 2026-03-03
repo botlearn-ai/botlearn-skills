@@ -5,276 +5,123 @@ priority: high
 ttl: 30d
 ---
 
-# OpenClaw Best Practices
+# Health Check Best Practices
 
-## Environment Setup
+## 10 维度红绿灯判定标准
 
-### Node.js Version
-- **Minimum**: Node.js 18.x LTS
-- **Recommended**: Node.js 20.x LTS (latest)
-- **Check**: `node --version`
-- **Upgrade**: Use nvm or official installer
+### 维度 1: 基础平台
 
-### Memory Configuration
-```
-Workload          Recommended    Minimum
-───────────────────────────────────────
-Light (<10 skills)    1GB          512MB
-Medium (10-30)        2GB           1GB
-Heavy (30+)           4GB           2GB
-Enterprise           8GB+          4GB
-```
+| 指标 | ✅ pass | ⚠️ warning | ❌ error |
+|------|---------|-----------|---------|
+| Node.js | v20+ LTS | v18.x | < v18 |
+| Memory available | > 30% | 15-30% | < 15% |
+| Disk available | > 20% | 10-20% | < 10% |
+| CPU load/core | < 0.7 | 0.7-0.9 | > 0.9 |
 
-### Concurrency Settings
-```
-Skills Installed    Concurrency    Rationale
-──────────────────────────────────────────────
-1-10                  5           Minimal parallelism
-11-20                10           Standard parallelism
-21-30                25           High parallelism
-31+                  50           Maximum throughput
-```
+### 维度 2: OpenClaw 版本
 
-## Configuration Best Practices
+| 指标 | ✅ pass | ⚠️ warning | ❌ error |
+|------|---------|-----------|---------|
+| openclaw CLI | Latest version | Older but usable | Not installed |
+| clawhub CLI | Latest version | Older but usable | Neither CLI found |
+| Node.js | v20+ LTS | v18.x | < v18 |
 
-### 1. Environment Separation
-```json
-{
-  "environment": "development",
-  "profiles": {
-    "development": { "logging": { "level": "debug" } },
-    "production": { "logging": { "level": "warn" } }
-  }
-}
-```
+### 维度 3: 配置正确性
 
-### 2. Skill Dependency Management
-- Enable `autoInstall` for dependencies
-- Review skill dependencies before installation
-- Use semantic version ranges for dependencies
-- Pin critical skill versions
+| 指标 | ✅ pass | ⚠️ warning | ❌ error |
+|------|---------|-----------|---------|
+| Config file | Exists | — | Missing |
+| JSON validity | Valid | — | Parse failure |
+| Required sections | All 5 present | Optional missing | gateway/agents missing |
 
-### 3. Memory Management
-```json
-{
-  "memory": {
-    "maxSize": "1GB",
-    "evictionPolicy": "lru",
-    "defaultTTL": "30d",
-    "cleanupInterval": "7d"
-  }
-}
-```
+### 维度 4: 日志告警
 
-### 4. Timeout Configuration
-```json
-{
-  "execution": {
-    "timeout": 30000,
-    "skillTimeout": 25000,
-    "networkTimeout": 10000,
-    "gracefulShutdown": 5000
-  }
-}
-```
+| 指标 | ✅ pass | ⚠️ warning | ❌ error |
+|------|---------|-----------|---------|
+| Error rate | < 1% | 1-10% | > 10% |
+| OOM/segfault | None | — | Detected |
+| Error spikes | None | Detected | — |
+| Log size | < 500MB | — | > 500MB |
 
-## Essential Skills (Best Practice Set)
+### 维度 5: 预检
 
-Based on common workflows, these skills should be installed:
+| 指标 | ✅ pass | ⚠️ warning | ❌ error |
+|------|---------|-----------|---------|
+| openclaw doctor | All pass | Has warnings | Has errors |
 
-### Core Set (Always Recommended)
-- `@botlearn/google-search` - Information retrieval
-- `@botlearn/summarizer` - Content understanding
-- `@botlearn/code-gen` - Code generation
+### 维度 6: Skills 安装
 
-### Information Workers
-- `@botlearn/academic-search` - Research papers
-- `@botlearn/rss-manager` - News aggregation
-- `@botlearn/translator` - Multi-language support
+| 指标 | ✅ pass | ⚠️ warning | ❌ error |
+|------|---------|-----------|---------|
+| Installed count | ≥ 3 | 1-2 | 0 |
+| Dependencies | All intact | Has outdated | Broken deps |
+| File integrity | Complete | Missing optional | Missing required |
 
-### Developers
-- `@botlearn/code-review` - Code quality
-- `@botlearn/debugger` - Troubleshooting
-- `@botlearn/refactor` - Code improvement
-- `@botlearn/doc-gen` - Documentation
+### 维度 7: Channels 安装
 
-### Content Creators
-- `@botlearn/writer` - Article writing
-- `@botlearn/brainstorm` - Idea generation
-- `@botlearn/copywriter` - Marketing copy
+| 指标 | ✅ pass | ⚠️ warning | ❌ error |
+|------|---------|-----------|---------|
+| Channel config | Valid + enabled | All disabled | Missing/corrupt |
 
-## Log Analysis Patterns
+### 维度 8: Agent 配置
 
-### Error Rate Thresholds
-```
-Error Rate     Status      Action
-──────────────────────────────────────────
-< 1%          ✅ Healthy   Monitor
-1-5%          ⚠️ Warning  Investigate
-5-10%         🟡 Elevated Review logs
-> 10%         🔴 Critical Immediate action
-```
+| 指标 | ✅ pass | ⚠️ warning | ❌ error |
+|------|---------|-----------|---------|
+| maxConcurrent | 1-10 | 11-20 | > 20 |
+| timeoutSeconds | 30-1800s | 1801-3600s | > 3600s |
+| heartbeat | 5-120min | Outside range | — |
 
-### Common Error Patterns
+### 维度 9: Gateway 健康
 
-| Error Pattern | Likely Cause | Fix |
-|---------------|--------------|-----|
-| `ECONNREFUSED` | Service down | Check service status |
-| `ETIMEDOUT` | Timeout too short | Increase timeout |
-| `EMFILE` | Too many open files | Increase ulimit |
-| `ENOSPC` | Disk full | Clean up disk |
-| `Skill not found` | Missing dependency | Install skill |
+| 指标 | ✅ pass | ⚠️ warning | ❌ error |
+|------|---------|-----------|---------|
+| Root endpoint | Reachable | — | Unreachable |
+| /openclaw | Responsive | — | Not responsive |
+| Endpoints | All healthy | Some unhealthy | — |
+| Latency | < 500ms | > 500ms | — |
 
-### Log Rotation
-```json
-{
-  "logging": {
-    "rotation": {
-      "enabled": true,
-      "maxSize": "100MB",
-      "maxFiles": 10,
-      "compress": true
-    }
-  }
-}
-```
+### 维度 10: 内置工具
 
-## Workspace Organization
+| 指标 | ✅ pass | ⚠️ warning | ❌ error |
+|------|---------|-----------|---------|
+| Core CLI tools | All available | — | Missing |
+| Core MCP tools | All available | — | Missing |
+| Optional tools | All available | Some missing | — |
 
-### Recommended Structure
-```
-~/.openclaw/workspace/
-├── active/              # Current projects
-├── archived/            # Completed projects
-├── templates/           # Reusable templates
-└── shared/              # Shared resources
-```
+## Configuration Guidelines
 
-### File Naming Conventions
-- Use kebab-case: `my-project-notes.md`
-- Add dates to daily notes: `2026-03-02-daily.md`
-- Use prefixes for types: `[REQ]`, `[IDEA]`, `[DONE]`
+| Setting | Recommended | Range |
+|---------|-------------|-------|
+| `agents.defaults.maxConcurrent` | Based on skill count | 1-10 |
+| `agents.defaults.timeoutSeconds` | 600s | 30-1800s |
+| `agents.heartbeat.intervalMinutes` | 30 | 5-120 |
 
-## Diagnostic Commands Reference
+### maxConcurrent by Workload
 
-### Health Check Commands
-```bash
-# Quick health check
-clawhub doctor --quick
+| Skills Installed | maxConcurrent |
+|------------------|---------------|
+| 1-5 | 2 |
+| 6-10 | 3 |
+| 11-20 | 5 |
+| 21+ | 10 |
 
-# Full diagnostic
-clawhub doctor --full
+## Essential Skills
 
-# Specific category
-clawhub doctor --category environment
-clawhub doctor --category skills
-clawhub doctor --category logs
+- **Core**: `google-search`, `summarizer`, `code-gen`
+- **Dev workflow**: `code-review`, `debugger`, `refactor`, `doc-gen`
+- **Content workflow**: `writer`, `brainstorm`, `translator`
 
-# Generate report
-clawhub doctor --report health-report.json
-```
+## Maintenance Cadence
 
-### Information Gathering
-```bash
-# Version info
-clawhub --version
-node --version
-npm --version
-
-# Skill status
-clawhub list --installed
-clawhub list --outdated
-clawhub list --dependencies
-
-# Memory usage
-clawhub stats --memory
-
-# Log summary
-clawhub logs --summary --tail 100
-```
-
-## Performance Benchmarks
-
-### Expected Performance
-
-| Metric | Target | Acceptable |
-|--------|--------|------------|
-| Skill load time | <100ms | <500ms |
-| Execution latency | <1s | <5s |
-| Memory per skill | <50MB | <100MB |
-| Startup time | <2s | <10s |
-| Log write latency | <10ms | <50ms |
+- **Daily**: Check error logs, disk space
+- **Weekly**: Skill updates, session stats
+- **Monthly**: Full diagnostic, config review
+- **Quarterly**: Major upgrades, workspace cleanup
 
 ## Security Best Practices
 
-### 1. API Keys & Secrets
-- Never commit secrets to version control
-- Use environment variables for sensitive data
-- Rotate credentials regularly
-- Use `.npmrc` for npm tokens (never in package.json)
-
-### 2. Skill Verification
-```bash
-# Verify skill integrity before installation
-clawhub verify @botlearn/skill-name
-
-# Check skill signature
-clawhub check-signature @botlearn/skill-name
-```
-
-### 3. Access Control
-```json
-{
-  "security": {
-    "allowedOrigins": ["https://trusted-domain.com"],
-    "rateLimiting": {
-      "enabled": true,
-      "maxRequests": 100,
-      "windowMs": 60000
-    }
-  }
-}
-```
-
-## Update & Maintenance Schedule
-
-### Daily
-- Review error logs
-- Check disk space
-- Monitor memory usage
-
-### Weekly
-- Check for skill updates
-- Review session statistics
-- Clean up temporary files
-
-### Monthly
-- Full health diagnostic
-- Archive old logs
-- Review and optimize configuration
-- Update dependencies
-
-### Quarterly
-- Major version upgrades
-- Workspace cleanup
-- Performance audit
-
-## Troubleshooting Workflow
-
-```
-1. Identify Symptom
-   ↓
-2. Collect Data (logs, config, environment)
-   ↓
-3. Analyze Patterns (compare against best practices)
-   ↓
-4. Form Hypothesis
-   ↓
-5. Test Hypothesis (isolated environment)
-   ↓
-6. Apply Fix
-   ↓
-7. Verify Resolution
-   ↓
-8. Document & Update Knowledge Base
-```
+- **Credentials**: Use env var references, never plaintext in config
+- **File Permissions**: Config/key files `0600`, log files `0640`, scripts `0755`
+- **Network**: Gateway `bind: "loopback"` for local use, enable auth for lan/tailnet
+- **Dependencies**: Weekly `clawhub update --all`, monthly `npm audit`
+- **Logs**: Enable rotation, never log credentials

@@ -1,24 +1,72 @@
 {
   "name": "@botlearn/openclaw-doctor",
-  "version": "0.1.0",
-  "description": "Comprehensive health check and diagnostic system for OpenClaw Agent, including data collection, analysis, troubleshooting, and automated repairs",
+  "version": "4.0.0",
+  "description": "OpenClaw 智能体检与修复 — 10 维度红绿灯诊断，渐进披露报告，定向修复",
   "category": "programming-assistance",
   "author": "BotLearn",
   "benchmarkDimension": "logical-reasoning",
-  "expectedImprovement": 40,
+  "expectedImprovement": 45,
   "dependencies": {},
   "compatibility": {
     "openclaw": ">=0.5.0"
   },
+  "metadata": {
+    "openclaw": {
+      "emoji": "🏥",
+      "requires": {
+        "bins": ["curl", "node"],
+        "anyBins": ["clawhub", "openclaw"],
+        "optionalBins": ["jq", "sendmail"]
+      },
+      "os": ["darwin", "linux"],
+      "primaryEnv": "OPENCLAW_HOME"
+    }
+  },
   "files": {
     "skill": "SKILL.md",
+    "requirement": "requirement.md",
+    "setup": "setup.md",
     "knowledge": [
       "knowledge/domain.md",
       "knowledge/best-practices.md",
-      "knowledge/anti-patterns.md"
+      "knowledge/anti-patterns.md",
+      "knowledge/security-domain.md"
     ],
     "strategies": [
       "strategies/main.md"
+    ],
+    "scripts": [
+      "scripts/collect-env.sh",
+      "scripts/collect-config.sh",
+      "scripts/collect-logs.sh",
+      "scripts/collect-skills.sh",
+      "scripts/collect-health.sh",
+      "scripts/collect-precheck.sh",
+      "scripts/collect-channels.sh",
+      "scripts/collect-tools.sh",
+      "scripts/collect-security.sh",
+      "scripts/collect-workspace-audit.sh",
+      "scripts/score-calculator.sh",
+      "scripts/snapshot-manager.sh",
+      "scripts/generate-report.sh",
+      "scripts/open-report.sh",
+      "scripts/deliver-report.sh"
+    ],
+    "references": [
+      "references/error-patterns.md",
+      "references/fix-playbooks.md",
+      "references/report-templates.md",
+      "references/scoring-model.md",
+      "references/security-checks.md",
+      "references/anomaly-patterns.md",
+      "references/channel-formats.md"
+    ],
+    "assets": [
+      "assets/health-score.json",
+      "assets/checkup-schema.json",
+      "assets/report-schema.json",
+      "assets/report-template.html",
+      "assets/channel-schema.json"
     ],
     "smokeTest": "tests/smoke.json",
     "benchmark": "tests/benchmark.json"
@@ -26,28 +74,45 @@
   "tags": [
     "openclaw",
     "doctor",
-    "code",
-    "programming",
-    "development",
-    "comprehensive",
-    "health",
-    "check"
+    "health-check",
+    "diagnostics",
+    "monitoring",
+    "troubleshooting",
+    "gateway",
+    "traffic-light",
+    "10-dimension",
+    "checkup",
+    "fix",
+    "report",
+    "multi-channel"
   ],
   "capabilities": [
-    "diagnose-skill-issues",
-    "repair-configuration",
-    "health-check"
+    "smart-checkup",
+    "smart-fix",
+    "10-dimension-traffic-light",
+    "progressive-disclosure",
+    "automated-data-collection",
+    "context-aware-recommendations",
+    "safe-automated-repairs",
+    "gateway-health-probing",
+    "checkup-history",
+    "multi-format-reports",
+    "multi-channel-delivery"
   ],
   "triggers": [
     "health check",
     "diagnose",
     "doctor",
+    "体检",
     "check system",
     "system status",
     "troubleshoot",
     "self-check",
-    "health report",
     "what's wrong",
-    "fix my setup"
+    "fix my setup",
+    "修复",
+    "fix",
+    "health history",
+    "compare checkups"
   ]
 }

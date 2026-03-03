@@ -1,0 +1,44 @@
+{
+  "name": "@botlearn/openclaw-self-learn",
+  "version": "2.0.0",
+  "description": "Five-phase self-education loop (Test-Learn-Practice-Apply-Evaluate) for OpenClaw Agent",
+  "type": "module",
+  "main": "manifest.json",
+  "files": [
+    "manifest.json",
+    "SKILL.md",
+    "requirement.md",
+    "setup.md",
+    "knowledge/",
+    "strategies/",
+    "scripts/",
+    "references/",
+    "assets/",
+    "tests/",
+    "README.md"
+  ],
+  "keywords": [
+    "botlearn",
+    "openclaw",
+    "skill",
+    "learning",
+    "self-education",
+    "five-phase",
+    "autonomous",
+    "improvement"
+  ],
+  "author": "BotLearn",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/readai-team/botlearn-awesome-skills.git",
+    "directory": "skills/openclaw-self-learn"
+  },
+  "homepage": "https://github.com/readai-team/botlearn-awesome-skills/tree/main/skills/openclaw-self-learn",
+  "bugs": {
+    "url": "https://github.com/readai-team/botlearn-awesome-skills/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

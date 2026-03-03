@@ -1,342 +1,274 @@
 ---
 strategy: openclaw-doctor
-version: 1.0.0
-steps: 8
+version: 4.0.0
+functions: 2
 ---
 
-# OpenClaw Doctor Strategy
+# OpenClaw Doctor Strategy — 2 Core Functions
 
-## Step 1: Intent Analysis & Scope
-- Parse the user's diagnostic request
-- Identify specific concern areas (environment, skills, logs, performance)
-- Determine diagnostic scope:
-  - `--quick`: Basic health check (environment, config, skills count)
-  - `--full`: Comprehensive analysis (all categories)
-  - `--category <name>`: Specific category only
-- IF request is ambiguous THEN ask clarifying questions
-- Establish baseline expectations (what does "healthy" mean for this user?)
+v4.0 聚焦 2 个核心功能：**智能体检**（幂等、可反复执行）和**智能修复**（基于体检结果的定向修复）。
+评分模型从加权百分制改为红绿灯状态模型（✅ pass / ⚠️ warning / ❌ error）。
 
-**Apply knowledge**: Refer to knowledge/Domain.md for component understanding
+---
 
-## Step 2: Data Collection (Parallel)
+## ═══════════════════════════════════════════
+## 功能 1：智能体检（clawhub doctor / clawhub doctor --full）
+## ═══════════════════════════════════════════
 
-Execute these collection tasks in parallel where possible:
+### Step 1: 数据采集
 
-### 2.1 Environment Data
-```bash
-# Collect via commands or API calls
-- OS platform and version
-- Node.js version
-- Memory: total, used, available
-- Disk space: total, used, available
-- CPU: core count, current load
-- Uptime
+#### 1.1 解析意图
+
+Parse user intent to determine function:
+
+- IF user says "体检" / "health check" / "doctor" / "diagnose" / "check" → **智能体检**
+- IF user says "修复" / "fix" / "repair" / "--fix" → **智能修复**（跳转功能 2）
+- IF user says "--history" → run `scripts/snapshot-manager.sh history` and return
+- IF user says "--compare" → run `scripts/snapshot-manager.sh compare` and return
+
+Additional flags:
+- `--full`: 展开 L3 深度分析
+- `--format md|html|all`: 报告格式
+- `--channel terminal|browser|slack|...`: 投递渠道
+- `--open`: 强制在浏览器打开 HTML
+
+#### 1.2 并行执行 8 个采集脚本
+
+```
+scripts/collect-env.sh         → env.json         # 维度 1+2: 平台 + 版本
+scripts/collect-config.sh      → config.json       # 维度 3+8: 配置 + Agent
+scripts/collect-logs.sh        → logs.json         # 维度 4: 日志（含异常检测）
+scripts/collect-precheck.sh    → precheck.json     # 维度 5: 预检 (NEW)
+scripts/collect-skills.sh      → skills.json       # 维度 6: Skills
+scripts/collect-channels.sh    → channels.json     # 维度 7: Channels (NEW)
+scripts/collect-health.sh      → health.json       # 维度 9: Gateway
+scripts/collect-tools.sh       → tools.json        # 维度 10: 工具 (NEW)
 ```
 
-### 2.2 Configuration Data
+IF any script fails → mark that dimension as status "warning" with message "data unavailable", continue.
+IF all scripts fail → report collection failure, suggest checking `requirement.md`.
+
+#### 1.3 保存采集数据
+
 ```bash
-- Read $OPENCLAW_HOME/config/openclaw.config.json
-- Validate JSON syntax
-- Check for required fields
-- Parse environment variables
-- Compare with schema from knowledge/BestPractices.md
+# Create timestamped directory
+CHECKUP_DIR=data/checkups/$(date +%Y-%m-%d-%H%M%S)
+mkdir -p "$CHECKUP_DIR"
+
+# Save all raw collection data
+cp /tmp/doctor-*.json "$CHECKUP_DIR/"
+
+# Save via snapshot-manager
+scripts/snapshot-manager.sh save "$CHECKUP_DIR"
 ```
 
-### 2.3 Log Data
+#### 1.4 创建 latest 软链接
+
+`snapshot-manager.sh save` 自动创建 `data/checkups/latest` → 当前体检目录。
+
+---
+
+### Step 2: 数据分析
+
+#### 2.1 10 维度红绿灯评估
+
+Merge all 8 JSON files and pipe to `scripts/score-calculator.sh`:
+
 ```bash
-- Read $OPENCLAW_LOG_DIR/openclaw.log (last 1000 lines)
-- Read $OPENCLAW_LOG_DIR/error.log (last 500 lines)
-- Extract: error count, warning count, recent errors
-- Identify error patterns (knowledge/AntiPatterns.md)
-- Calculate error rate
+node -e "
+  const fs = require('fs');
+  const dir = process.argv[1];
+  const data = {};
+  const mapping = { env:'env', config:'config', logs:'logs', skills:'skills',
+                    health:'health', precheck:'precheck', channels:'channels', tools:'tools' };
+  for (const [key, file] of Object.entries(mapping)) {
+    try { data[key] = JSON.parse(fs.readFileSync(dir+'/'+file+'.json','utf8')); }
+    catch { data[key] = {}; }
+  }
+  console.log(JSON.stringify(data));
+" "$CHECKUP_DIR" | scripts/score-calculator.sh > "$CHECKUP_DIR/analysis.json"
 ```
 
-### 2.4 Session Data
-```bash
-- Active session count
-- Average session duration
-- Most/least used skills
-- Request success rate
-- Recent session failures
+Output: `analysis.json` containing:
+- `overall_status`: pass / warning / error
+- `summary`: { pass_count, warning_count, error_count, total: 10 }
+- `dimensions[]`: 10 items, each with { id, label, label_en, status, message, issues[] }
+
+#### 2.2 历史对比
+
+IF previous checkup exists (data/checkups/latest points to older directory):
+- Load previous analysis.json
+- Compare per-dimension status changes
+- Flag improved and degraded dimensions
+
+---
+
+### Step 3: 总结建议
+
+#### 3.1 L0 — 一行状态（默认输出）
+
+```
+🏥 OpenClaw 体检: 8✅ 1⚠️ 1❌ — 需要处理 2 个问题
 ```
 
-### 2.5 Workspace Data
-```bash
-- List installed skills: clawhub list --installed
-- Check for outdated skills: clawhub list --outdated
-- Scan workspace for orphaned files
-- Check file sizes (>10MB warning)
-- Count markdown files
+Format: `🏥 OpenClaw 体检: {pass}✅ {warn}⚠️ {error}❌ — {action_msg}`
+
+#### 3.2 L1 — 维度网格（紧接 L0 后自动展示）
+
+```
+ 平台 ✅ | 版本 ✅ | 配置 ✅ | 日志 ⚠️ | 预检 ✅
+Skills ✅ | Channels ✅ | Agent ✅ | Gateway ❌ | 工具 ✅
 ```
 
-**Output**: Structured data object with all collected information
+Two rows, 5 dimensions each, aligned for visual scanning.
 
-## Step 3: Data Analysis
+#### 3.3 L2 — 问题清单 + 修复建议
 
-### 3.1 Score Calculation (0-100 per category)
+ONLY shown when ⚠️ or ❌ dimensions exist:
 
-**Environment Score**:
-- Node version current: +25 points
-- Memory adequate: +25 points
-- Disk space >20%: +25 points
-- CPU load <80%: +25 points
-
-**Configuration Score**:
-- Valid JSON: +20 points
-- All required fields: +20 points
-- Concurrency appropriate: +20 points
-- Timeouts reasonable: +20 points
-- Logging enabled: +20 points
-
-**Skills Score**:
-- Essential skills installed: +25 points
-- No outdated critical skills: +25 points
-- No broken dependencies: +25 points
-- No orphaned skills: +25 points
-
-**Logs Score**:
-- Error rate <1%: +40 points
-- No critical errors in 24h: +30 points
-- Warning rate <5%: +20 points
-- Log rotation enabled: +10 points
-
-**Workspace Score**:
-- No orphaned files: +25 points
-- No oversized files: +25 points
-- Organized structure: +25 points
-- No broken references: +25 points
-
-### 3.2 Issue Detection
-
-For each category, identify issues:
-1. Compare values against thresholds (knowledge/BestPractices.md)
-2. Check for anti-patterns (knowledge/AntiPatterns.md)
-3. Detect anomalies (sudden changes, outliers)
-4. Classify severity: Critical, High, Medium, Low
-5. Generate unique issue ID: `<CATEGORY>-<NUMBER>`
-
-**Issue Format**:
 ```markdown
-### [severity] [ID] Title
-- **Category**: Environment/Configuration/Skills/Logs/Workspace
-- **Finding**: What was detected
-- **Evidence**: Data backing the finding
-- **Impact**: Why it matters
-- **Recommendation**: What to do about it
+| # | 状态 | 维度     | 问题                              | 修复命令                    |
+|---|------|---------|----------------------------------|---------------------------|
+| 1 | ❌   | Gateway | /openclaw 端点返回 503            | openclaw start             |
+| 2 | ⚠️   | 日志    | 错误率 3.2%，检测到 2 次错误尖峰    | 查看 fix-playbooks.md PB-009 |
 ```
 
-## Step 4: Report Generation
+For each issue, reference `references/fix-playbooks.md` for fix commands.
 
-### 4.1 Structure
+#### 3.4 提示修复
+
+```
+💡 运行 `clawhub doctor --fix` 可自动修复上述问题
+```
+
+#### 3.5 L3 — 深度分析
+
+IF `--full` flag or user asks "详细" / "detail":
+- For each ⚠️/❌ dimension, expand:
+  1. **检测结果**: Raw data excerpt
+  2. **根因分析**: Why this happened
+  3. **修复步骤**: From `references/fix-playbooks.md`
+  4. **回滚方案**: How to undo
+  5. **预防措施**: How to avoid recurrence
+
+#### 3.6 可选输出
+
+- IF `--format md|html|all` → run `scripts/generate-report.sh`
+- IF `--channel` → run `scripts/deliver-report.sh`
+- IF macOS + no --channel specified → auto-open HTML if generated
+
+---
+
+## ═══════════════════════════════════════════
+## 功能 2：智能修复（clawhub doctor --fix）
+## ═══════════════════════════════════════════
+
+### Step 1: 问题定位
+
+#### 1.1 读取最近体检结果
+
+```bash
+# Read latest analysis
+LATEST=$(readlink data/checkups/latest 2>/dev/null || ls -d data/checkups/2* | sort | tail -1)
+ANALYSIS="data/checkups/$LATEST/analysis.json"
+```
+
+#### 1.2 提取问题维度
+
+From `analysis.json`, extract all dimensions where status is ⚠️ or ❌:
+- List each dimension's issues with severity and fix_ref
+
+#### 1.3 无数据处理
+
+IF no analysis.json found → automatically run 智能体检 first, then continue.
+
+---
+
+### Step 2: 修复方案
+
+#### 2.1 按影响排序
+
+Sort issues: ❌ error first, then ⚠️ warning.
+Within same severity, sort by dimension ID (lower = more fundamental).
+
+#### 2.2 匹配修复步骤
+
+For each issue with `fix_ref`:
+- Load corresponding section from `references/fix-playbooks.md`
+- Extract: Assess → Backup → Fix → Verify → Rollback steps
+
+For issues without fix_ref:
+- Generate contextual fix suggestion based on issue details
+- Reference `references/error-patterns.md` or `references/security-checks.md`
+
+#### 2.3 展示修复计划
+
 ```markdown
-# OpenClaw Health Report
-**Generated**: [timestamp]
-**Agent ID**: [agent-id]
-**Diagnostic Scope**: [quick/full/category]
+## 修复计划
 
-## Overall Health Score: XX/100
+| # | 维度 | 问题 | 修复操作 | 影响 |
+|---|------|------|---------|------|
+| 1 | Gateway | 端口不可达 | openclaw start | 恢复 Gateway 服务 |
+| 2 | 日志 | 错误率过高 | 清理 + 轮转日志 | 降低错误率 |
 
-### Category Scores
-- Environment: XX/100 [status]
-- Configuration: XX/100 [status]
-- Skills: XX/100 [status]
-- Logs: XX/100 [status]
-- Workspace: XX/100 [status]
-
-## Summary Statistics
-- Node.js: [version]
-- Memory: [used]/[total] ([percentage]%)
-- Disk: [used]/[total] ([percentage]%)
-- Skills Installed: [count]
-- Active Sessions: [count]
-- Error Rate (24h): [percentage]%
-
-## Findings ([count] issues)
-
-### 🔴 Critical ([count])
-[... critical issues ...]
-
-### 🟡 High Priority ([count])
-[... high priority issues ...]
-
-### 🟠 Medium Priority ([count])
-[... medium priority issues ...]
-
-### ℹ️ Low Priority / Info ([count])
-[... low priority issues ...]
+确认执行修复? [Y/n]
 ```
 
-### 4.2 Visual Indicators
-- ✅ Healthy (80-100)
-- ⚠️ Warning (60-79)
-- 🟡 Elevated (40-59)
-- 🔴 Critical (<40)
+---
 
-## Step 5: Recommendations
+### Step 3: 执行验证
 
-Prioritize by severity and impact:
+#### 3.1 执行修复
 
-1. **Critical Issues** - Fix immediately
-2. **High Priority** - Fix within 24 hours
-3. **Medium Priority** - Fix within 1 week
-4. **Low Priority** - Fix when convenient
+IF user confirms:
+1. For each fix step:
+   a. Display: "正在修复: {issue description}"
+   b. Execute fix command
+   c. Capture result (success/failure)
+   d. IF failure → log error, suggest manual fix, continue to next
 
-For each recommendation, provide:
-- What needs to be done
-- How to do it (specific commands)
-- Expected outcome
-- Potential risks
-- Rollback procedure
-
-**Example**:
-```markdown
-## Recommendation 1: Increase Concurrency Limit
-
-**Current**: concurrency = 10
-**Recommended**: concurrency = 25
-
-**How to fix**:
-1. Open `$OPENCLAW_HOME/config/openclaw.config.json`
-2. Find `execution.concurrency` field
-3. Change value from 10 to 25
-4. Save file
-5. Restart OpenClaw: `clawhub restart`
-
-**Expected**: Better parallelization, reduced queue time
-**Risk**: None (reversible change)
-**Rollback**: Change value back to 10 and restart
-```
-
-## Step 6: Interactive Fix Execution
-
-Ask user for confirmation:
-```
-Found [N] issues requiring attention.
-Recommend automatic fixes for [M] safe issues.
-
-Execute fixes? [Y/n/s] (Y=yes, n=no, s=show details)
-```
-
-### 6.1 Safe Auto-Fixes (with confirmation)
-These are low-risk changes:
-- Update configuration values
-- Clear cache files
-- Restart services
-- Install missing recommended skills
-- Update outdated skills
-
-### 6.2 Manual Fixes (guidance only)
-These require user action:
-- System-level changes (Node.js upgrade)
-- External service configuration
-- Network settings
-- Security-related changes
-
-**For each fix**:
-1. Display what will be changed
-2. Show before/after comparison
-3. Get user confirmation
-4. Execute fix
-5. Verify result
-6. Report success/failure
-
-## Step 7: Result Verification
+#### 3.2 重新采集验证
 
 After fixes applied:
-1. Re-run affected category checks
-2. Compare before/after scores
-3. Verify issues are resolved
-4. Check for new issues
-5. Generate comparison report
+- Re-run ONLY the affected collection scripts (not all 8)
+- Re-calculate score for affected dimensions only
+- Compare before/after status
 
-**Before/After Format**:
+#### 3.3 输出修复摘要
+
 ```markdown
-## Results Summary
+## 修复结果
 
-### Score Changes
-- Environment: 70 → 90 (+20) ✅
-- Configuration: 60 → 85 (+25) ✅
-- Skills: 75 → 80 (+5) ✅
+| # | 维度 | 修复前 | 修复后 | 状态 |
+|---|------|-------|-------|------|
+| 1 | Gateway | ❌ | ✅ | 已修复 |
+| 2 | 日志 | ⚠️ | ⚠️ | 部分改善 |
 
-### Issues Resolved
-- ✅ [CONF-001] Concurrency limit increased
-- ✅ [SKILL-003] @botlearn/code-gen installed
-- ✅ [LOG-004] Timeout configuration updated
-
-### Remaining Issues
-- ⏳ [ENV-002] Node.js upgrade (manual, skipped)
+🏥 修复后体检: 9✅ 1⚠️ 0❌
 ```
 
-## Step 8: Documentation & Next Steps
-
-### 8.1 Export Report
-Offer to save report:
-```bash
-Save full report to file? [Y/n]
-Path: [default: ~/.openclaw/reports/doctor-YYYY-MM-DD.json]
-```
-
-### 8.2 Schedule Next Check
-Recommend next check based on findings:
-- Healthy (85+): Recheck in 1 month
-- Warning (60-84): Recheck in 1 week
-- Critical (<60): Recheck in 24 hours
-
-### 8.3 Monitoring Recommendations
-Suggest ongoing monitoring if issues detected:
-- Enable health check dashboard
-- Set up alerting for critical metrics
-- Configure automated periodic checks
-
-### 8.4 Knowledge Base Update
-If new issue patterns discovered:
-- Document in internal knowledge base
-- Share with OpenClaw community if applicable
-- Update anti-patterns reference
-
-## Conditional Branches
-
-### IF: User requests quick check
-- Skip log deep analysis
-- Skip workspace file scan
-- Focus on environment, config, skills status
-
-### IF: User requests specific category
-- Only run data collection for that category
-- Skip other categories
-- Provide detailed analysis of single category
-
-### IF: Critical errors detected
-- Immediately pause and alert user
-- Ask for immediate action or proceed
-- Prioritize critical fixes above all else
-
-### IF: Unsafe operations required
-- Clearly mark as "manual intervention required"
-- Provide detailed instructions
-- Do not execute automatically
-
-### IF: Fixes fail
-- Capture error details
-- Suggest alternative approaches
-- Create rollback if changes were partial
-- Recommend support escalation if needed
+---
 
 ## Error Handling
 
-- Data collection fails → Note and continue with other sources
-- Invalid configuration → Report as finding, don't crash
-- Log files missing → Report as finding
-- Commands fail → Capture stderr, include in report
-- Unexpected data → Validate schema, note anomalies
+- Script execution fails → mark dimension as "warning" with "data unavailable", continue
+- JSON parse fails → treat as empty data, log warning
+- Gateway unreachable → Gateway dimension = ❌, proceed with other dimensions
+- No previous checkup for comparison → skip trend, note "首次体检"
+- User declines fixes → save report only
+- Checkup save fails → warn but continue (non-blocking)
+- Channel delivery fails → log error, continue to next channel
 
-## Self-Check
+## Data Flow Summary
 
-Before presenting report:
-- All data sources attempted
-- Scores calculated correctly
-- Findings backed by evidence
-- Recommendations actionable
-- Safe fixes identified
-- User approval obtained for changes
-- Rollback procedures ready
+```
+采集 (8 scripts)  →  保存 (data/checkups/)  →  分析 (score-calculator.sh)
+     ↓                      ↓                          ↓
+  8 JSON files         latest symlink           analysis.json (10 维度)
+                                                       ↓
+                                              L0/L1/L2/L3 报告输出
+                                                       ↓
+                                              generate-report.sh (可选)
+                                                       ↓
+                                              deliver-report.sh (可选)
+```

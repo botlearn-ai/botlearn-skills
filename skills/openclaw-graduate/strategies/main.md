@@ -1,552 +1,429 @@
 ---
 strategy: openclaw-graduate
-version: 1.0.0
-steps: 10
+version: 2.0.0
+steps: 6
 ---
 
-# Day 7 Graduation Strategy
+# Graduation Strategy: 6-Stage Pipeline
 
-## Step 1: Graduation Trigger & Intent Analysis
+## Stage 1: Mode Detection & Context Collection
 
-Detect graduation request and determine scope:
+### 1.1 Detect Activation Mode
 
-**Trigger Patterns**:
-- "day 7", "retrospective", "7 days review"
-- "what have i learned", "my progress"
-- "growth report", "next steps"
-- "毕业总结", "七天复盘", "成长报告"
-- "graduate", "completion", "journey complete"
+```
+IF agent:bootstrap hook fired AND journey day == 7:
+  → mode = "hook-triggered"
+  → Announce graduation day, offer ceremony
 
-**Scope Options**:
-- `--full`: Complete graduation ceremony with all components
-- `--quick`: Executive summary only
-- `--archetype`: Focus on archetype and growth path
-- `--community`: Focus on A2A community welcome
-- `--report`: Export report without ceremony
+IF user says "graduate", "毕业", "graduation":
+  → mode = "ceremony" (full ceremony)
 
-**Apply knowledge**: Refer to knowledge/Domain.md for understanding the 4 phases
+IF user says "exam", "考试", "test":
+  → mode = "exam" (exam only)
 
-## Step 2: Collect Journey Data (Day 1 + Day 7)
+IF user says "--quick" or "quick summary":
+  → mode = "quick" (executive summary only)
 
-### 2.1 Day 1 Baseline Collection
+IF user says "stats", "progress", "我的进度":
+  → mode = "stats" (growth stats only)
 
-**Primary Source**: Check for saved snapshot
-```javascript
-GET /memory/snapshots?label=day1-baseline
-
-// If not found, reconstruct from:
-- First session timestamp
-- Initial configuration logs
-- Early skill installations
+IF cron trigger:
+  → mode = "daily-check"
+  → Inject day-appropriate reminder, exit
 ```
 
-**Reconstructed Baseline**:
-```javascript
+### 1.2 Collect Context
+
+```
+Read journey-start.json → currentDay, startDate
+Read workspace files → SOUL.md, USER.md, AGENTS.md existence and quality
+
+IF currentDay < 7 AND mode != "stats":
+  → Inform user: "Day {currentDay}/7. Graduation available on Day 7."
+  → Offer: "Want to see your current progress? Say 'stats'"
+
+IF currentDay >= 7:
+  → Proceed to Stage 2
+```
+
+**Apply knowledge**: @knowledge/domain.md for 4C framework and phases
+
+## Stage 2: Parallel Data Collection
+
+Run all collection scripts in parallel:
+
+```
+PARALLEL:
+  journey_data  ← bash scripts/collect-journey.sh
+  growth_data   ← bash scripts/collect-growth.sh
+  activity_data ← bash scripts/collect-activity.sh
+  browser_data  ← bash scripts/track-browser.sh
+```
+
+### 2.1 Handle Script Failures
+
+```
+FOR EACH script result:
+  IF script failed OR timeout:
+    → Mark that dimension as "unavailable"
+    → Continue with remaining data
+    → DO NOT abort graduation
+
+IF ALL scripts failed:
+  → Fall back to manual collection mode
+  → Ask user for self-reported data
+```
+
+### 2.2 Merge Results
+
+```
+graduation_context = {
+  journey: journey_data,
+  growth: growth_data,
+  activity: activity_data,
+  browser: browser_data,
+  collected_at: NOW
+}
+```
+
+## Stage 3: Analysis & Scoring
+
+### 3.1 4C Growth Analysis
+
+```
+FROM growth_data:
+  core_score = growth.current.core         (0-100)
+  context_score = growth.current.context   (0-100)
+  constitution_score = growth.current.constitution (0-100)
+  capabilities_score = growth.current.capabilities (0-100)
+  overall_score = growth.current.overall   (weighted)
+
+  core_growth = growth.growth.core
+  context_growth = growth.growth.context
+  constitution_growth = growth.growth.constitution
+  capabilities_growth = growth.growth.capabilities
+  overall_growth = growth.growth.overall
+```
+
+### 3.2 Archetype Detection
+
+```
+FROM journey_data + growth_data:
+
+builder_score = (
+  (skills.count > 10 ? 25 : skills.count > 5 ? 15 : 0) +
+  (technical_skills_ratio × 20) +
+  (config_modified ? 15 : 0) +
+  (experiment_indicators × 25) +
+  (doc_engagement × 15)
+)
+
+operator_score = (
+  (workflow_patterns × 30) +
+  (workflow_optimization × 25) +
+  (automation_indicators × 20) +
+  (efficiency_keywords × 25)
+)
+
+explorer_score = (
+  (skill_category_variety × 30) +
+  (skill_churn × 20) +
+  (discovery_language × 20) +
+  (sharing_behavior × 30)
+)
+
+specialist_score = (
+  (domain_focus × 35) +
+  (domain_depth × 35) +
+  (expertise_language × 30)
+)
+
+// Determine archetype
+primary = max(builder, operator, explorer, specialist)
+secondary = second_highest
+
+IF primary.score - secondary.score < 15:
+  archetype = "{primary.name}-{secondary.name}" (hybrid)
+ELSE:
+  archetype = primary.name
+```
+
+Refer to @assets/graduation-schema.json for thresholds.
+
+### 3.3 Milestone Scoring (Day 1-6 Only)
+
+```
+currentDay = journey_data.journey.currentDay
+
+FROM journey_data + growth_data:
+
+FOR EACH milestone in @assets/milestone-config.json:
+  // Gate 1: 只检测当前天及之前的里程碑
+  IF milestone.day > currentDay:
+    milestone.achieved = false
+    milestone.status = "future"     // 未来日期，不可检测
+    SKIP
+
+  // Gate 2: Day 7 里程碑标记为 postCeremony，Stage 3 不检测
+  //         这些文件（graduation-report.json, exam-result.json, ceremony-completed）
+  //         是 Stage 4/5/6 才生成的，此时还不存在
+  IF milestone.postCeremony == true:
+    milestone.achieved = false
+    milestone.status = "pending"    // 等待毕业流程完成后二次评分
+    SKIP
+
+  // Gate 通过：正常检测
+  IF detect(milestone) == true:
+    milestone.achieved = true
+    total_points += milestone.points
+
+// 此处的 grade 是 **临时等级**（不含 Day 7 的 30 分）
+preliminary_grade = lookup(total_points, @assets/milestone-config.json.grading)
+```
+
+**重要**: Day 7 的 30 分由 Stage 6.1 二次评分追加。Stage 3 输出的 grade 是临时值。
+
+### 3.4 Community Engagement Score
+
+```
+engagement = 0
+
+IF activity_data.activity.available:
+  engagement += activity_data.activity.engagementScore
+
+IF browser_data.engaged:
+  engagement += min(browser_data.totalVisits × 2, 20)
+
+engagement_level = "none" | "low" | "medium" | "high"
+```
+
+## Stage 4: Exam Management (Conditional)
+
+```
+IF mode == "exam" OR (mode == "ceremony" AND user accepts exam):
+  → Proceed with exam
+ELSE:
+  → Skip to Stage 5
+```
+
+### 4.1 Offer Exam
+
+```
+"Would you like to take the graduation exam?"
+Options:
+  - Full exam (15 questions, ~20 minutes)
+  - Quick exam (6 questions, ~8 minutes)
+  - Practice mode (3 knowledge questions)
+  - Skip exam (proceed to ceremony)
+```
+
+### 4.2 Administer Exam
+
+```
+Load questions from @references/exam-questions.md
+Select questions based on mode:
+  full → all 15 (K1-K5, P1-P5, R1-R5)
+  quick → K1, K3, P1, P3, R1, R3
+  practice → K1, K2, K3
+
+Present ONE question at a time
+Collect answers
+```
+
+### 4.3 Score Exam
+
+```
+answers_json = format_answers_as_json(collected_answers)
+exam_result = echo $answers_json | bash scripts/graduation-scorer.sh
+
+Save to ~/.openclaw/data/graduate/exam-result.json
+```
+
+### 4.4 Present Results
+
+```
+Use @references/emotional-scripts.md for tone:
+  IF exam_result.passed AND score >= 65: "Outstanding!"
+  IF exam_result.passed: "Congratulations on passing!"
+  IF NOT passed: "Your exam shows you're still growing — and that's beautiful."
+
+Show: category breakdown, strengths, growth areas
+```
+
+## Stage 5: Report & Ceremony Generation
+
+### 5.1 Select Ceremony Template
+
+```
+FROM archetype:
+  template = @references/ceremony-templates.md[archetype]
+
+IF hybrid archetype:
+  template = hybrid adaptation
+```
+
+### 5.2 Generate Graduation Report
+
+```
+Report sections (in order):
+  1. Executive Summary
+     - Agent name, journey dates, archetype, overall score
+  2. Transformation Table
+     - Day 1 vs Day 7 for each 4C dimension
+  3. Milestone Grade
+     - Points earned (Day 1-6 confirmed + Day 7 pending)
+     - NOTE: 此处使用 preliminary_grade（Stage 3 临时值）
+     - Day 7 里程碑在 Stage 6.1 二次评分后更新为 final_grade
+  4. Achievement Timeline
+     - Day 1-7 key milestones achieved
+  5. Archetype Analysis
+     - Detection evidence, strengths, growth path
+  6. 4C Detailed Analysis
+     - Per-dimension scores with growth indicators
+  7. Exam Results (if taken)
+     - Score, grade, category breakdown
+  8. Community Engagement (if available)
+     - botlearn.ai activity, browser visits
+  9. Next Phase Recommendations
+     - 7/30/90-day personalized plan based on archetype
+  10. Community Welcome
+      - Archetype-matched channels and resources
+  11. Graduation Certificate
+      - Fill @assets/diploma-template.md with actual data
+  12. Farewell Message
+      - Archetype-specific from @references/ceremony-templates.md
+```
+
+### 5.3 Quality Self-Check
+
+```
+Before presenting, verify:
+- [ ] All claims backed by script data (anti-pattern: False Celebration)
+- [ ] Archetype has supporting evidence (anti-pattern: Label Thrower)
+- [ ] Browser data shows only aggregate metrics (anti-pattern: Surveillance)
+- [ ] Exam framed as optional (anti-pattern: Exam Pressure)
+- [ ] Community resources are curated, not dumped (anti-pattern: Overwhelmer)
+- [ ] Hook content was ≤ 150 tokens (anti-pattern: Bombardment)
+- [ ] Every section is personalized (anti-pattern: Template Bot)
+```
+
+Refer to @knowledge/anti-patterns.md for full anti-pattern list.
+
+## Stage 6: Save & Follow-Up
+
+### 6.1 Save Graduation Data & Day 7 Milestone Re-scoring
+
+```
+GRADUATE_DATA = ~/.openclaw/data/graduate/
+
+// —— Step A: 保存数据文件 ——
+Save:
+  $GRADUATE_DATA/graduation-report.json    ← full report data
+  $GRADUATE_DATA/exam-result.json          ← exam scores (if taken)
+  $GRADUATE_DATA/ceremony-completed        ← completion marker
+
+// —— Step B: Day 7 里程碑二次评分 ——
+// 此时 Stage 4/5 已完成，Day 7 的文件已经写入磁盘
+// 重新检测 postCeremony=true 的里程碑
+
+d7_bonus = 0
+
+IF file_exists($GRADUATE_DATA/graduation-report.json):
+  d7-retrospective.achieved = true
+  d7_bonus += 10   // "Retrospective Completed"
+
+IF file_exists($GRADUATE_DATA/exam-result.json):
+  d7-exam.achieved = true
+  d7_bonus += 10   // "Graduation Exam Taken"
+
+IF file_exists($GRADUATE_DATA/ceremony-completed):
+  d7-ceremony.achieved = true
+  d7_bonus += 10   // "Ceremony Attended"
+
+// 更新最终里程碑分数和等级
+final_total_points = preliminary_total_points + d7_bonus
+final_grade = lookup(final_total_points, @assets/milestone-config.json.grading)
+
+// —— Step C: 回写最终等级到报告 ——
+// 用 final_grade 替换 preliminary_grade
+Update graduation-report.json:
+  milestoneGrade = final_grade
+  milestonePoints = final_total_points
+  day7Milestones = { retrospective: bool, exam: bool, ceremony: bool }
+
+Format:
 {
-  "day1": {
-    "timestamp": "[First activation]",
-    "core": { "model": "default", "configured": false },
-    "context": { "documents": 0, "personalized": false },
-    "constitution": { "soulMd": false, "userMd": false },
-    "capabilities": { "botlearnSkills": 0 },
-    "tasks": { "completed": 0 }
-  }
+  "graduationId": "day7-{DATE}",
+  "timestamp": "{NOW}",
+  "archetype": "{ARCHETYPE}",
+  "overallScore": {SCORE},
+  "growthScore": {GROWTH},
+  "milestonePoints": {FINAL_POINTS},
+  "milestoneGrade": "{FINAL_GRADE}",
+  "milestoneGradePreliminary": "{PRELIMINARY_GRADE}",
+  "day7Bonus": {D7_BONUS},
+  "examTaken": {BOOL},
+  "examGrade": "{GRADE_OR_NULL}"
 }
 ```
 
-### 2.2 Day 7 Current State Collection
+### 6.2 Schedule Follow-Ups
 
-```javascript
-{
-  "day7": {
-    "timestamp": "[Now]",
-    "core": {
-      "model": "[current]",
-      "configured": true,
-      "optimized": [check customization]
-    },
-    "context": {
-      "documentCount": [count workspace docs],
-      "memoryStructure": "[check organization]",
-      "personalized": [check for user-specific content]
-    },
-    "constitution": {
-      "soulMd": [exists? + completeness],
-      "userMd": [exists? + completeness],
-      "agentsMd": [exists? + completeness]
-    },
-    "capabilities": {
-      "botlearnSkills": [count from clawhub list],
-      "mostUsed": [top 3 with usage],
-      "skillCombos": [discovered patterns]
-    },
-    "tasks": {
-      "completed": [from session logs],
-      "successRate": [calculate],
-      "breakthroughs": [identify]
-    }
-  }
-}
+```
+IF clawhub cron available:
+  clawhub cron add "graduate-14d" --schedule "in 14 days" \
+    --command "echo '14-day progress check reminder'"
+  clawhub cron add "graduate-30d" --schedule "in 30 days" \
+    --command "echo '30-day milestone review reminder'"
+
+IF cron not available:
+  → Record reminder dates in graduation-report.json
+  → Agent's memory will surface them
 ```
 
-### 2.3 Session Analysis
+### 6.3 Offer Next Actions
 
-```javascript
-{
-  "sessions": {
-    "total": [N],
-    "daysActive": [N],
-    "requestTypes": { [categorize] },
-    "skillsUsage": { [count per skill] },
-    "satisfaction": { [positive/negative feedback] }
-  }
-}
 ```
-
-**Apply knowledge**: Use knowledge/BestPractices.md for collection guidelines
-
-## Step 3: Calculate 4C Growth Scores
-
-### 3.1 Core Score (15% weight)
-```javascript
-coreScore = (
-  (modelAppropriate() ? 30 : 0) +
-  (configurationOptimized() ? 40 : 0) +
-  (costEffective() ? 30 : 0)
-)
+"What would you like to do next?"
+Options:
+  - View full report again
+  - Focus on a specific area
+  - Start your 30-day plan
+  - Connect to community
+  - Share your graduation
+  - Export report as markdown
 ```
-
-### 3.2 Context Score (35% weight) ⭐
-```javascript
-contextScore = (
-  (documentCount_scaled()) +  // 0-10=60, 10-20=80, 20+=100
-  (memoryStructure() ? 40 : 0) +
-  (personalizationDepth() ? 30 : 0)
-)
-```
-
-### 3.3 Constitution Score (20% weight)
-```javascript
-constitutionScore = (
-  (soulMd_completeness ? 35 : 0) +
-  (userMd_completeness ? 35 : 0) +
-  (agentsMd_completeness ? 30 : 0)
-)
-```
-
-### 3.4 Capabilities Score (30% weight)
-```javascript
-capabilitiesScore = (
-  (relevantSkills_scaled()) +  // Based on user's needs
-  (skillUsageFrequency()) +     // Regular usage patterns
-  (effectiveCombinations() ? 30 : 0)
-)
-```
-
-### 3.5 Overall Score
-```javascript
-overallScore = (
-  (coreScore * 0.15) +
-  (contextScore * 0.35) +
-  (constitutionScore * 0.20) +
-  (capabilitiesScore * 0.30)
-)
-
-growthScore = overallScore - day1OverallScore
-```
-
-**Output**: 4C scores table with before/after
-
-## Step 4: Detect Agent Archetype
-
-### 4.1 Calculate Archetype Scores
-
-```javascript
-const scores = {
-  builder: (
-    (skillsInstalled > 10 ? 25 : 0) +
-    (technicalSkillsRatio * 20) +
-    (documentationRead * 15) +
-    (customSkillAttempts * 25) +
-    (experimentationFreq * 15)
-  ),
-  operator: (
-    (repetitiveTaskPattern * 30) +
-    (workflowOptimization * 25) +
-    (automationKeywords * 20) +
-    (efficiencyFocus * 25)
-  ),
-  explorer: (
-    (skillCategoryVariety * 30) +
-    (skillChurnRate * 20) +
-    (discoveryLanguage * 20) +
-    (sharingBehavior * 30)
-  ),
-  specialist: (
-    (domainFocusScore * 35) +
-    (domainSkillDepth * 35) +
-    (expertiseLanguage * 30)
-  )
-}
-```
-
-### 4.2 Validate and Present
-
-**Validation Criteria**:
-- Highest score exceeds second by >15 points
-- Score >60 (confidence threshold)
-- Behavioral evidence supports
-
-**IF not met**: Identify as "Hybrid" (e.g., "Builder-Operator")
-
-**Presentation**:
-1. Archetype name and definition
-2. Why it fits (specific evidence)
-3. Strengths of this archetype
-4. Typical growth path
-5. Community resources
-
-**Apply knowledge**: Refer to knowledge/Domain.md for archetype definitions
-
-## Step 5: Identify Achievements
-
-### 5.1 Categorize by Phase
-
-**Phase 1: Activation (Days 1-2)**
-- Agent running and responsive
-- First successful task
-- Communication established
-
-**Phase 2: Stability (Days 3-4)**
-- Security baseline
-- Personalization (SOUL/USER/AGENTS)
-- Advanced task completed
-
-**Phase 3: Reinforcement (Days 5-6)**
-- Workflow optimized
-- Self-improvement enabled
-- Consistent performance
-
-**Phase 4: Graduation (Day 7)**
-- Retrospective complete
-- Growth path defined
-- Community connected
-
-### 5.2 Find Breakthrough Moment
-
-**Look for**:
-- First complex task success
-- First self-directed agent action
-- First workflow iteration
-- User's "aha" expression
-
-### 5.3 Create Achievement Timeline
-
-```markdown
-Day 1: [Initial activation] 🎯
-Day 2: [First task] ✅
-Day 3: [Security/personalization] 🔒
-Day 4: [Advanced task] 🚀
-Day 5: [Workflow optimization] 🔄
-Day 6: [Self-improvement] 📈
-Day 7: [Graduation] 🎓
-```
-
-## Step 6: Generate Growth Report
-
-### 6.1 Executive Summary
-
-```markdown
-🎓 OpenClaw Day 7 Graduation
-
-Journey: Day 1 → Day 7
-Archetype: [Name]
-Key Achievement: [Specific]
-
-Transformation Table:
-| Dimension | Day 1 | Day 7 | Growth |
-|-----------|-------|-------|--------|
-| Capability | [XX]/100 | [YY]/100 | [+ZZ] ✨ |
-```
-
-### 6.2 Detailed 4C Analysis
-
-For each dimension (Core, Context, Constitution, Capabilities):
-- Day 1 state
-- Day 7 state
-- Growth explanation
-- Specific evidence
-
-### 6.3 Graduation Achievements
-
-Checklist format with visual indicators
-Highlight unique achievements
-Identify breakthrough moment
-
-### 6.4 Archetype Section
-
-- Name and emoji
-- What it means
-- Why it fits (evidence)
-- Strengths
-- Growth path
-
-**Apply knowledge**: Use knowledge/BestPractices.md for report structure
-
-## Step 7: Design Next Phase Path
-
-### 7.1 Personalized Recommendations
-
-**Based on**:
-- Archetype
-- Demonstrated interests
-- Current skill stack
-- Goals (explicit or inferred)
-
-**Algorithm**:
-```javascript
-function generateNextSteps(archetype, currentState) {
-  const steps = {
-    immediate: [],   // 7 days
-    shortTerm: [],   // 30 days
-    mediumTerm: []   // 90 days
-  };
-
-  // Archetype-specific
-  switch(archetype) {
-    case 'builder':
-      steps.shortTerm.push("Develop custom skill", "Contribute to ecosystem");
-      break;
-    case 'operator':
-      steps.shortTerm.push("Optimize workflows", "Multi-agent coordination");
-      break;
-    // ... etc
-  }
-
-  // Personalized based on usage
-  if (highResearchUsage) {
-    steps.immediate.push("Add @botlearn/academic-search");
-  }
-
-  return steps;
-}
-```
-
-### 7.2 3-Phase Roadmap
-
-**Immediate (7 days)**:
-- 2-3 specific actions
-- Low friction, high value
-- Builds on current success
-
-**Short-term (30 days)**:
-- 2-3 goals
-- Next complexity level
-- Expands capabilities
-
-**Medium-term (90 days)**:
-- 1-2 major milestones
-- Transformational outcomes
-- Leadership opportunities
-
-## Step 8: Welcome to A2A Community
-
-### 8.1 Map User to Community
-
-```javascript
-function mapToCommunity(archetype, interests) {
-  return {
-    discordChannels: [
-      `#${archetype}s`,
-      ...archetypeSpecificChannels(archetype),
-      ...interestBasedChannels(interests)
-    ],
-    forumCategories: [
-      archetypeForumCategory(archetype),
-      ...relevantForums(interests)
-    ],
-    peopleToFollow: suggestMentors(archetype, interests),
-    firstAction: specificFirstAction(archetype)
-  };
-}
-```
-
-### 8.2 Create Warm Welcome
-
-**NOT**: "Join our Discord at link"
-
-**INSTEAD**: "Based on your [archetype] style and interest in [topic], you'll find your people in #[channel]. Many users there share workflows like yours. Here's a recent discussion about [specific thing]..."
-
-**Include**:
-- Specific channels (3-5 max)
-- Why relevant to THIS user
-- What to do there
-- Expected outcome
-- People to follow
-
-**Apply knowledge**: Refer to knowledge/Domain.md for community structure
-
-## Step 9: Assemble Graduation Ceremony
-
-### 9.1 Structure (as defined in SKILL.md)
-
-1. **Graduation Header** with emoji and title
-2. **Executive Summary** (transformation table)
-3. **Graduation Achievements** (4 phases checklist)
-4. **Agent Archetype** (detection and explanation)
-5. **4C Analysis** (detailed scores)
-6. **Next Phase Planning** (7/30/90 day paths)
-7. **A2A Community Welcome** (specific resources)
-8. **Key Insights** (breakthroughs, DNA)
-9. **Resources** (archetype-specific)
-10. **Graduation Message** (inspiring send-off)
-
-### 9.2 Apply Visual Formatting
-
-- Headers for hierarchy (# ## ###)
-- Tables for comparison
-- Bulleted lists for readability
-- Bold for emphasis
-- Emojis for visual interest
-- Blockquotes for key insights
-
-### 9.3 Quality Check
-
-Before presenting:
-- [ ] All sections complete
-- [ ] Data accurate and sourced
-- [ ] Claims backed by evidence
-- [ ] Personalized (not generic)
-- [ ] Balanced (achievements + growth areas)
-- [ ] Future-oriented and exciting
-- [ ] Community resources curated
-- [ ] Next steps actionable
-- [ ] Graduation message feels earned
-
-**Apply knowledge**: Check against knowledge/AntiPatterns.md to avoid pitfalls
-
-## Step 10: Present and Follow Up
-
-### 10.1 Graduation Ceremony Mode
-
-**Present with ceremony**:
-- "🎓 Congratulations! You've completed your 7-day OpenClaw journey!"
-- This is a milestone—treat it like one
-- Create "diploma moment"
-
-**Offer options**:
-- "View full graduation ceremony"
-- "Quick summary"
-- "Focus on specific area"
-- "Export report"
-- "Plan next phase"
-- "Connect to community"
-
-### 10.2 Save for Reference
-
-```javascript
-{
-  "graduationId": "day7-2026-03-02",
-  "timestamp": "[Now]",
-  "day1Snapshot": {...},
-  "day7Snapshot": {...},
-  "archetype": "[detected]",
-  "overallScore": [score],
-  "growthScore": [score],
-  "achievements": [...],
-  "nextSteps": [...]
-}
-```
-
-### 10.3 Schedule Follow-Ups
-
-**Automatic**:
-- 14 days: "How's your agent evolving?"
-- 30 days: "Progress check — how's the growth path?"
-- 90 days: "Major milestone review"
 
 ## Conditional Branches
 
-### IF: --quick mode
-- Executive summary only
-- Skip detailed sections
-- Offer to expand on interest
-- Focus on next step
+### IF mode == "quick"
+→ Stage 1-2-3 → Executive summary only → Stage 6
 
-### IF: --archetype mode
-- Emphasize archetype detection
-- Go deep on archetype-specific path
-- Provide archetype community resources
-- Tailor all to archetype
+### IF mode == "stats"
+→ Stage 1-2-3 → Show 4C scores + milestone progress → No ceremony
 
-### IF: --community mode
-- Emphasize community welcome
-- Detailed connection guidance
-- Suggest specific channels and people
-- Create engagement plan
+### IF mode == "exam"
+→ Stage 1 → Stage 4 → Stage 6
 
-### IF: Day 1 snapshot missing
-- Reconstruct from available data
-- Mark as "estimated baseline"
-- Note limitations
-- Suggest saving snapshot next time
+### IF Day 1 baseline missing
+→ Reconstruct from available data, mark as "estimated baseline"
 
-### IF: Low engagement
-- Adjust expectations
-- Focus on potential
-- Provide re-engagement suggestions
-- Address blockers honestly
+### IF low engagement (overall_score < 30)
+→ Adjust ceremony tone: honest but encouraging
+→ Focus on potential, not gaps
+→ Use @references/emotional-scripts.md low-engagement scripts
 
-### IF: High achievement
-- Celebrate appropriately
-- Identify what worked
-- Suggest contribution opportunities
-- Consider mentorship potential
+### IF high achievement (overall_score > 80)
+→ Extra celebration, identify what worked
+→ Suggest contribution opportunities
+→ Consider mentorship potential
 
 ## Error Handling
 
-### Data Collection Errors
 ```
-Error: Can't access session logs
-→ Use available data, note limitations
-→ Mark as "partial graduation"
-→ Offer to regenerate when data available
+Script failure → Mark dimension "unavailable", continue
+Exam scoring failure → Fall back to manual scoring
+No journey-start.json → Ask user for start date or estimate
+Network failure → Skip botlearn.ai API, continue
+Browser access denied → Skip browser tracking, note as optional
 ```
-
-### Archetype Detection Failures
-```
-Error: Can't confidently determine
-→ Present as "Evolving" or "Hybrid"
-→ Explain patterns observed
-→ Offer user to self-identify
-→ Provide resources for multiple
-```
-
-### Report Generation Errors
-```
-Error: Report incomplete
-→ Don't present partial as final
-→ Identify missing sections
-→ Offer to regenerate specific sections
-→ Save progress for retry
-```
-
-## Self-Correction
-
-### During ceremony generation, check:
-
-**Am I**:
-- ❌ Being too generic? → Add specific user data
-- ❌ Overwhelming with data? → Summarize more
-- ❌ Focusing on knowledge not outcomes? → Emphasize capabilities
-- ❌ Being too positive/negative? → Balance both
-- ❌ Leaving user hanging? → Provide clear next steps
-- ❌ Making graduation feel unearned? → Reference specific achievements
-
-**Should I**:
-- ✅ Base everything on actual user data?
-- ✅ Personalize every recommendation?
-- ✅ Make growth visible and tangible?
-- ✅ Create excitement for the future?
-- ✅ Provide clear paths to community?
-- ✅ Make this feel like a graduation?

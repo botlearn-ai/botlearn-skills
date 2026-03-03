@@ -1,0 +1,143 @@
+{
+  "version": "4.0.0",
+  "description": "10-dimension traffic-light health model for openclaw-doctor v4.0",
+  "model": "traffic-light",
+  "statuses": {
+    "pass": "✅",
+    "warning": "⚠️",
+    "error": "❌"
+  },
+  "overall_status_rule": "有 ❌ → 整体 ❌; 无 ❌ 有 ⚠️ → 整体 ⚠️; 全 ✅ → 整体 ✅",
+  "dimensions": {
+    "platform": {
+      "id": 1,
+      "label": "基础平台",
+      "label_en": "Platform",
+      "source": "collect-env.sh",
+      "checks": ["OS version", "arch", "memory", "disk", "CPU"],
+      "thresholds": {
+        "pass": "Meets recommended config: Node v20+, memory >30%, disk >20%, CPU load/core <0.7",
+        "warning": "Meets minimum config: Node v18+, memory >15%, disk >10%, CPU load/core <0.9",
+        "error": "Below minimum requirements"
+      }
+    },
+    "version": {
+      "id": 2,
+      "label": "OpenClaw 版本",
+      "label_en": "Version",
+      "source": "collect-env.sh",
+      "checks": ["openclaw --version", "clawhub --version", "Node.js version"],
+      "thresholds": {
+        "pass": "Latest LTS versions installed",
+        "warning": "Usable but not latest",
+        "error": "Too old or not installed"
+      }
+    },
+    "config": {
+      "id": 3,
+      "label": "配置正确性",
+      "label_en": "Config",
+      "source": "collect-config.sh",
+      "checks": ["openclaw.json exists", "JSON5 valid", "required sections complete"],
+      "thresholds": {
+        "pass": "All checks pass",
+        "warning": "Minor omissions that don't affect startup",
+        "error": "Config missing or parse failure"
+      }
+    },
+    "logs": {
+      "id": 4,
+      "label": "日志告警",
+      "label_en": "Logs",
+      "source": "collect-logs.sh",
+      "checks": ["error count", "error rate", "anomaly patterns (spike/OOM/stack trace)"],
+      "thresholds": {
+        "pass": "Error rate <1%, no critical anomalies",
+        "warning": "Error rate 1-10%, minor anomalies",
+        "error": "Error rate >10% or OOM/segfault detected"
+      }
+    },
+    "precheck": {
+      "id": 5,
+      "label": "预检",
+      "label_en": "Precheck",
+      "source": "collect-precheck.sh",
+      "checks": ["openclaw doctor output parsing"],
+      "thresholds": {
+        "pass": "All precheck items pass",
+        "warning": "Has warnings",
+        "error": "Has errors"
+      }
+    },
+    "skills": {
+      "id": 6,
+      "label": "Skills 安装",
+      "label_en": "Skills",
+      "source": "collect-skills.sh",
+      "checks": ["installed count", "dependency integrity", "outdated check"],
+      "thresholds": {
+        "pass": ">=3 installed, no issues",
+        "warning": "Has outdated skills",
+        "error": "Broken dependencies"
+      }
+    },
+    "channels": {
+      "id": 7,
+      "label": "Channels 安装",
+      "label_en": "Channels",
+      "source": "collect-channels.sh",
+      "checks": ["channel registration", "enabled status", "config validity"],
+      "thresholds": {
+        "pass": "Has enabled channels",
+        "warning": "All channels disabled",
+        "error": "Channel config corrupt or missing"
+      }
+    },
+    "agent": {
+      "id": 8,
+      "label": "Agent 配置",
+      "label_en": "Agent",
+      "source": "collect-config.sh",
+      "checks": ["maxConcurrent", "timeout", "heartbeat reasonability"],
+      "thresholds": {
+        "pass": "All values in recommended range",
+        "warning": "Values in acceptable range",
+        "error": "Values exceed safe range"
+      },
+      "ranges": {
+        "maxConcurrent": { "recommended": [1, 10], "acceptable": [1, 20], "safe_max": 50 },
+        "timeoutSeconds": { "recommended": [30, 1800], "acceptable": [10, 3600], "safe_max": 7200 },
+        "heartbeatMinutes": { "recommended": [5, 120], "acceptable": [1, 240] }
+      }
+    },
+    "gateway": {
+      "id": 9,
+      "label": "Gateway 健康",
+      "label_en": "Gateway",
+      "source": "collect-health.sh",
+      "checks": ["/ reachable", "/openclaw operational", "/hooks available", "latency"],
+      "thresholds": {
+        "pass": "All endpoints normal, latency <500ms",
+        "warning": "Some endpoints abnormal",
+        "error": "Gateway unreachable"
+      }
+    },
+    "tools": {
+      "id": 10,
+      "label": "内置工具",
+      "label_en": "Tools",
+      "source": "collect-tools.sh",
+      "checks": ["MCP tools (memory_search, file_read, bash)", "CLI tools (clawhub, openclaw)"],
+      "thresholds": {
+        "pass": "All core tools available",
+        "warning": "Optional tools missing",
+        "error": "Core tools missing"
+      }
+    }
+  },
+  "recheck_interval": {
+    "pass": "30d",
+    "warning": "7d",
+    "error": "1h"
+  }
+}

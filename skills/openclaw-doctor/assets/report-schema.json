@@ -1,0 +1,229 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OpenClaw Doctor Health Report",
+  "description": "Schema for the health report output produced by openclaw-doctor v3.0",
+  "type": "object",
+  "required": ["version", "timestamp", "scope", "overall_score", "overall_status", "category_scores", "issues", "recommendations"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Report schema version",
+      "const": "3.0.0"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of report generation"
+    },
+    "scope": {
+      "type": "string",
+      "enum": ["quick", "standard", "full"],
+      "description": "Diagnostic scope level"
+    },
+    "agent_id": {
+      "type": "string",
+      "description": "OpenClaw Agent instance identifier"
+    },
+    "overall_score": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Weighted total health score"
+    },
+    "overall_status": {
+      "type": "string",
+      "enum": ["healthy", "warning", "elevated", "critical"],
+      "description": "Overall health status label"
+    },
+    "category_scores": {
+      "type": "object",
+      "required": ["environment", "configuration", "skills", "runtime", "workspace", "security"],
+      "properties": {
+        "environment": { "$ref": "#/definitions/categoryScore" },
+        "configuration": { "$ref": "#/definitions/categoryScore" },
+        "skills": { "$ref": "#/definitions/categoryScore" },
+        "runtime": { "$ref": "#/definitions/categoryScore" },
+        "workspace": { "$ref": "#/definitions/categoryScore" },
+        "security": { "$ref": "#/definitions/categoryScore" }
+      }
+    },
+    "issues": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/issue" },
+      "description": "Detected issues sorted by severity"
+    },
+    "issue_summary": {
+      "type": "object",
+      "properties": {
+        "critical": { "type": "integer" },
+        "high": { "type": "integer" },
+        "warning": { "type": "integer" },
+        "info": { "type": "integer" },
+        "total": { "type": "integer" }
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/recommendation" },
+      "description": "Prioritized fix recommendations"
+    },
+    "raw_data": {
+      "type": "object",
+      "description": "Raw collected data from scripts (included in --full reports only)",
+      "properties": {
+        "env": { "type": "object" },
+        "config": { "type": "object" },
+        "logs": { "type": "object" },
+        "log_anomalies": { "type": "object" },
+        "skills": { "type": "object" },
+        "health": { "type": "object" },
+        "security": { "type": "object" },
+        "workspace_audit": { "type": "object" }
+      }
+    },
+    "previous_score": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Previous health score for trend comparison"
+    },
+    "score_delta": {
+      "type": "integer",
+      "description": "Change from previous score (positive = improvement)"
+    },
+    "snapshot": {
+      "type": "object",
+      "description": "Snapshot metadata if saved",
+      "properties": {
+        "snapshot_id": { "type": "string" },
+        "path": { "type": "string" },
+        "retain_days": { "type": "integer" }
+      }
+    },
+    "delivery": {
+      "type": "object",
+      "description": "Report delivery results",
+      "properties": {
+        "channels": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "channel": { "type": "string" },
+              "status": { "type": "string", "enum": ["delivered", "opened", "skipped", "failed", "error"] },
+              "error": { "type": "string" }
+            }
+          }
+        },
+        "format": {
+          "type": "string",
+          "enum": ["md", "html", "all"]
+        }
+      }
+    }
+  },
+  "definitions": {
+    "categoryScore": {
+      "type": "object",
+      "required": ["score", "weight", "weighted"],
+      "properties": {
+        "score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Raw category score"
+        },
+        "weight": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Weight factor for this category"
+        },
+        "weighted": {
+          "type": "integer",
+          "description": "Weighted contribution to total score"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["healthy", "warning", "elevated", "critical"]
+        }
+      }
+    },
+    "issue": {
+      "type": "object",
+      "required": ["id", "severity", "msg"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Z]+-[0-9]+$",
+          "description": "Unique issue identifier (e.g., ENV-001, SEC-003, ANOM-001)"
+        },
+        "severity": {
+          "type": "string",
+          "enum": ["critical", "high", "warning", "info"]
+        },
+        "msg": {
+          "type": "string",
+          "description": "Human-readable issue description"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["environment", "configuration", "skills", "runtime", "workspace", "security"]
+        },
+        "evidence": {
+          "type": "object",
+          "description": "Supporting data for this finding"
+        },
+        "fix_command": {
+          "type": "string",
+          "description": "One-liner fix command if available"
+        }
+      }
+    },
+    "recommendation": {
+      "type": "object",
+      "required": ["priority", "action", "command"],
+      "properties": {
+        "priority": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Priority rank (1 = highest)"
+        },
+        "issue_id": {
+          "type": "string",
+          "description": "Related issue ID"
+        },
+        "action": {
+          "type": "string",
+          "description": "What needs to be done"
+        },
+        "command": {
+          "type": "string",
+          "description": "Executable command to fix"
+        },
+        "impact": {
+          "type": "string",
+          "enum": ["high", "medium", "low"],
+          "description": "Expected impact on health score"
+        },
+        "effort": {
+          "type": "string",
+          "enum": ["easy", "medium", "hard"],
+          "description": "Effort required to implement"
+        },
+        "auto_fixable": {
+          "type": "boolean",
+          "description": "Whether this can be auto-fixed with confirmation"
+        },
+        "rollback": {
+          "type": "string",
+          "description": "Command or steps to rollback this fix"
+        },
+        "expected_score_change": {
+          "type": "integer",
+          "description": "Estimated score improvement"
+        }
+      }
+    }
+  }
+}

@@ -5,7 +5,7 @@ priority: high
 ttl: 90d
 ---
 
-# Day 7: OpenClaw 7-Day Learning Journey
+# OpenClaw Graduate: Domain Knowledge
 
 ## The Journey: From Installation to Evolution
 
@@ -13,25 +13,15 @@ ttl: 90d
 **User State**: Excited but uncertain
 - "I have this thing called OpenClaw but..."
 - "What do I do with it?"
-- "Is this actually useful?"
 
-**Agent State**:
-- Generic AI assistant
-- No personalization
-- Minimal capabilities
-- Empty memory
+**Agent State**: Generic AI assistant, no personalization, minimal capabilities, empty memory
 
 ### Day 7: The Graduation
 **User State**: Confident and capable
 - "My Agent can [specific capability]"
 - "Here's my workflow for [task]"
-- "I want to expand this further"
 
-**Agent State**:
-- Unique personality
-- Knows the user
-- Multiple capabilities
-- Established workflows
+**Agent State**: Unique personality, knows the user, multiple capabilities, established workflows
 
 ## The 4C Framework of Agent Intelligence
 
@@ -39,283 +29,178 @@ ttl: 90d
 ┌─────────────────────────────────────────────────────────────┐
 │                    OpenClaw Agent 4C                         │
 ├─────────────────────────────────────────────────────────────┤
-│                                                               │
 │    Core          Context         Constitution      Skills    │
 │  (The Brain)    (The Memory)    (The Soul)      (The Hands)  │
 │    ↓              ↓               ↓               ↓          │
 │  LLM Model      Knowledge Base   Identity       Capabilities │
 │  + Config       + Documents      + Rules        + Tools      │
-│                                                               │
 └─────────────────────────────────────────────────────────────┘
 ```
 
 ### 1. Core (The Brain) - 15% Weight
-**What**: The underlying LLM and its configuration
-
-**Day 1**: Default model, standard settings
-**Day 7**: Optimized choice, customized parameters
-
-**Growth Indicators**:
-- Model appropriate for use case
-- Configuration tuned for user's needs
-- Cost-effective balance achieved
+LLM model choice + configuration optimization + cost effectiveness.
 
 ### 2. Context (The Memory) - 35% Weight ⭐ Most Important
-**What**: Information about user's projects, preferences, history
-
-**Day 1**: Empty or generic templates
-**Day 7**: Personal documents, memory structure, agent knows user
-
-**Growth Indicators**:
-- Document count and organization
-- Memory retrieval accuracy
-- Context density in conversations
+Document count/organization + memory retrieval + personalization depth.
 
 ### 3. Constitution (The Soul) - 20% Weight
-**What**: Personality, values, rules (SOUL.md, USER.md, AGENTS.md)
-
-**Day 1**: "I'm a helpful AI assistant"
-**Day 7**: Unique identity with clear behavioral guidelines
-
-**Growth Indicators**:
-- SOUL.md personality completeness
-- USER.md accuracy and detail
-- AGENTS.md specificity
-- Consistent agent behavior
+SOUL.md personality + USER.md accuracy + AGENTS.md specificity.
 
 ### 4. Capabilities (The Hands) - 30% Weight
-**What**: Skills the agent can execute via @botlearn packages
-
-**Day 1**: Built-in skills only
-**Day 7**: Multiple @botlearn skills, workflow patterns
-
-**Growth Indicators**:
-- Relevant skills installed
-- Skill usage frequency
-- Effective combinations discovered
+Relevant skills installed + usage frequency + effective combinations.
 
 ## The 4 Phases
 
-### Phase 1: Activation (Days 1-2)
-**User State**: "Where do I start?"
-**Focus**: Get Agent running, complete first task
-**Success Indicators**:
-- ✅ Agent responds consistently
-- ✅ First task completed
-- ✅ User feels in control
-
-### Phase 2: Stability (Days 3-4)
-**User State**: "Can I trust this?"
-**Focus**: Security, personalization, advanced tasks
-**Success Indicators**:
-- ✅ Security boundaries defined
-- ✅ Agent feels personalized
-- ✅ Complex task succeeds
-
-### Phase 3: Reinforcement (Days 5-6)
-**User State**: "This is actually useful!"
-**Focus**: Workflow optimization, self-improvement
-**Success Indicators**:
-- ✅ Tasks repeat successfully
-- ✅ Agent learns and improves
-- ✅ User relies on agent
-
-### Phase 4: Graduation (Day 7)
-**User State**: "What's next?"
-**Focus**: Retrospective, planning, community
-**Success Indicators**:
-- ✅ Growth clearly visible
-- ✅ Future path exciting
-- ✅ Community connections made
+| Phase | Days | Focus |
+|-------|------|-------|
+| Activation | 1-2 | Get running, first tasks |
+| Stability | 3-4 | Security, personalization |
+| Reinforcement | 5-6 | Optimization, self-growth |
+| Graduation | 7 | Retrospective, planning |
 
 ## Agent Archetypes
 
-After 7 days, users typically fall into one pattern:
-
 ### 🛠️ Builder
-**Characteristics**: Technical exploration, skill development, custom solutions
-
-**Behavioral Signals**:
-- Many skills installed (>10)
-- Technical skills preferred
-- Documentation read
-- Custom skills attempted
-
-**Growth Path**: Advanced skill development, tool integration, ecosystem contribution
-
-**Community**: #builders, #dev, #skill-authors
+Technical exploration, skill development, custom solutions.
+**Signals**: Many skills (>10), technical preference, documentation read, custom attempts.
 
 ### 🔄 Operator
-**Characteristics**: Workflow optimization, automation, efficiency
-
-**Behavioral Signals**:
-- Fewer skills, workflow focus
-- Repetitive task patterns
-- Automation keywords
-- Efficiency mentions
-
-**Growth Path**: Workflow optimization, multi-agent coordination, business automation
-
-**Community**: #operators, #workflows, #automation
+Workflow optimization, automation, efficiency.
+**Signals**: Fewer skills with workflow focus, repetitive patterns, automation keywords.
 
 ### 🔍 Explorer
-**Characteristics**: Skill discovery, experimentation, pattern finding
-
-**Behavioral Signals**:
-- Diverse skill categories
-- High variety, lower depth
-- Discovery language
-- Sharing behavior
-
-**Growth Path**: Ecosystem navigation, pattern discovery, community curation
-
-**Community**: #explorers, #skills-showcase, #new-skills
+Skill discovery, experimentation, pattern finding.
+**Signals**: Diverse categories, high variety, discovery language, sharing behavior.
 
 ### 🎯 Specialist
-**Characteristics**: Domain expertise, deep skill combinations
+Domain expertise, deep skill combinations.
+**Signals**: Deep focus in one domain, domain-specific skills, expert language.
 
-**Behavioral Signals**:
-- Deep focus in one domain
-- Domain skill combinations
-- Expert language
-- Niche use case
+## Browser Tracking Model
 
-**Growth Path**: Domain expertise, advanced workflows, thought leadership
+### Purpose
+Track user engagement with botlearn.ai community through browser visit history.
 
-**Community**: #[domain], #specialists
+### Privacy Design
+- **ONLY** queries `botlearn.ai` domain — no other URLs inspected
+- Database copied to `/tmp` before query to avoid lock conflicts with running browser
+- Feature is entirely **optional** — degrades gracefully if unavailable
+- No data sent externally — all processing local
+- User can opt-out by not granting sqlite3 access
 
-## A2A Community Structure
+### Supported Browsers
+| Browser | OS | History DB |
+|---------|-----|-----------|
+| Chrome | macOS | `~/Library/Application Support/Google/Chrome/Default/History` |
+| Safari | macOS | `~/Library/Safari/History.db` |
+| Chrome | Linux | `~/.config/google-chrome/Default/History` |
 
-### Discord Server
-```
-📚 OpenClaw A2A Community
-├── #welcome - Newcomer introduction
-├── #announcements - Product updates
-├── #general - Open discussion
-│
-├── 📁 By Archetype
-│   ├── #builders - Technical developers
-│   ├── #operators - Workflow automators
-│   ├── #explorers - Skill discoverers
-│   └── #specialists - Domain experts
-│
-├── 🛠️ Skills
-│   ├── #skills-showcase - Share discoveries
-│   ├── #skills-requests - Request new skills
-│   └── #skills-help - Get help
-│
-├── 💡 Workflows
-│   ├── #workflow-patterns - Share workflows
-│   └── #automation - Automation discussions
-│
-├── 📖 Learning
-│   ├── #day1-2 - Beginners
-│   ├── #day3-4 - Stability seekers
-│   ├── #day5-6 - Advanced users
-│   └── #day7-graduates - Alumni 🎓
-│
-└── 🤝 Community
-    ├── #introductions - Say hello
-    ├── #showcase - Show your agent
-    └── #feedback - Product ideas
-```
+### Engagement Scoring
+- Visit count → engagement level (none/low/medium/high)
+- Unique pages → breadth of exploration
+- Visit frequency → consistency of engagement
 
-## Growth Path Framework
+## Graduation Exam Structure
 
-### Level 1: Foundation (Days 1-7) ✅ Current
-**Achievement**: Agent is running, personalized, useful
+### 3 Categories × 5 Questions = 15 Total
 
-### Level 2: Expansion (Days 8-30)
-**Focus**: Deepen capabilities in chosen direction
-**Milestones**:
-- Master 5-7 core skills
-- Establish 3 reliable workflows
-- Join A2A community channel
-- Share first workflow
+| Category | Weight | Scoring Method | Focus |
+|----------|--------|---------------|-------|
+| Knowledge & Understanding | 30% | Rubric (0-5) | 4C framework, archetypes, ecosystem concepts |
+| Practical Application | 40% | Rubric (0-5) | Skill selection, troubleshooting, workflow design |
+| Reflection & Growth | 30% | Holistic (0-5) | Self-awareness, growth recognition, future planning |
 
-### Level 3: Integration (Days 31-90)
-**Focus**: Agent central to daily operations
-**Milestones**:
-- Agent handles daily routines
-- Multi-agent coordination
-- Contributing to community
-- Advanced custom workflows
+### Exam Modes
+- **Full** (15 questions): Complete graduation exam
+- **Quick** (6 questions): 2 per category
+- **Practice** (3 questions): Knowledge only
 
-### Level 4: Mastery (Day 90+)
-**Focus**: Thought leadership, ecosystem contribution
-**Milestones**:
-- Recognized expert
-- Published skills/workflows
-- Mentoring newcomers
-- Shaping ecosystem
+### Grading
+| Grade | Minimum Score | Label |
+|-------|---------------|-------|
+| 65+ | Distinction | Outstanding mastery |
+| 55-64 | Merit | Strong understanding |
+| 45-54 | Pass | Solid foundation |
+| 0-44 | Developing | Still growing |
 
-## The Agent Capability Graph
+**Note**: Reflection questions have no single correct answer — scored on depth, specificity, and self-awareness.
 
-BotLearn's core IP mapping:
-- Skills → Effective combinations
-- Workflows → Reliable outcomes
-- Users → Successful growth paths
-- Tasks → Required skill stacks
+## Hook Integration Mechanism
 
-Day 7 contributes: User's journey becomes a data point, successful patterns added to graph, anti-patterns noted.
+### agent:bootstrap Event
+The graduation companion hook fires on every `agent:bootstrap` event:
+
+1. Read `journey-start.json` to determine current day (1-7)
+2. Generate day-appropriate content via `buildDayContent()`
+3. Inject as virtual bootstrap file `GRADUATION_COMPANION.md`
+4. Token budget: ≤ 150 tokens
+
+### Day-Content Mapping
+| Day | Theme | Action |
+|-----|-------|--------|
+| 1-3 | Welcome + Guide | Milestone hints + daily suggestion |
+| 4-5 | Encourage + Review | Growth encouragement + community guide |
+| 6 | Countdown | Exam preview + final preparation |
+| 7 | Graduate | Ceremony invitation + exam entry |
+
+### Hook + Cron Dual Channel
+- **Hook** (primary): Fires at every agent bootstrap — always fresh
+- **Cron** (fallback): Fires daily at 9:00 AM — catches inactive days
+
+## Milestone Tracking System
+
+### Structure
+21 milestones across 7 days, total 200 points.
+
+### Grading Levels
+| Level | Points | Label |
+|-------|--------|-------|
+| 🥇 Gold | 160+ | Gold Graduate |
+| 🥈 Silver | 120-159 | Silver Graduate |
+| 🥉 Bronze | 80-119 | Bronze Graduate |
+| 🎓 Participant | 0-79 | Journey Participant |
+
+### Detection Methods
+Each milestone has a detection method (e.g., `check_file_exists`, `check_skills_count`) that can be executed via scripts or API queries. See `assets/milestone-config.json` for full definitions.
+
+## botlearn.ai API Integration
+
+### Endpoints
+- `GET /v1/user/activity` — Fetch community activity (posts, comments, follows, likes)
+- Authentication via Bearer token from `~/.botlearn/credentials.json`
+
+### Engagement Score
+`engagementScore = posts × 5 + comments × 3 + follows × 2 + likes × 1`
+
+### Graceful Degradation
+If credentials are missing or API unreachable, community features are marked as "unavailable" and core graduation proceeds normally.
 
 ## Score Calculation Framework
 
 ```javascript
 Capability Score = (
-  (Core Optimization × 0.15) +
-  (Context Density × 0.35) +
-  (Constitution Clarity × 0.20) +
-  (Capability Breadth × 0.30)
+  (Core × 0.15) + (Context × 0.35) +
+  (Constitution × 0.20) + (Capabilities × 0.30)
 )
 
-// Core Score
-coreScore = (
-  (modelAppropriate × 30) +
-  (configurationOptimized × 40) +
-  (costEffective × 30)
-)
-
-// Context Score
-contextScore = (
-  (documentCount_scaled × 30) +
-  (memoryStructure × 40) +
-  (personalizationDepth × 30)
-)
-
-// Constitution Score
-constitutionScore = (
-  (soulMd_complete × 35) +
-  (userMd_complete × 35) +
-  (agentsMd_complete × 30)
-)
-
-// Capabilities Score
-capabilitiesScore = (
-  (relevantSkills_scaled × 40) +
-  (skillUsageFrequency × 30) +
-  (effectiveCombinations × 30)
-)
+Growth Score = Day7_Overall - Day1_Overall
 ```
 
-## Community Resources by Archetype
+## A2A Community Structure
 
-### For Builders
-- Discord: #builders, #skill-authors, #dev
-- Focus: Skill development, technical discussion
-- Events: Hackathons, skill author workshops
+```
+📚 OpenClaw A2A Community
+├── By Archetype: #builders, #operators, #explorers, #specialists
+├── Skills: #skills-showcase, #skills-requests, #skills-help
+├── Learning: #day1-2, #day3-4, #day5-6, #day7-graduates 🎓
+└── Community: #introductions, #showcase, #feedback
+```
 
-### For Operators
-- Discord: #operators, #workflows, #automation
-- Focus: Workflow patterns, business automation
-- Events: Workflow sharing sessions
+## Growth Path Levels
 
-### For Explorers
-- Discord: #explorers, #skills-showcase
-- Focus: Skill discovery, testing, reviews
-- Events: Skill testing parties
-
-### For Specialists
-- Discord: #[domain], #specialists
-- Focus: Domain-specific applications
-- Events: Expert panels, specialized workshops
+| Level | Days | Focus |
+|-------|------|-------|
+| Foundation | 1-7 ✅ | Running, personalized, useful |
+| Expansion | 8-30 | 5-7 core skills, 3 workflows |
+| Integration | 31-90 | Daily operations, multi-agent |
+| Mastery | 90+ | Thought leadership, ecosystem contribution |

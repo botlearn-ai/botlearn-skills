@@ -1,210 +1,158 @@
 # @botlearn/openclaw-graduate
 
-> 🎓 Day 7 Graduation Coach - 7-day retrospective, growth analysis, archetype discovery, and continuous development planning for the OpenClaw learning journey
+> 🎓 7-Day Journey Graduation Companion — daily hook encouragement, browser engagement tracking, growth statistics, graduation exam, milestone grading, and personalized ceremony
 
 ## Installation
 
 ```bash
+# via clawhub (recommended)
+clawhub install @botlearn/openclaw-graduate
+
 # via npm
 npm install @botlearn/openclaw-graduate
-
-# via clawhub
-clawhub install @botlearn/openclaw-graduate
 ```
+
+See `setup.md` for full 10-step installation guide including hook registration, journey initialization, and baseline collection.
 
 ## Category
 
-Learning (Education, Growth, Graduation, Retrospective)
+Learning (Education, Growth, Graduation, Journey Companion)
 
 ## Dependencies
 
-- `@botlearn/openclaw-doctor` (>=0.1.0) - For health check and capability scoring
-- `@botlearn/google-search` (>=0.1.0) - For finding community resources
+- `@botlearn/openclaw-examiner` (>=0.1.0) — Exam evaluation methodology
+- `@botlearn/openclaw-doctor` (>=0.1.0) — Health baseline and 4C data collection
 
 ## Overview
 
-This is the **Day 7 capstone skill** for the OpenClaw 7-Day Learning Journey. It conducts a meaningful graduation ceremony, analyzing the user's transformation from Day 1 baseline to Day 7 current state, identifying their unique agent archetype, and designing a personalized path for continued evolution.
+This is the **full-journey graduation companion** for the OpenClaw 7-Day Learning Journey. Unlike a simple Day 7 ceremony, it provides:
 
-## Philosophy: From Installation to Evolution
-
-Day 7 is not just an endpoint—it's a **graduation**. We celebrate the transformation from "I have this thing called OpenClaw but don't know what to do with it" to "I have a personalized AI agent that can [specific capability] and [specific capability]."
-
-**Focus**: Outcomes First, Not Knowledge First. We measure what the Agent can now DO, not what the user "learned."
+- **Daily companion** via OpenClaw hooks — day-aware encouragement from Day 1 to Day 7
+- **Browser engagement tracking** — monitors botlearn.ai visits (privacy-first, aggregate only)
+- **4C growth analysis** — Core/Context/Constitution/Capabilities scoring with Day 1 baseline comparison
+- **Milestone grading** — 21 milestones, 200 points, Gold/Silver/Bronze/Participant tiers
+- **Graduation exam** — 15 questions in 3 categories with multiple modes
+- **Personalized ceremony** — archetype-specific templates with ASCII certificate
 
 ## Capabilities
 
-### 🎓 Graduation Ceremony
-- Conduct meaningful 7-day retrospective
-- Compare Day 1 baseline with Day 7 current state
-- Celebrate transformation with specific achievements
-- Create "diploma moment"—visible proof of growth
+### 🎓 Hook-Driven Daily Companion
+Injects day-aware content at every agent bootstrap:
+- Day 1-3: Welcome + daily suggestion + milestone hints
+- Day 4-5: Growth encouragement + community guide
+- Day 6: Graduation countdown + exam preview
+- Day 7: Ceremony invitation + exam entry
 
-### 📊 4C Growth Analysis
+### 🌐 Browser Engagement Tracking
+- ONLY queries `botlearn.ai` domain (privacy-first)
+- Supports Chrome and Safari on macOS, Chrome on Linux
+- DB copied to `/tmp` to avoid lock conflicts
+- Optional — degrades gracefully
+
+### 📊 4C Growth Statistics
 - **Core** (15%): Model optimization and configuration
 - **Context** (35%): Memory density and personalization ⭐
-- **Constitution** (20%): Agent identity and behavioral clarity
-- **Capabilities** (30%): Skill breadth and effective combinations
+- **Constitution** (20%): Agent identity (SOUL/USER/AGENTS)
+- **Capabilities** (30%): Skill breadth and combinations
 
-### 🏷️ Agent Archetype Discovery
-- **🛠️ Builder**: Technical exploration, custom solutions
-- **🔄 Operator**: Workflow optimization, automation
-- **🔍 Explorer**: Skill discovery, experimentation
-- **🎯 Specialist**: Domain expertise, deep combinations
+### 📝 Graduation Exam
+- 3 categories: Knowledge (30%), Practical (40%), Reflection (30%)
+- 3 modes: Full (15 questions), Quick (6), Practice (3)
+- Grades: Distinction / Merit / Pass / Developing
+- Optional — graduation proceeds regardless
 
-### 🚀 Next Phase Architecture
-- Personalized 7/30/90-day growth roadmap
-- Archetype-aligned development paths
-- A2A community integration strategy
-- Resource curation matched to user's journey
+### 🎉 Graduation Ceremony
+- 4 archetype templates: Builder / Operator / Explorer / Specialist
+- Personalized opening, narrative, achievements, farewell
+- ASCII graduation certificate
+- Emotional scripts library
 
-### 👥 A2A Community Welcome
-- Guide to relevant community spaces
-- Introduce to "tribe" based on archetype
-- Suggest mentors, channels, and resources
-- Encourage consumer → contributor transition
+### 🏆 Milestone Tracking
+- 21 milestones across 7 days (200 total points)
+- 4-tier grading: Gold (160+) / Silver (120+) / Bronze (80+) / Participant
+- Automated detection via scripts
+
+### 👥 Community Integration
+- botlearn.ai API activity tracking
+- Browser visit engagement scoring
+- Archetype-matched community recommendations
+
+## Activation Modes
+
+| Mode | Trigger | Description |
+|------|---------|-------------|
+| Hook | `agent:bootstrap` | Daily companion injection (automatic) |
+| Cron | `0 9 * * *` | Fallback daily reminder |
+| Manual | "graduate", "毕业" | Full graduation ceremony |
+| Exam | "exam", "考试" | Graduation exam only |
+| Ceremony | "ceremony" | Ceremony without exam |
+| Stats | "stats", "progress" | Growth stats without ceremony |
 
 ## Usage Examples
 
 ```bash
 # Full graduation ceremony
-"It's Day 7! Conduct my graduation ceremony."
+"It's Day 7! Graduate me."
 
 # Quick summary
-"Give me a quick graduation summary."
+"Show me a quick graduation summary."
+
+# Graduation exam
+"I want to take the graduation exam in quick mode."
+
+# Progress stats (any day)
+"Show me my progress stats."
 
 # Archetype focus
-"What's my agent archetype and what does it mean?"
+"What's my agent archetype?"
 
-# Next phase planning
-"What should I focus on next?"
-
-# Community connection
-"Which A2A community resources should I explore?"
+# Milestone check
+"How many milestones have I achieved?"
 ```
 
-## The 4C Framework
+## Architecture
 
-OpenClaw Agent intelligence consists of 4 layers:
+### Hook + Cron Dual Channel
+- **Hook** (primary): Fires at every `agent:bootstrap` — always fresh, day-aware content
+- **Cron** (fallback): Fires daily at 9:00 AM — catches inactive days
+
+### Data Collection Pipeline
+All scripts run in parallel and output JSON:
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    OpenClaw Agent 4C                         │
-├─────────────────────────────────────────────────────────────┤
-│                                                               │
-│    Core          Context         Constitution      Skills    │
-│  (The Brain)    (The Memory)    (The Soul)      (The Hands)  │
-│    ↓              ↓               ↓               ↓          │
-│  LLM Model      Knowledge Base   Identity       Capabilities │
-│  + Config       + Documents      + Rules        + Tools      │
-│                                                               │
-└─────────────────────────────────────────────────────────────┘
+collect-journey.sh  → Journey dates, skills, workspace files, baseline
+collect-growth.sh   → 4C dimension scores with baseline comparison
+collect-activity.sh → botlearn.ai community activity via API
+track-browser.sh    → Browser visits to botlearn.ai (optional)
+graduation-scorer.sh → Exam answer scoring
 ```
 
-### Core (The Brain) - 15%
-**Day 1**: Default model, standard settings
-**Day 7**: Optimized choice, customized parameters
-
-### Context (The Memory) - 35% ⭐ Most Important
-**Day 1**: Empty or generic templates
-**Day 7**: Personal documents, memory structure established
-
-### Constitution (The Soul) - 20%
-**Day 1**: Generic assistant persona
-**Day 7**: Unique identity (SOUL.md, USER.md, AGENTS.md)
-
-### Capabilities (The Hands) - 30%
-**Day 1**: Built-in skills only
-**Day 7**: Multiple @botlearn skills, workflow patterns
-
-## The 4 Phases
-
-| Phase | Days | Focus | Achievement |
-|-------|------|-------|-------------|
-| **Activation** | 1-2 | Get running, first tasks | Agent responds, first success |
-| **Stability** | 3-4 | Security, personalization | Boundaries set, agent knows user |
-| **Reinforcement** | 5-6 | Optimization, self-growth | Workflows repeat, agent improves |
-| **Graduation** | 7 | Retrospective, planning | Growth visible, path defined |
-
-## Agent Archetypes
-
-After 7 days, users typically fall into one pattern:
-
-### 🛠️ Builder
-**Characteristics**: Technical exploration, skill development, custom solutions
-**Growth Path**: Advanced skill development, ecosystem contribution
-**Community**: #builders, #dev, #skill-authors
-
-### 🔄 Operator
-**Characteristics**: Workflow optimization, automation, efficiency
-**Growth Path**: Workflow optimization, multi-agent coordination
-**Community**: #operators, #workflows, #automation
-
-### 🔍 Explorer
-**Characteristics**: Skill discovery, experimentation, pattern finding
-**Growth Path**: Ecosystem navigation, pattern discovery
-**Community**: #explorers, #skills-showcase
-
-### 🎯 Specialist
-**Characteristics**: Domain expertise, deep skill combinations
-**Growth Path**: Domain expertise, advanced workflows
-**Community**: #[domain], #specialists
-
-## Output Format
-
-### Graduation Ceremony Summary
-```
-🎓 OpenClaw Day 7 Graduation
-
-Transformation:
-| Dimension | Day 1 | Day 7 | Growth |
-|-----------|-------|-------|--------|
-| Capability | 35/100 | 72/100 | +37 ✨ |
-
-Archetype: Operator
-Achievement: 3 repeatable workflows
-Next: Optimize with @botlearn/scheduler
-
-[Full ceremony | Next phase | Community]
-```
+### Graceful Degradation
+Every feature is independent. If any component fails:
+- Browser tracking unavailable → Skip, no mention
+- Community API unreachable → Skip, note as optional
+- Exam declined → Skip, proceed to ceremony
+- Baseline missing → Reconstruct or estimate
 
 ## Files
 
-| File | Description |
-|------|-------------|
-| `manifest.json` | Skill metadata and configuration |
-| `SKILL.md` | Role definition and activation rules |
-| `knowledge/Domain.md` | 4C framework, archetypes, A2A community |
-| `knowledge/BestPractices.md` | Graduation ceremony best practices |
-| `knowledge/AntiPatterns.md` | Common pitfalls to avoid |
-| `strategies/Main.md` | 10-step graduation strategy |
-| `tests/` | Smoke and benchmark tests |
+| Directory | Files | Description |
+|-----------|-------|-------------|
+| `hooks/openclaw/` | HOOK.md, handler.ts, handler.js | Bootstrap hook for daily companion |
+| `scripts/` | 5 shell scripts | Data collection and exam scoring |
+| `references/` | 4 markdown files | Milestones, exam questions, ceremony templates, emotional scripts |
+| `assets/` | 4 JSON/MD files | Schemas, milestone config, diploma template |
+| `knowledge/` | 3 markdown files | Domain knowledge, best practices, anti-patterns |
+| `strategies/` | main.md | 6-stage pipeline strategy |
+| `tests/` | smoke.json, benchmark.json | Validation tests |
 
-## Key Features
+## Privacy
 
-### Data-Driven Insights
-Every claim backed by actual session data, skill usage, and configuration changes.
-
-### Archetype-Based Guidance
-Recommendations tailored to user's demonstrated patterns (Builder/Operator/Explorer/Specialist).
-
-### Future-Oriented
-Focus on what's possible next, creating excitement for continued growth.
-
-### Community-Connected
-Every user receives curated A2A community resources matched to their archetype.
-
-### Graduation Experience
-Creates a meaningful "diploma moment" celebrating the journey and welcoming to the ecosystem.
-
-## Success Criteria
-
-A successful Day 7 graduation achieves:
-
-1. **Transformation Visible**: User sees what Agent can NOW do vs. Day 1
-2. **Identity Formed**: User recognizes archetype and feels understood
-3. **Future Exciting**: User motivated to continue
-4. **Community Connected**: Clear paths to A2A ecosystem
-5. **Next Steps Clear**: Specific, personalized recommendations
+- Browser tracking ONLY queries `botlearn.ai` domain
+- DB copied to `/tmp` before query (never locks browser DB)
+- Only aggregate metrics reported (visit count, not specific pages)
+- All features are optional and degrade gracefully
+- No data sent to external services without explicit configuration
 
 ## License
 
@@ -212,4 +160,4 @@ MIT
 
 ---
 
-**🎓 Congratulations on completing your 7-day journey!**
+**🎓 Your 7-day journey starts with installation. It ends with graduation.**

@@ -1,31 +1,31 @@
 {
-  "version": "1.0.0",
+  "version": "2.0.0",
   "dimension": "learning-progress",
   "tasks": [
     {
       "id": "bench-easy-01",
       "difficulty": "easy",
-      "description": "Generate quick graduation summary with Day 1 vs Day 7 comparison",
-      "input": "It's Day 7! Give me a quick graduation summary showing how far I've come from Day 1 to now. Focus on the key growth metrics.",
+      "description": "Generate hook-aware daily companion content for a specific journey day",
+      "input": "It's Day 3 of my OpenClaw journey. What should I focus on today? Show me my current progress and milestones.",
       "rubric": [
         {
-          "criterion": "Data Collection",
-          "weight": 0.4,
+          "criterion": "Day-Aware Content",
+          "weight": 0.5,
           "scoring": {
-            "5": "Collects both Day 1 and Day 7 data with specific metrics (skills, tasks, configuration changes)",
-            "3": "Provides comparison but some data missing or generic; lacks specific numbers",
-            "1": "Vague comparison without specific data points or measurements",
-            "0": "No comparison data collected"
+            "5": "Generates Day 3-specific content (personalization/identity focus); references Day 1-2 progress; suggests milestone targets for today",
+            "3": "Basic day-specific content but missing milestone tracking or progression context",
+            "1": "Generic advice not tied to specific journey day",
+            "0": "No day-aware content"
           }
         },
         {
-          "criterion": "Growth Emphasis",
-          "weight": 0.6,
+          "criterion": "Progress Tracking",
+          "weight": 0.5,
           "scoring": {
-            "5": "Clear growth summary emphasizing OUTCOMES (what user's agent can NOW DO) with specific capability highlighted",
-            "3": "Basic summary but focuses on what user 'learned' rather than capabilities; some outcome mention",
-            "1": "Generic praise without specific growth details or capability focus",
-            "0": "No meaningful growth summary"
+            "5": "Shows milestone progress so far (Day 1-2 achievements), current 4C scores, and what's ahead for Day 3-7",
+            "3": "Some progress shown but incomplete milestone tracking",
+            "1": "Vague progress without specific milestones or scores",
+            "0": "No progress tracking"
           }
         }
       ],
@@ -35,57 +35,57 @@
     {
       "id": "bench-easy-02",
       "difficulty": "easy",
-      "description": "Identify user's agent archetype based on 7-day behavior patterns",
-      "input": "Based on my 7-day journey, I've installed 12 skills (mostly technical like code-gen, debugger), I've read skill documentation, and I've experimented with custom configurations. What's my agent archetype and why?",
+      "description": "Identify agent archetype with evidence from journey data",
+      "input": "Based on my 7-day journey, I've installed 12 skills (mostly technical like code-gen, debugger), I've read skill documentation, and I've experimented with custom configurations. What's my agent archetype?",
       "rubric": [
         {
           "criterion": "Archetype Detection",
           "weight": 0.6,
           "scoring": {
-            "5": "Correctly identifies Builder archetype with specific supporting evidence from user's described behavior",
-            "3": "Identifies Builder archetype but provides weak evidence or explanation",
-            "1": "Incorrect or generic archetype assignment without proper justification",
+            "5": "Correctly identifies Builder archetype with specific evidence (12 skills, technical focus, config experiments, doc reading)",
+            "3": "Identifies Builder but provides weak evidence",
+            "1": "Incorrect or generic archetype without evidence",
             "0": "No archetype identified"
           }
         },
         {
-          "criterion": "Explanation Quality",
+          "criterion": "Growth Path Alignment",
           "weight": 0.4,
           "scoring": {
-            "5": "Explains what archetype means and why it fits this specific user with clear reasoning",
-            "3": "Some explanation provided but could be clearer or more specific",
-            "1": "Minimal explanation; doesn't help user understand their archetype",
-            "0": "No explanation provided"
+            "5": "Provides Builder-specific growth path with concrete next steps (skill development, ecosystem contribution)",
+            "3": "Some growth suggestions but not fully Builder-aligned",
+            "1": "Generic growth path not tied to archetype",
+            "0": "No growth path"
           }
         }
       ],
       "expectedScoreWithout": 30,
-      "expectedScoreWith": 70
+      "expectedScoreWith": 75
     },
     {
       "id": "bench-easy-03",
       "difficulty": "easy",
-      "description": "Provide next phase recommendations based on user's archetype",
-      "input": "I'm an 'Operator' archetype who focuses on workflows and automation. I've successfully set up a morning brief workflow. What should I focus on in the next 7 days?",
+      "description": "Explain milestone grading system and show current standing",
+      "input": "How does the graduation milestone system work? I think I've completed about 15 milestones out of 21. What grade does that give me?",
       "rubric": [
         {
-          "criterion": "Archetype Alignment",
+          "criterion": "System Explanation",
           "weight": 0.5,
           "scoring": {
-            "5": "Recommendations clearly aligned with Operator archetype and user's demonstrated workflow success",
-            "3": "Recommendations somewhat aligned but could be more specific to archetype",
-            "1": "Generic recommendations not tailored to Operator archetype",
-            "0": "Irrelevant recommendations"
+            "5": "Clearly explains 21 milestones across 7 days, 200 total points, 4-tier grading (Gold/Silver/Bronze/Participant) with point thresholds",
+            "3": "Explains grading system but missing specific thresholds or milestone details",
+            "1": "Vague explanation of milestone system",
+            "0": "No explanation"
           }
         },
         {
-          "criterion": "Actionability",
+          "criterion": "Grade Assessment",
           "weight": 0.5,
           "scoring": {
-            "5": "Specific, actionable next steps with clear rationale for each recommendation",
-            "3": "Somewhat actionable but lacks specificity or clear reasoning",
-            "1": "Vague suggestions without clear actions or rationale",
-            "0": "No clear next steps provided"
+            "5": "Estimates points for 15/21 milestones; provides likely grade with range; suggests which remaining milestones to target",
+            "3": "Provides grade estimate but lacks specificity on remaining milestones",
+            "1": "Vague grade assessment without calculation basis",
+            "0": "No grade assessment"
           }
         }
       ],
@@ -95,107 +95,107 @@
     {
       "id": "bench-med-01",
       "difficulty": "medium",
-      "description": "Generate complete 4C framework analysis with scores and growth indicators",
-      "input": "Analyze my 7-day journey using the 4C framework: Core (model/configuration), Context (memory/documents), Constitution (SOUL/USER/AGENTS files), and Capabilities (skills). Provide scores for each dimension and explain the growth.",
+      "description": "Administer graduation exam in quick mode and score results",
+      "input": "I want to take the graduation exam in quick mode. Ask me the 6 questions one at a time, then score my answers.",
       "rubric": [
         {
-          "criterion": "4C Analysis Completeness",
+          "criterion": "Exam Administration",
           "weight": 0.4,
           "scoring": {
-            "5": "Analyzes all 4C dimensions with scores (0-100), evidence, and growth explanation for each",
-            "3": "Covers 3C dimensions or analysis lacks depth and scoring details",
-            "1": "Superficial analysis of 1-2 dimensions without proper scoring",
-            "0": "No meaningful 4C analysis"
+            "5": "Selects correct 6 questions for quick mode (2 per category); presents one at a time; frames as reflection not test; uses appropriate emotional scripts",
+            "3": "Presents questions but wrong count, wrong mode selection, or presents all at once",
+            "1": "Attempts exam but disorganized or incorrect question selection",
+            "0": "No exam administered"
           }
         },
         {
-          "criterion": "Evidence-Based Claims",
+          "criterion": "Scoring & Feedback",
           "weight": 0.3,
           "scoring": {
-            "5": "All claims backed by specific data from user's journey; clear evidence for scores",
-            "3": "Some evidence provided but gaps present; some claims lack support",
-            "1": "Generic claims without user-specific data or evidence",
-            "0": "No evidence provided for claims"
+            "5": "Scores answers using rubric criteria; provides category breakdown; highlights strengths and growth areas; frames results positively",
+            "3": "Provides scores but missing category breakdown or positive framing",
+            "1": "Minimal scoring without meaningful feedback",
+            "0": "No scoring"
           }
         },
         {
-          "criterion": "Growth Quantification",
+          "criterion": "Emotional Framing",
           "weight": 0.3,
           "scoring": {
-            "5": "Quantifies growth with specific before/after metrics and clear improvement indicators",
-            "3": "Some quantification but could be more specific; general growth statements",
-            "1": "Vague growth statements without specific measurements",
-            "0": "No growth quantification"
+            "5": "Uses exam context scripts appropriately (before/during/after); exam feels like reflection not judgment; celebrates attempt regardless of score",
+            "3": "Some emotional awareness but exam feels more like a test than reflection",
+            "1": "Clinical or pressure-creating exam experience",
+            "0": "No emotional consideration"
           }
         }
       ],
-      "expectedScoreWithout": 35,
-      "expectedScoreWith": 75
+      "expectedScoreWithout": 30,
+      "expectedScoreWith": 70
     },
     {
       "id": "bench-med-02",
       "difficulty": "medium",
-      "description": "Map user to A2A community resources based on archetype and interests",
-      "input": "I'm a 'Specialist' archetype focused on academic research. I've used academic-search and summarizer extensively. What A2A community resources should I connect with and how do I get started?",
+      "description": "Generate ceremony for specific archetype with browser engagement data",
+      "input": "Generate my graduation ceremony. I'm an Operator archetype, I've visited botlearn.ai 8 times this week, posted 2 community messages, and have a 4C overall score of 72/100. Include the ceremony, certificate, and community welcome.",
       "rubric": [
         {
-          "criterion": "Resource Relevance",
+          "criterion": "Archetype-Specific Ceremony",
           "weight": 0.4,
           "scoring": {
-            "5": "Curated list of 3-5 specific community resources matched to Specialist archetype and research interests",
-            "3": "Some relevant resources but could be more targeted to user's specific situation",
-            "1": "Generic community resources not personalized to archetype or interests",
-            "0": "Irrelevant or overwhelming resource list"
+            "5": "Uses Operator-specific ceremony template (workflow focus, efficiency narrative, automation celebration); opening, narrative, and farewell all Operator-themed",
+            "3": "Ceremony present but only partially Operator-specific; some generic sections",
+            "1": "Generic ceremony without Operator customization",
+            "0": "No ceremony"
           }
         },
         {
-          "criterion": "Actionable Guidance",
-          "weight": 0.4,
+          "criterion": "Engagement Integration",
+          "weight": 0.3,
           "scoring": {
-            "5": "Specific next steps for each resource with what to do, why relevant, and expected outcome",
-            "3": "Basic guidance but lacks specificity or clear expected outcomes",
-            "1": "Minimal actionable information; doesn't help user take next steps",
-            "0": "No clear guidance provided"
+            "5": "Integrates browser visits (8 visits) and community activity (2 posts) as aggregate engagement metrics; frames positively without specific URLs; contributes to overall assessment",
+            "3": "Mentions engagement but missing browser or community data integration",
+            "1": "No engagement data integration or reports specific URLs/timestamps",
+            "0": "No engagement tracking"
           }
         },
         {
-          "criterion": "Warm Welcome Tone",
-          "weight": 0.2,
+          "criterion": "Certificate & Farewell",
+          "weight": 0.3,
           "scoring": {
-            "5": "Welcoming, encouraging tone that makes community connection feel exciting and accessible",
-            "3": "Neutral tone; functional but not particularly welcoming",
-            "1": "Transactional or cold tone; doesn't create excitement",
-            "0": "Unwelcoming approach"
+            "5": "Generates filled ASCII certificate with actual scores; Operator-specific farewell message; warm community channel recommendations (#operators, #workflows)",
+            "3": "Certificate or farewell present but partially generic",
+            "1": "Missing certificate or generic farewell",
+            "0": "No certificate or farewell"
           }
         }
       ],
-      "expectedScoreWithout": 35,
+      "expectedScoreWithout": 30,
       "expectedScoreWith": 70
     },
     {
       "id": "bench-med-03",
       "difficulty": "medium",
-      "description": "Create achievement timeline and identify breakthrough moment from 7-day journey",
-      "input": "Review my 7-day session history and create an achievement timeline highlighting key milestones. Also identify my 'breakthrough moment' - when things really clicked for me and why it mattered.",
+      "description": "Handle stats mode showing 4C growth without full ceremony",
+      "input": "Show me my current graduation stats. I don't want the full ceremony yet — just my 4C scores, milestone progress, and what I need to do before Day 7.",
       "rubric": [
         {
-          "criterion": "Timeline Quality",
+          "criterion": "Stats Presentation",
           "weight": 0.5,
           "scoring": {
-            "5": "Clear day-by-day timeline with specific achievements, visual formatting, and milestone indicators",
-            "3": "Basic timeline present but lacks detail, formatting, or clarity",
-            "1": "Vague or incomplete timeline missing key milestones",
-            "0": "No meaningful timeline created"
+            "5": "Shows all 4C dimension scores with baseline comparison; milestone progress (achieved/total with points); clear summary without ceremony elements",
+            "3": "Shows some stats but missing dimensions or milestone progress",
+            "1": "Vague stats without specific scores or progress",
+            "0": "No stats shown or unwanted ceremony elements"
           }
         },
         {
-          "criterion": "Breakthrough Identification",
+          "criterion": "Actionable Guidance",
           "weight": 0.5,
           "scoring": {
-            "5": "Identifies specific breakthrough moment with supporting evidence and explains why it was significant",
-            "3": "Identifies moment but explanation is weak or lacks supporting evidence",
-            "1": "Generic or incorrect breakthrough identification; doesn't explain significance",
-            "0": "No breakthrough identified"
+            "5": "Identifies specific remaining milestones to target before Day 7; suggests actions to improve lowest 4C dimension; provides clear preparation checklist",
+            "3": "Some guidance but not specific to remaining milestones or lowest dimension",
+            "1": "Vague guidance without specific actions",
+            "0": "No actionable guidance"
           }
         }
       ],
@@ -205,37 +205,37 @@
     {
       "id": "bench-med-04",
       "difficulty": "medium",
-      "description": "Design personalized 3-phase growth path (7-day, 30-day, 90-day) based on user's journey",
-      "input": "I'm an Explorer archetype who's tried many skills and discovered that research workflows work best for me. Create a personalized growth path for my next 7, 30, and 90 days with specific milestones.",
+      "description": "Generate personalized 7/30/90-day growth path for Explorer archetype",
+      "input": "I'm an Explorer archetype who discovered 15 different skills across all 4 categories. Create my personalized growth path for the next 7, 30, and 90 days with specific milestones.",
       "rubric": [
         {
-          "criterion": "Personalization",
+          "criterion": "Explorer-Specific Recommendations",
           "weight": 0.4,
           "scoring": {
-            "5": "Highly personalized path based on Explorer archetype, demonstrated research interest, and current capabilities",
-            "3": "Somewhat personalized but could be more specific to user's patterns and interests",
-            "1": "Generic recommendations not tailored to this user's journey or archetype",
+            "5": "Recommendations celebrate exploration breadth; suggest deepening in discovered favorites; encourage pattern sharing and community curation",
+            "3": "Somewhat Explorer-aligned but could be more specific to exploration pattern",
+            "1": "Generic recommendations not tied to Explorer archetype",
             "0": "Irrelevant recommendations"
           }
         },
         {
-          "criterion": "Phasing Logic",
+          "criterion": "Phase Progression",
           "weight": 0.3,
           "scoring": {
-            "5": "Clear logical progression from immediate (7-day) to short-term (30-day) to medium-term (90-day) with each building on previous",
-            "3": "Basic phasing but progression logic could be clearer or more connected",
-            "1": "Poor phasing logic; phases don't connect or build appropriately",
-            "0": "No clear phased structure"
+            "5": "Clear 7→30→90 day progression with each phase building on previous; realistic milestones; specific skill/workflow targets per phase",
+            "3": "Basic phasing but progression logic could be clearer",
+            "1": "Poor phasing; phases don't connect",
+            "0": "No phased structure"
           }
         },
         {
-          "criterion": "Achievability",
+          "criterion": "Community Integration",
           "weight": 0.3,
           "scoring": {
-            "5": "Realistic milestones that build on current foundation with appropriate stretch but achievable goals",
-            "3": "Some milestones unrealistic or not well-matched to current foundation",
-            "1": "Most milestones unrealistic, disconnected from current state, or too easy/hard",
-            "0": "Unachievable or irrelevant milestones"
+            "5": "Explorer-matched community resources (#explorers, #skills-showcase); suggests sharing discoveries; provides contribution pathway",
+            "3": "Some community recommendations but not Explorer-specific",
+            "1": "Generic community links",
+            "0": "No community integration"
           }
         }
       ],
@@ -245,47 +245,47 @@
     {
       "id": "bench-hard-01",
       "difficulty": "hard",
-      "description": "Generate graduation ceremony for user with low engagement (honest but encouraging)",
-      "input": "I've had my OpenClaw Agent for 7 days but honestly haven't used it much. I think I installed 2-3 skills but haven't really done anything. Generate my Day 7 graduation - be honest but encouraging about where I am.",
+      "description": "Handle graduation for user with low engagement — honest but encouraging, with emotional intelligence",
+      "input": "I've had my OpenClaw Agent for 7 days but honestly haven't used it much. I installed 2 skills and completed maybe 3 tasks. I never visited botlearn.ai. Generate my graduation — be honest but encouraging.",
       "rubric": [
         {
-          "criterion": "Balanced Approach",
+          "criterion": "Honest Assessment",
           "weight": 0.3,
           "scoring": {
-            "5": "Honest assessment acknowledging low engagement while focusing on potential and providing practical re-engagement suggestions",
-            "3": "Some balance but could be more honest about challenges or more encouraging about possibilities",
-            "1": "Either too harsh (discouraging) or overly positive (unrealistic)",
-            "0": "Inappropriate tone that doesn't help user"
+            "5": "Honest about low engagement without shaming; identifies likely blockers; shows actual (low) scores transparently; doesn't fabricate achievements",
+            "3": "Some honesty but either too harsh or too sugarcoated",
+            "1": "Dishonest (fake achievements) or discouragingly harsh",
+            "0": "Inappropriate handling of low engagement"
           }
         },
         {
-          "criterion": "Root Cause Analysis",
+          "criterion": "Emotional Intelligence",
           "weight": 0.3,
           "scoring": {
-            "5": "Identifies likely blockers with specific suggestions to overcome them; addresses why engagement was low",
-            "3": "Some analysis of challenges but generic suggestions without specific relevance",
-            "1": "Poor analysis or irrelevant suggestions that don't address actual situation",
-            "0": "No meaningful analysis of challenges"
+            "5": "Uses low-engagement emotional scripts appropriately; validates the experience; normalizes challenges; creates excitement for possibilities; 'Journey Participant' grade presented with dignity",
+            "3": "Some emotional awareness but could be more empathetic",
+            "1": "Insensitive or clinical approach to low engagement",
+            "0": "Poor emotional intelligence"
           }
         },
         {
           "criterion": "Re-engagement Strategy",
           "weight": 0.2,
           "scoring": {
-            "5": "Specific, low-friction next steps to re-engage user that acknowledge their starting point",
-            "3": "Basic re-engagement suggestions but could be more specific or lower friction",
-            "1": "Vague or overwhelming suggestions that don't help user re-engage",
-            "0": "No clear re-engagement strategy"
+            "5": "Specific, low-friction next steps that acknowledge starting point; 'even 5 minutes' framing; browser/community features noted as unavailable without judgment",
+            "3": "Basic suggestions but not low-friction enough",
+            "1": "Overwhelming suggestions that ignore current engagement level",
+            "0": "No re-engagement strategy"
           }
         },
         {
-          "criterion": "Emotional Intelligence",
+          "criterion": "Graceful Degradation",
           "weight": 0.2,
           "scoring": {
-            "5": "Validates user's experience, normalizes challenges, creates excitement for possibilities without being dismissive",
-            "3": "Some emotional awareness but could be more empathetic or encouraging",
-            "1": "Insensitive to user's situation or overly clinical in approach",
-            "0": "Poor emotional intelligence that alienates user"
+            "5": "Handles missing data gracefully (no browser data, no community, low scores); doesn't mention unavailable features prominently; core ceremony still meaningful",
+            "3": "Handles some missing data but mentions unavailable features awkwardly",
+            "1": "Errors or awkward handling of missing data",
+            "0": "Breaks on missing data"
           }
         }
       ],
@@ -295,37 +295,37 @@
     {
       "id": "bench-hard-02",
       "difficulty": "hard",
-      "description": "Handle hybrid archetype detection with nuanced analysis and growth path",
-      "input": "Looking at my 7-day history: I installed 8 technical skills but also created 3 repeatable workflows. I've contributed to community discussions and documented my learnings. What's my archetype and how should I think about my growth path?",
+      "description": "Handle hybrid archetype detection with nuanced exam and ceremony",
+      "input": "Looking at my 7-day history: I installed 8 technical skills but also created 3 repeatable workflows. I've contributed to community discussions and documented my learnings. Run me through the quick exam, then generate my ceremony with certificate.",
       "rubric": [
         {
-          "criterion": "Nuanced Analysis",
+          "criterion": "Hybrid Archetype Detection",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Recognizes Builder-Operator hybrid with nuanced evidence (8 technical skills = Builder, 3 workflows = Operator); explains unique intersection; doesn't force single archetype",
+            "3": "Identifies one primary archetype but acknowledges secondary traits",
+            "1": "Forces single archetype without acknowledging hybrid nature",
+            "0": "Incorrect archetype"
+          }
+        },
+        {
+          "criterion": "Quick Exam Execution",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Administers 6 questions (2 per category) correctly; scores with rubric; provides category breakdown; celebrates attempt; frames as reflection",
+            "3": "Administers exam but wrong question count or missing category balance",
+            "1": "Poor exam execution or inappropriate framing",
+            "0": "No exam"
+          }
+        },
+        {
+          "criterion": "Hybrid Ceremony & Certificate",
           "weight": 0.4,
           "scoring": {
-            "5": "Recognizes hybrid nature (e.g., Builder-Operator) with nuanced analysis of how both traits express in user's behavior",
-            "3": "Identifies one primary archetype but acknowledges secondary traits; some nuance present",
-            "1": "Forces user into single archetype without acknowledging hybrid nature or nuance",
-            "0": "Incorrect archetype assignment that doesn't reflect user's patterns"
-          }
-        },
-        {
-          "criterion": "Tailored Recommendations",
-          "weight": 0.3,
-          "scoring": {
-            "5": "Recommendations that honor both aspects of hybrid archetype rather than favoring one over the other",
-            "3": "Recommendations that favor one aspect but acknowledge the other to some degree",
-            "1": "Generic recommendations that don't honor user's unique hybrid expression",
-            "0": "Irrelevant recommendations"
-          }
-        },
-        {
-          "criterion": "Growth Path Strategy",
-          "weight": 0.3,
-          "scoring": {
-            "5": "Clear strategy for developing hybrid strengths rather than choosing one path; celebrates unique combination",
-            "3": "Some strategy for hybrid growth but could be clearer or more integrated",
-            "1": "Vague strategy or forces choice between archetypes rather than embracing hybrid",
-            "0": "No clear growth path strategy"
+            "5": "Generates hybrid ceremony honoring both Builder and Operator traits; certificate shows 'Builder-Operator'; community recommendations from both tribes; farewell celebrates versatility",
+            "3": "Ceremony leans to one archetype; certificate shows only primary",
+            "1": "Generic ceremony without hybrid consideration",
+            "0": "No ceremony"
           }
         }
       ],
@@ -335,47 +335,47 @@
     {
       "id": "bench-hard-03",
       "difficulty": "hard",
-      "description": "Generate complete graduation ceremony with inspiring future vision for high-achievement user",
-      "input": "Generate my complete Day 7 graduation ceremony. I'm a Builder who's created custom configurations, developed 2 workflows, and is interested in skill development. Include: full analysis, archetype-specific growth path, community resources, and create an exciting future vision for my next 90 days.",
+      "description": "Generate complete end-to-end graduation with all features: exam, ceremony, browser tracking, milestones, certificate, and 90-day vision",
+      "input": "Generate my complete Day 7 graduation. I'm a Builder with high engagement: 15 skills installed, SOUL.md + USER.md + AGENTS.md all complete, 12 botlearn.ai visits, 5 community posts, and strong 4C scores. Include: full exam, milestone grade, browser engagement, ceremony, certificate, and create an exciting 90-day vision.",
       "rubric": [
         {
           "criterion": "Ceremony Completeness",
-          "weight": 0.3,
+          "weight": 0.25,
           "scoring": {
-            "5": "Comprehensive ceremony with all sections: summary, 4C analysis, achievements, archetype, growth path, community, future vision, graduation message",
-            "3": "Most sections present but some lacking depth or detail; missing minor components",
-            "1": "Basic ceremony missing key sections or major components incomplete",
-            "0": "Incomplete ceremony missing essential elements"
+            "5": "All 12 sections present: summary, transformation, milestones, timeline, archetype, 4C, exam, community engagement, next steps, community welcome, certificate, farewell",
+            "3": "Most sections present but some lacking depth",
+            "1": "Basic ceremony missing key sections",
+            "0": "Incomplete"
           }
         },
         {
-          "criterion": "Future Vision Quality",
-          "weight": 0.3,
+          "criterion": "Feature Integration",
+          "weight": 0.25,
           "scoring": {
-            "5": "Exciting, specific, achievable 90-day vision that builds on current foundation, aligns with Builder archetype, and creates genuine motivation",
-            "3": "Basic future vision but could be more inspiring, specific, or better connected to current state",
-            "1": "Vague or unrealistic future vision; doesn't build effectively on current achievements",
-            "0": "No meaningful future vision created"
+            "5": "Integrates all features: hook awareness, browser tracking (12 visits aggregate), API activity (5 posts), exam (full mode), milestone grading (Gold-level expected), certificate generation",
+            "3": "Integrates most features but missing 1-2",
+            "1": "Basic integration with major features missing",
+            "0": "Minimal feature integration"
           }
         },
         {
           "criterion": "Personalization Depth",
-          "weight": 0.2,
+          "weight": 0.25,
           "scoring": {
-            "5": "Highly personalized throughout with user-specific data, patterns, and recommendations; clearly not a template",
-            "3": "Some personalization but could be deeper; still feels somewhat templated in sections",
-            "1": "Generic with minimal personalization; reads like template with user name inserted",
-            "0": "Not personalized at all"
+            "5": "Deeply personalized throughout: Builder-specific narrative and farewell, references specific skills installed, SOUL/USER/AGENTS content, community activity, exam answers",
+            "3": "Some personalization but still partially templated",
+            "1": "Generic with minimal personalization",
+            "0": "Not personalized"
           }
         },
         {
-          "criterion": "Emotional & Visual Appeal",
-          "weight": 0.2,
+          "criterion": "90-Day Vision",
+          "weight": 0.25,
           "scoring": {
-            "5": "Well-formatted with visual elements; emotionally resonant, celebrates journey genuinely, creates excitement for future",
-            "3": "Basic formatting; some emotional resonance but could be more engaging",
-            "1": "Poor formatting; minimal emotional connection or celebration",
-            "0": "Unengaging presentation that doesn't feel like a graduation"
+            "5": "Compelling Builder-specific 90-day vision: skill authorship, ecosystem contribution, custom tool development; builds on 15-skill foundation; specific milestones with community integration",
+            "3": "Basic future vision but could be more inspiring or Builder-specific",
+            "1": "Vague or generic future vision",
+            "0": "No future vision"
           }
         }
       ],

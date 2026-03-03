@@ -1,0 +1,208 @@
+---
+domain: openclaw-doctor
+topic: channel-formats
+priority: low
+ttl: 90d
+---
+
+# Message Channel Format Specifications
+
+## Slack — Block Kit JSON
+
+```json
+{
+  "blocks": [
+    {
+      "type": "header",
+      "text": { "type": "plain_text", "text": "🏥 OpenClaw Health Report" }
+    },
+    {
+      "type": "section",
+      "fields": [
+        { "type": "mrkdwn", "text": "*Score:* {{SCORE}}/100 {{STATUS_EMOJI}}" },
+        { "type": "mrkdwn", "text": "*Status:* {{STATUS}}" }
+      ]
+    },
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "ENV {{ENV_EMOJI}} {{ENV_SCORE}} | CONF {{CONF_EMOJI}} {{CONF_SCORE}} | SKILL {{SKILL_EMOJI}} {{SKILL_SCORE}} | RT {{RT_EMOJI}} {{RT_SCORE}} | WS {{WS_EMOJI}} {{WS_SCORE}} | SEC {{SEC_EMOJI}} {{SEC_SCORE}}"
+      }
+    },
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "⚡ *{{CRITICAL_COUNT}} critical + {{HIGH_COUNT}} high* issues need attention"
+      }
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "{{TOP_ISSUES_MARKDOWN}}"
+      }
+    }
+  ]
+}
+```
+
+### Slack Limits
+- Max 50 blocks per message
+- Max 3000 chars per text field
+- Webhook URL format: `https://hooks.slack.com/services/T.../B.../...`
+
+---
+
+## 钉钉 (DingTalk) — Markdown Message
+
+```json
+{
+  "msgtype": "markdown",
+  "markdown": {
+    "title": "🏥 OpenClaw 健康报告",
+    "text": "# 🏥 OpenClaw 健康报告\n\n**分数: {{SCORE}}/100** {{STATUS_EMOJI}}\n\n| 维度 | 分数 | 状态 |\n|------|------|------|\n| 环境 | {{ENV_SCORE}} | {{ENV_EMOJI}} |\n| 配置 | {{CONF_SCORE}} | {{CONF_EMOJI}} |\n| 技能 | {{SKILL_SCORE}} | {{SKILL_EMOJI}} |\n| 运行时 | {{RT_SCORE}} | {{RT_EMOJI}} |\n| 工作区 | {{WS_SCORE}} | {{WS_EMOJI}} |\n| 安全 | {{SEC_SCORE}} | {{SEC_EMOJI}} |\n\n**⚡ {{ISSUE_COUNT}} 个问题需要关注**\n\n{{TOP_ISSUES_MARKDOWN}}"
+  }
+}
+```
+
+### DingTalk Signing (Optional)
+```
+timestamp = current time in ms
+stringToSign = timestamp + "\n" + secret
+sign = base64(hmac-sha256(stringToSign, secret))
+URL: webhook_url + "&timestamp=" + timestamp + "&sign=" + urlencode(sign)
+```
+
+### DingTalk Limits
+- Max 20000 chars per message
+- Webhook URL format: `https://oapi.dingtalk.com/robot/send?access_token=...`
+
+---
+
+## 飞书 (Feishu/Lark) — Interactive Card
+
+```json
+{
+  "msg_type": "interactive",
+  "card": {
+    "header": {
+      "title": { "tag": "plain_text", "content": "🏥 OpenClaw 健康报告" },
+      "template": "{{TEMPLATE_COLOR}}"
+    },
+    "elements": [
+      {
+        "tag": "div",
+        "fields": [
+          { "is_short": true, "text": { "tag": "lark_md", "content": "**总分**\n{{SCORE}}/100" } },
+          { "is_short": true, "text": { "tag": "lark_md", "content": "**状态**\n{{STATUS}}" } }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": {
+          "tag": "lark_md",
+          "content": "| 维度 | 分数 | 权重 |\n|---|---|---|\n{{DIMENSION_TABLE}}"
+        }
+      },
+      { "tag": "hr" },
+      {
+        "tag": "div",
+        "text": {
+          "tag": "lark_md",
+          "content": "**问题列表**\n{{TOP_ISSUES_MARKDOWN}}"
+        }
+      }
+    ]
+  }
+}
+```
+
+### Feishu Card Template Colors
+- `green` — healthy (80+)
+- `yellow` — warning (60-79)
+- `orange` — elevated (40-59)
+- `red` — critical (<40)
+
+### Feishu Limits
+- Max 30 elements per card
+- Max 4096 chars per content field
+- Webhook URL format: `https://open.feishu.cn/open-apis/bot/v2/hook/...`
+
+---
+
+## Discord — Embed JSON
+
+```json
+{
+  "embeds": [
+    {
+      "title": "🏥 OpenClaw Health Report",
+      "description": "Overall Score: **{{SCORE}}/100** · Status: **{{STATUS}}**",
+      "color": {{EMBED_COLOR}},
+      "fields": [
+        { "name": "Environment", "value": "{{ENV_EMOJI}} {{ENV_SCORE}}/100", "inline": true },
+        { "name": "Configuration", "value": "{{CONF_EMOJI}} {{CONF_SCORE}}/100", "inline": true },
+        { "name": "Skills", "value": "{{SKILL_EMOJI}} {{SKILL_SCORE}}/100", "inline": true },
+        { "name": "Runtime", "value": "{{RT_EMOJI}} {{RT_SCORE}}/100", "inline": true },
+        { "name": "Workspace", "value": "{{WS_EMOJI}} {{WS_SCORE}}/100", "inline": true },
+        { "name": "Security", "value": "{{SEC_EMOJI}} {{SEC_SCORE}}/100", "inline": true },
+        { "name": "Issues", "value": "{{TOP_ISSUES_SHORT}}", "inline": false }
+      ],
+      "footer": { "text": "@botlearn/openclaw-doctor v3.0.0" },
+      "timestamp": "{{TIMESTAMP}}"
+    }
+  ]
+}
+```
+
+### Discord Embed Colors (decimal)
+- Green (healthy): `2280667` (#22c55e → 0x22C55B)
+- Yellow (warning): `15379208` (#eab308)
+- Orange (elevated): `16348950` (#f97316)
+- Red (critical): `15614020` (#ef4444)
+
+### Discord Limits
+- Max 10 embeds per message
+- Max 25 fields per embed
+- Max 6000 total characters
+- Webhook URL format: `https://discord.com/api/webhooks/...`
+
+---
+
+## Email — HTML Body
+
+The HTML report generated by `generate-report.sh --format html` is used directly as the email body.
+
+### Headers
+```
+From: {{FROM}} or "OpenClaw Doctor <noreply@localhost>"
+To: {{TO}}
+Subject: [OpenClaw Doctor] Health Report — {{SCORE}}/100 {{STATUS}}
+Content-Type: text/html; charset=UTF-8
+```
+
+### Sending
+```bash
+# Via sendmail
+sendmail -t < email-payload.txt
+
+# Via curl + SMTP
+curl --url "smtp://{{SMTP_HOST}}:{{SMTP_PORT}}" \
+  --mail-from "{{FROM}}" --mail-rcpt "{{TO}}" \
+  --upload-file email-payload.txt
+```
+
+---
+
+## Payload Safety
+
+Before sending to any webhook channel, deliver-report.sh MUST:
+1. Scan the payload JSON string for credential patterns
+2. Replace any matches with `***REDACTED***`
+3. Verify no `api_key`, `secret`, `token`, `password`, or `private_key` values remain in plaintext
+4. Log a warning if redaction was needed

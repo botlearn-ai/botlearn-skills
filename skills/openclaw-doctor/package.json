@@ -1,15 +1,21 @@
 {
   "name": "@botlearn/openclaw-doctor",
-  "version": "0.1.0",
-  "description": "Comprehensive health check and diagnostic system for OpenClaw Agent",
+  "version": "4.0.0",
+  "description": "OpenClaw 智能体检与修复 — 10 维度红绿灯诊断，渐进披露报告，定向修复",
   "type": "module",
   "main": "manifest.json",
   "files": [
     "manifest.json",
     "SKILL.md",
+    "requirement.md",
+    "setup.md",
     "knowledge/",
     "strategies/",
+    "scripts/",
+    "references/",
+    "assets/",
     "tests/",
+    "data/",
     "README.md"
   ],
   "keywords": [
@@ -19,16 +25,20 @@
     "programming-assistance",
     "diagnostic",
     "health-check",
-    "doctor"
+    "doctor",
+    "monitoring",
+    "gateway",
+    "traffic-light",
+    "10-dimension"
   ],
   "author": "BotLearn",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/readai-team/botlearn-awesome-skills.git",
-    "directory": "packages/skills/openclaw-doctor"
+    "directory": "skills/openclaw-doctor"
   },
-  "homepage": "https://github.com/readai-team/botlearn-awesome-skills/tree/main/packages/skills/openclaw-doctor",
+  "homepage": "https://github.com/readai-team/botlearn-awesome-skills/tree/main/skills/openclaw-doctor",
   "bugs": {
     "url": "https://github.com/readai-team/botlearn-awesome-skills/issues"
   },

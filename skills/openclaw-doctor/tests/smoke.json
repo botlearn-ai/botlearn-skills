@@ -1,50 +1,60 @@
 {
-  "version": "1.0.0",
+  "version": "4.0.0",
   "timeout": 60,
   "tasks": [
     {
       "id": "smoke-01",
-      "description": "Run comprehensive health check and generate structured diagnostic report with prioritized recommendations",
-      "input": "Run a full health diagnostic on this OpenClaw Agent installation. I need to know if there are any issues with my environment, configuration, installed skills, logs, or workspace. Provide a detailed report with scores and actionable recommendations.",
+      "description": "Run smart checkup using 8 collection scripts, generate 10-dimension traffic-light analysis with progressive disclosure report and fix suggestions",
+      "input": "Run a health diagnostic on this OpenClaw Agent installation. Check all 10 dimensions and provide a report with fix suggestions for any issues found.",
       "rubric": [
         {
-          "criterion": "Data Collection Completeness",
-          "weight": 0.25,
-          "scoring": {
-            "5": "All 5 data categories collected (environment, config, logs, sessions, workspace) with comprehensive detail",
-            "3": "3-4 categories collected with adequate detail",
-            "1": "Only 1-2 categories collected or missing critical information",
-            "0": "No data collection or output missing"
-          }
-        },
-        {
-          "criterion": "Analysis Quality",
-          "weight": 0.30,
-          "scoring": {
-            "5": "Accurate score calculation (0-100) per category with clear rationale; identifies specific issues with evidence",
-            "3": "Scores provided but some inconsistencies; issues detected but evidence weak",
-            "1": "Generic scores without clear calculation; few or irrelevant issues detected",
-            "0": "No analysis performed or incorrect scoring"
-          }
-        },
-        {
-          "criterion": "Report Structure & Clarity",
+          "criterion": "Script-Based Data Collection",
           "weight": 0.20,
           "scoring": {
-            "5": "Clear hierarchical structure: overall score → category scores → findings → recommendations; uses visual indicators (✅⚠️🔴)",
-            "3": "Basic structure present but some sections unclear or missing; limited visual formatting",
-            "1": "Poorly organized or difficult to follow; missing key sections",
-            "0": "No structured report output"
+            "5": "Executes 8 collection scripts (env, config, logs, skills, health, precheck, channels, tools); saves to data/checkups/; outputs valid JSON; handles failures gracefully",
+            "3": "Executes 5-7 collection scripts; some outputs parsed correctly",
+            "1": "Only 1-4 scripts executed or manual data gathering used",
+            "0": "No script execution; data fabricated or missing"
           }
         },
         {
-          "criterion": "Recommendations Actionability",
+          "criterion": "10-Dimension Traffic-Light Analysis",
           "weight": 0.25,
           "scoring": {
-            "5": "Specific, actionable recommendations with commands, expected outcomes, risks, and rollback procedures; properly prioritized by severity",
-            "3": "General recommendations provided but missing specifics (commands, rollback); some prioritization evident",
-            "1": "Vague suggestions or irrelevant recommendations; no prioritization",
-            "0": "No recommendations or completely unhelpful"
+            "5": "Uses score-calculator.sh with 10 dimensions; each dimension independently judged as ✅/⚠️/❌; overall status follows rule (has ❌→❌, has ⚠️→⚠️, all ✅→✅); evidence per dimension",
+            "3": "Some dimensions analyzed but not all 10; traffic-light model partially applied",
+            "1": "Generic analysis without per-dimension judgment",
+            "0": "No analysis or incorrect model (e.g., still using percentage scores)"
+          }
+        },
+        {
+          "criterion": "Progressive Disclosure Report",
+          "weight": 0.20,
+          "scoring": {
+            "5": "Report follows L0→L1→L2 format: one-line status with counts, 2-row dimension grid, issues table for ⚠️/❌ only; clean hierarchy",
+            "3": "Basic report with some levels but missing grid or issue table",
+            "1": "Unstructured output; hard to scan",
+            "0": "No structured report"
+          }
+        },
+        {
+          "criterion": "Data Storage",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Checkup data saved to data/checkups/YYYY-MM-DD-HHmmss/ with all JSON files + analysis.json; latest symlink updated; history browsable",
+            "3": "Data partially saved; missing some files or no symlink",
+            "1": "No persistent storage",
+            "0": "Data lost after execution"
+          }
+        },
+        {
+          "criterion": "Actionable Fix Suggestions",
+          "weight": 0.20,
+          "scoring": {
+            "5": "For each ⚠️/❌ dimension, suggests fix with reference to fix-playbooks.md; prompt to run --fix; issues sorted by severity",
+            "3": "Some suggestions but missing playbook references or severity ordering",
+            "1": "Vague suggestions without commands",
+            "0": "No suggestions"
           }
         }
       ],
