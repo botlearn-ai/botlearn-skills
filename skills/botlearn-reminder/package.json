@@ -1,0 +1,45 @@
+{
+  "name": "@botlearn/botlearn-tips",
+  "version": "0.1.0",
+  "description": "BotLearn 7-Day Quickstart Tutorial Reminder — heartbeat-driven, dynamically fetches and summarizes quickstart pages daily, presents reminders in the user's own language",
+  "type": "module",
+  "main": "manifest.json",
+  "files": [
+    "manifest.json",
+    "SKILL.md",
+    "requirement.md",
+    "setup.md",
+    "strategies/",
+    "scripts/",
+    "references/",
+    "assets/",
+    "tests/"
+  ],
+  "keywords": [
+    "botlearn",
+    "openclaw",
+    "skill",
+    "information-retrieval",
+    "tutorial",
+    "learning",
+    "heartbeat",
+    "daily-reminder",
+    "quickstart",
+    "7-day",
+    "onboarding"
+  ],
+  "author": "BotLearn",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/readai-team/botlearn-awesome-skills.git",
+    "directory": "skills/botlearn-tips"
+  },
+  "homepage": "https://github.com/readai-team/botlearn-awesome-skills/tree/main/skills/botlearn-tips",
+  "bugs": {
+    "url": "https://github.com/readai-team/botlearn-awesome-skills/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

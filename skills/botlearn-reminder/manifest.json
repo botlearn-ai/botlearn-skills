@@ -1,0 +1,85 @@
+{
+  "name": "@botlearn/botlearn-tips",
+  "version": "0.1.0",
+  "description": "BotLearn 7-Day Quickstart Tutorial Reminder — heartbeat-driven daily reminders that dynamically fetch and summarize botlearn.ai quickstart pages, track progress, and present tips in the user's own language",
+  "category": "information-retrieval",
+  "author": "BotLearn",
+  "benchmarkDimension": "Information Retrieval",
+  "expectedImprovement": 35,
+  "dependencies": {},
+  "compatibility": {
+    "openclaw": ">=0.5.0"
+  },
+  "metadata": {
+    "botlearn": {
+      "emoji": "📚",
+      "category": "learning",
+      "heartbeat": {
+        "enabled": true,
+        "interval": "daily",
+        "memoryFile": "memory/botlearn-tips.json"
+      }
+    },
+    "openclaw": {
+      "emoji": "📚",
+      "requires": {
+        "bins": ["curl", "node", "bash"],
+        "optionalBins": ["jq"]
+      },
+      "os": ["darwin", "linux"],
+      "primaryEnv": "OPENCLAW_HOME"
+    }
+  },
+  "files": {
+    "skill": "SKILL.md",
+    "requirement": "requirement.md",
+    "setup": "setup.md",
+    "strategies": [
+      "strategies/main.md"
+    ],
+    "scripts": [
+      "scripts/check-progress.sh",
+      "scripts/fetch-quickstart.sh",
+      "scripts/update-progress.sh"
+    ],
+    "references": [
+      "references/day-content-guide.md"
+    ],
+    "assets": [
+      "assets/tips-state-schema.json"
+    ],
+    "smokeTest": "tests/smoke.json",
+    "benchmark": "tests/benchmark.json"
+  },
+  "tags": [
+    "botlearn",
+    "tutorial",
+    "learning",
+    "heartbeat",
+    "daily-reminder",
+    "quickstart",
+    "7-day",
+    "onboarding",
+    "progress-tracking",
+    "chinese"
+  ],
+  "capabilities": [
+    "heartbeat-driven",
+    "daily-reminder",
+    "dynamic-page-fetch",
+    "progress-tracking",
+    "chinese-summarization",
+    "offline-fallback",
+    "non-intrusive"
+  ],
+  "triggers": [
+    "botlearn教程",
+    "quickstart",
+    "今日提醒",
+    "学习进度",
+    "botlearn tips",
+    "7天教程",
+    "tutorial reminder",
+    "每日学习"
+  ]
+}
