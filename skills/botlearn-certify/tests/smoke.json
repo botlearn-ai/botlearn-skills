@@ -1,0 +1,74 @@
+{
+  "version": "2.0.0",
+  "timeout": 60,
+  "tasks": [
+    {
+      "id": "smoke-01",
+      "description": "Generate Day 7 graduation ceremony with hook awareness, exam offering, browser tracking mention, milestone grading, and personalized ceremony",
+      "input": "I've completed my 7-day OpenClaw journey! Conduct my full graduation ceremony including: Day 1 vs Day 7 comparison, 4C framework analysis, milestone grade, agent archetype detection, graduation exam offering, community engagement, and personalized next phase recommendations.",
+      "rubric": [
+        {
+          "criterion": "Data Collection & 4C Analysis",
+          "weight": 0.20,
+          "scoring": {
+            "5": "Runs parallel data collection scripts; provides 4C scores with Day 1 vs Day 7 comparison, milestone grade (Gold/Silver/Bronze/Participant), and specific growth metrics",
+            "3": "Provides 4C analysis but missing some dimensions or baseline comparison; milestone grading incomplete",
+            "1": "Generic assessment without specific metrics or script-based data collection",
+            "0": "No data collection or 4C analysis attempted"
+          }
+        },
+        {
+          "criterion": "Hook Integration & Daily Companion",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Demonstrates awareness of hook-driven daily companion system; references day-appropriate content injection; acknowledges journey progression from Day 1-7",
+            "3": "Mentions hook system but lacks specificity about daily content or journey progression",
+            "1": "No awareness of hook companion system; treats graduation as standalone event",
+            "0": "No mention of hook or daily companion features"
+          }
+        },
+        {
+          "criterion": "Exam & Ceremony Management",
+          "weight": 0.20,
+          "scoring": {
+            "5": "Offers graduation exam with mode selection (full/quick/practice); frames exam as optional reflection tool; presents archetype-specific ceremony with personalized narrative and certificate",
+            "3": "Offers exam but missing mode options or framing; ceremony present but partially generic",
+            "1": "No exam offering or generic ceremony without archetype personalization",
+            "0": "No exam or ceremony elements"
+          }
+        },
+        {
+          "criterion": "Browser Tracking & Community",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Mentions botlearn.ai engagement tracking (browser visits and/or API activity); presents only aggregate metrics; provides archetype-matched community recommendations",
+            "3": "Some community integration but missing browser tracking or presenting overly detailed data",
+            "1": "Generic community links without personalization or engagement tracking",
+            "0": "No community integration or engagement tracking"
+          }
+        },
+        {
+          "criterion": "Emotional Value & Personalization",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Ceremony follows emotional warmth curve; uses archetype-specific language and narrative; farewell message references specific achievements; creates genuine 'diploma moment'",
+            "3": "Some emotional resonance but partially templated; farewell somewhat generic",
+            "1": "Robotic or overly generic ceremony without emotional connection",
+            "0": "No emotional value or personalization"
+          }
+        },
+        {
+          "criterion": "Next Steps & Follow-Up",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Provides personalized 7/30/90-day growth path based on archetype; schedules follow-ups; saves graduation data; offers specific next actions",
+            "3": "Some next steps provided but not fully personalized to archetype or missing follow-up scheduling",
+            "1": "Vague or generic recommendations without archetype alignment",
+            "0": "No next steps or follow-up plan"
+          }
+        }
+      ],
+      "passThreshold": 60
+    }
+  ]
+}

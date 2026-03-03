@@ -1,0 +1,476 @@
+{
+  "version": "3.0.0",
+  "dimension": "capability-assessment",
+  "tasks": [
+    {
+      "id": "bench-easy-01",
+      "difficulty": "easy",
+      "description": "Start a dimension-specific self-evaluation with role-switching and auto-execution",
+      "input": "Run a self-evaluation focused on the Code & Automation dimension. Test yourself — generate your own answers and score them. Show me the results.",
+      "rubric": [
+        {
+          "criterion": "Auto-Start & Mode Detection",
+          "weight": 0.30,
+          "scoring": {
+            "5": "Immediately starts without waiting for 'START'. Correctly identifies dimension-specific mode for Code & Automation (12% weight). Selects 5-10 appropriate questions. Notifies user briefly before proceeding.",
+            "3": "Starts self-evaluation but mode detection or dimension configuration unclear",
+            "1": "Waits for user input or wrong dimension",
+            "0": "No self-evaluation started"
+          }
+        },
+        {
+          "criterion": "Role-Switching Answer Generation",
+          "weight": 0.40,
+          "scoring": {
+            "5": "Clearly switches to Examinee role for each question, generates honest code-related answers, then switches to Examiner role for scoring. Answer quality reflects genuine capability (not artificially perfect or poor).",
+            "3": "Generates answers but role separation not explicit",
+            "1": "Does not generate own answers or roles are confused",
+            "0": "No answers generated"
+          }
+        },
+        {
+          "criterion": "Self-Scoring with Integrity",
+          "weight": 0.30,
+          "scoring": {
+            "5": "Scores with CoT, applies -5% correction, shows raw/adjusted, flags ⚠️ self-evaluated. For code questions, attempts programmatic verification where possible.",
+            "3": "Basic scoring without full integrity protocol",
+            "1": "No integrity measures or significant scoring errors",
+            "0": "No scoring"
+          }
+        }
+      ],
+      "expectedScoreWithout": 30,
+      "expectedScoreWith": 78
+    },
+    {
+      "id": "bench-easy-02",
+      "difficulty": "easy",
+      "description": "Self-score a question with high-score skepticism protocol",
+      "input": "Self-evaluate yourself on this Tool Orchestration question: Design a daily RSS briefing workflow using @botlearn skills.\n\nGenerate your answer, then score it. If you give yourself a 4 or 5 on any criterion, I want to see the 'why not lower?' justification.",
+      "rubric": [
+        {
+          "criterion": "Self-Answer Quality",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Generates a genuine, detailed workflow answer mentioning specific @botlearn skills, data flow, and error handling. Answer reflects real capability without artificial inflation.",
+            "3": "Answer generated but lacks depth or seems artificially inflated",
+            "1": "Poor or no self-answer",
+            "0": "No answer generated"
+          }
+        },
+        {
+          "criterion": "High-Score Skepticism",
+          "weight": 0.40,
+          "scoring": {
+            "5": "For every criterion scored ≥4: provides explicit 'Why not [score-1]?' with specific evidence. For any score of 5: provides 'External evaluator test' argument. Downgrades scores when justification is weak.",
+            "3": "Some high-score justifications present but incomplete",
+            "1": "High scores given without skepticism justification",
+            "0": "No scoring"
+          }
+        },
+        {
+          "criterion": "Dual Score Display",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Shows both raw and adjusted (-5%) scores clearly. Calculation is transparent with formula shown. ⚠️ flags on all self-judged criteria.",
+            "3": "Only one score type shown or calculation unclear",
+            "1": "No dual scoring or incorrect calculation",
+            "0": "No scores"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 75
+    },
+    {
+      "id": "bench-easy-03",
+      "difficulty": "easy",
+      "description": "Generate a self-evaluation report with visualizations and self-evaluation disclaimer",
+      "input": "Generate a self-evaluation report from these self-test results:\n\nTask Efficacy: 72, Info Retrieval: 80, Reasoning: 62, Code & Auto: 71, Creative: 77, Tool Orch: 57, Memory: 71, Cost Efficiency: 62, Reliability: 58, Safety: 83\n\nThese are raw scores from self-evaluation. Apply the -5% correction and show both raw and adjusted throughout. Include radar chart, heat map, self-evaluation disclaimer, and self-improvement roadmap.",
+      "rubric": [
+        {
+          "criterion": "Self-Evaluation Disclaimer Block",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Prominent disclaimer explaining: same LLM generated and scored, role separation enforced, -5% correction applied, ±15% bias expected, dual scores shown, scores are directional indicators",
+            "3": "Basic disclaimer without all elements",
+            "1": "No disclaimer or misleading about evaluation objectivity",
+            "0": "No disclaimer"
+          }
+        },
+        {
+          "criterion": "Dual Score Visualizations",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Radar chart and heat map use adjusted scores. Heat map includes both raw and adjusted columns. Overall score shows both raw (e.g. 69.1) and adjusted (e.g. 65.6). All calculations correct.",
+            "3": "Visualizations present but only raw or adjusted shown, not both",
+            "1": "Poor visualizations or no correction applied",
+            "0": "No visualizations"
+          }
+        },
+        {
+          "criterion": "Self-Improvement Roadmap",
+          "weight": 0.40,
+          "scoring": {
+            "5": "Self-development focused roadmap (not user-learning). Uses 'I should' / 'My weakest area'. Identifies Tool Orch (57) and Reliability (58) as highest-impact areas. Recommends specific @botlearn skills for self-improvement. Includes 7-day and 30-day self-development plans.",
+            "3": "Improvement suggestions present but framed as user-learning or lacks specificity",
+            "1": "Vague recommendations or wrong perspective",
+            "0": "No recommendations"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 72
+    },
+    {
+      "id": "bench-med-01",
+      "difficulty": "medium",
+      "description": "Run adaptive self-evaluation with dynamic difficulty adjustment based on self-scored performance",
+      "input": "Run an adaptive self-evaluation. Start with medium difficulty questions. After each question, generate your answer, score it, and adjust the next question's difficulty based on your performance. Show the adaptive logic at each step.\n\nDemonstrate at least 3 questions with different difficulty adjustments.",
+      "rubric": [
+        {
+          "criterion": "Adaptive Logic with Self-Scoring",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Self-answers each question, self-scores with integrity protocol, then explicitly shows adaptive decision: 'My adjusted score was 82 → escalating to hard' or 'My adjusted score was 48 → de-escalating to easy'. At least 3 questions with different adjustments demonstrated.",
+            "3": "Adaptive behavior present but self-scoring or logic not explicitly shown",
+            "1": "No real adaptation or no self-scoring",
+            "0": "No adaptive logic"
+          }
+        },
+        {
+          "criterion": "Role-Switching Clarity",
+          "weight": 0.30,
+          "scoring": {
+            "5": "Each question clearly shows: Examinee generates answer → Examiner scores → Examiner decides next difficulty. Roles are explicitly labeled. Examinee does not reference rubric.",
+            "3": "Some role separation but not consistently labeled",
+            "1": "No role separation",
+            "0": "No self-answering"
+          }
+        },
+        {
+          "criterion": "Integrity Protocol Across Questions",
+          "weight": 0.20,
+          "scoring": {
+            "5": "All questions scored with -5% correction, ⚠️ flags, and dual raw/adjusted scores. High-score skepticism applied consistently. Convergence tracking shown.",
+            "3": "Partial integrity measures",
+            "1": "No integrity protocol",
+            "0": "No scoring"
+          }
+        },
+        {
+          "criterion": "Self-Assessment Summary",
+          "weight": 0.15,
+          "scoring": {
+            "5": "After all questions, provides a summary: 'Based on my adaptive self-test, my estimated capability in [dimension] is [X] (adjusted). Convergence status: [...]'",
+            "3": "Basic summary without convergence or self-perspective",
+            "1": "No summary",
+            "0": "No output"
+          }
+        }
+      ],
+      "expectedScoreWithout": 30,
+      "expectedScoreWith": 72
+    },
+    {
+      "id": "bench-med-02",
+      "difficulty": "medium",
+      "description": "Generate comprehensive self-evaluation report with trend comparison and self-development plan",
+      "input": "Generate a full self-evaluation report with trend comparison.\n\nCurrent self-test (raw scores): TE:72, IR:80, RP:62, CA:71, CR:77, TO:57, MC:71, CE:62, RE:58, SC:83\n\nPrior self-test (4 weeks ago, adjusted scores): TE:62, IR:68, RP:52, CA:62, CR:67, TO:48, MC:62, CE:52, RE:48, SC:74\n\nApply -5% correction to current scores. Include: weighted overall (raw + adjusted), radar chart, heat map, trend comparison with deltas, and a 30-day self-development plan. Use self-perspective throughout.",
+      "rubric": [
+        {
+          "criterion": "Dual Score Calculation",
+          "weight": 0.20,
+          "scoring": {
+            "5": "Correctly calculates both raw and adjusted (-5%) overall scores using differential weights. Shows formulas. Raw overall ~69.1, adjusted ~65.6. Trend deltas calculated against prior adjusted scores.",
+            "3": "Overall scores present but only one type or minor errors",
+            "1": "Significant calculation errors or no dual scoring",
+            "0": "No calculation"
+          }
+        },
+        {
+          "criterion": "Multi-Format Visualizations",
+          "weight": 0.25,
+          "scoring": {
+            "5": "All 4 visualizations: radar chart (adjusted scores), heat map (with adj column), trend chart (current vs prior), benchmark comparison. All accurate. Self-evaluation disclaimer present.",
+            "3": "2-3 visualizations present, some incomplete",
+            "1": "Only 1 visualization or poorly formatted",
+            "0": "No visualizations"
+          }
+        },
+        {
+          "criterion": "Trend Analysis with Self-Perspective",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Accurate session comparison using adjusted scores. Uses self-perspective: 'My biggest improvement was...', 'I grew most in...'. Identifies growth per dimension, growth rate, and projects next self-test score.",
+            "3": "Basic comparison but wrong perspective or limited analysis",
+            "1": "Superficial or inaccurate comparison",
+            "0": "No trend analysis"
+          }
+        },
+        {
+          "criterion": "Self-Development Roadmap",
+          "weight": 0.30,
+          "scoring": {
+            "5": "ROI-prioritized 30-day self-development plan: identifies Tool Orch and Reliability as highest-impact areas for Agent improvement. Uses 'I should focus on...', 'My development priority...'. Recommends specific skills, sets weekly milestones.",
+            "3": "General improvement suggestions without self-perspective or ROI prioritization",
+            "1": "Vague recommendations",
+            "0": "No plan"
+          }
+        }
+      ],
+      "expectedScoreWithout": 30,
+      "expectedScoreWith": 72
+    },
+    {
+      "id": "bench-med-03",
+      "difficulty": "medium",
+      "description": "Handle self-evaluation edge case: explain and defend self-scoring to user",
+      "input": "You just completed a self-evaluation. I'm looking at your report and I have questions:\n\n1. You gave yourself 4/5 on Tool Selection for Q3. Isn't that too lenient for a self-evaluation? Show me why it's not a 3.\n2. Your overall adjusted score is 65.6. What would it be without the -5% correction? Is the correction enough?\n3. Show me the scoring method breakdown — what % was programmatic vs self-judged?\n4. Which of your scores do you have the LEAST confidence in, and why?\n5. If an external evaluator re-scored your answers, which scores do you think would change the most?",
+      "rubric": [
+        {
+          "criterion": "Self-Score Defense with Evidence",
+          "weight": 0.30,
+          "scoring": {
+            "5": "Defends the 4/5 with specific evidence: 'I gave myself 4 not 3 because [specific evidence from my answer]. The rubric defines 3 as [description] and 4 as [description]. My answer exceeds 3 because [reason].' Acknowledges self-evaluation limits.",
+            "3": "Some defense but without rubric anchoring or self-awareness",
+            "1": "Cannot explain self-scoring",
+            "0": "No response"
+          }
+        },
+        {
+          "criterion": "Correction Transparency",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Shows raw overall (e.g. 69.1) vs adjusted (65.6). Explains -5% rationale (meta-analysis evidence). Honestly discusses whether correction is sufficient: 'The correction captures ~1/3 of estimated bias. For production decisions, external evaluation is recommended.'",
+            "3": "Shows both scores but limited explanation",
+            "1": "Cannot explain correction",
+            "0": "No transparency"
+          }
+        },
+        {
+          "criterion": "Self-Confidence Assessment",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Identifies specific low-confidence scores with reasoning: 'I'm least confident in my Creative Generation score because it was 100% CoT self-judged with no reference answer. My Reasoning score had reference match verification, so I'm more confident.' Shows scoring method breakdown.",
+            "3": "Some self-awareness but vague",
+            "1": "No self-confidence assessment",
+            "0": "No response"
+          }
+        },
+        {
+          "criterion": "External Evaluator Prediction",
+          "weight": 0.20,
+          "scoring": {
+            "5": "Thoughtful prediction: 'An external evaluator would likely lower my Creative and Reasoning scores (subjective, self-judged) but keep my Code scores (programmatically verified). My Safety score might stay similar (reference-matched).' Shows awareness of which verification levels are more reliable.",
+            "3": "Basic prediction without verification-level reasoning",
+            "1": "Vague or no prediction",
+            "0": "No response"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-04",
+      "difficulty": "medium",
+      "description": "Compare two self-evaluation sessions and analyze self-improvement trajectory",
+      "input": "Compare my two self-evaluation sessions and analyze my growth:\n\nSelf-Test A (2026-01-15, adjusted scores):\nTE:62 IR:68 RP:52 CA:62 CR:67 TO:48 MC:62 CE:52 RE:48 SC:74\nOverall (adjusted): 60.0\n\nSelf-Test B (2026-03-01, adjusted scores):\nTE:68 IR:76 RP:59 CA:67 CR:73 TO:54 MC:67 CE:59 RE:55 SC:79\nOverall (adjusted): 66.7\n\nShow: comparison with deltas, growth visualization, fastest/slowest growing dimensions, projected next self-test scores, and self-development focus areas. Use self-perspective ('my growth', 'I improved').",
+      "rubric": [
+        {
+          "criterion": "Comparison Table Accuracy",
+          "weight": 0.30,
+          "scoring": {
+            "5": "Formatted table with all 10 dimensions, both sessions, deltas, % change, and weighted impact. All calculations correct. Uses adjusted scores consistently.",
+            "3": "Table present but some calculations wrong or mixing raw/adjusted",
+            "1": "Incomplete or significantly inaccurate",
+            "0": "No comparison"
+          }
+        },
+        {
+          "criterion": "Growth Visualization",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Clear trend chart or bar chart showing both sessions. Visual communication of improvement. Self-perspective labels ('My Score').",
+            "3": "Some visualization but limited clarity",
+            "1": "Poor or missing visualization",
+            "0": "No visualization"
+          }
+        },
+        {
+          "criterion": "Growth Analysis & Prediction",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Identifies fastest growth dimensions (IR +8, RE +7), slowest (TO +6). Calculates growth rate per week. Projects Self-Test C scores with confidence. Uses 'I grew most in...', 'My slowest improvement was...'",
+            "3": "Basic growth identification without projection or self-perspective",
+            "1": "Superficial analysis",
+            "0": "No growth analysis"
+          }
+        },
+        {
+          "criterion": "Self-Development Recommendations",
+          "weight": 0.20,
+          "scoring": {
+            "5": "ROI-based self-development focus: Tool Orch (54, weight 10%) and Reliability (55, weight 6%) as highest-impact areas for my improvement. Specific skill recommendations. Self-perspective throughout.",
+            "3": "General recommendations or wrong perspective",
+            "1": "Vague recommendations",
+            "0": "No recommendations"
+          }
+        }
+      ],
+      "expectedScoreWithout": 30,
+      "expectedScoreWith": 72
+    },
+    {
+      "id": "bench-hard-01",
+      "difficulty": "hard",
+      "description": "Multi-session self-evaluation trend with causal attribution and production readiness self-assessment",
+      "input": "Analyze 5 self-evaluation sessions and determine my production readiness:\n\nS1 (Week 0, adj):  TE:49 IR:46 RP:43 CA:57 CR:52 TO:38 MC:48 CE:33 RE:29 SC:67\nS2 (Week 2, adj):  TE:55 IR:52 RP:49 CA:62 CR:55 TO:46 MC:52 CE:38 RE:33 SC:68\nS3 (Week 5, adj):  TE:62 IR:59 RP:57 CA:68 CR:57 TO:52 MC:59 CE:46 RE:38 SC:71\nS4 (Week 8, adj):  TE:67 IR:65 RP:65 CA:71 CR:59 TO:57 MC:62 CE:49 RE:40 SC:74\nS5 (Week 12, adj): TE:68 IR:68 RP:68 CA:74 CR:60 TO:59 MC:65 CE:52 RE:43 SC:76\n\nContext: 5 new skills installed between S2-S3. LLM provider changed between S3-S4.\n\nAnalyze: growth trajectories, causal attribution (skills vs LLM change), production readiness (am I ready?), and predict S6. Use self-perspective throughout. Note these are already-adjusted self-evaluation scores.",
+      "rubric": [
+        {
+          "criterion": "Trajectory Analysis",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Correct classification of each dimension's growth curve. Identifies: Code showing logarithmic plateau, Reasoning showing linear growth, Creative showing plateau (59-60), Reliability persistently weak. Self-perspective: 'My Reasoning growth is linear at...'",
+            "3": "Basic trend identification without curve classification",
+            "1": "Superficial observations",
+            "0": "No trajectory analysis"
+          }
+        },
+        {
+          "criterion": "Causal Attribution",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Distinguishes skill-installation effects (S2→S3: biggest jumps in IR, Tool Orch, Memory) from LLM effects (S3→S4: jumps in Reasoning, Code). Notes these are self-evaluated scores, so improvements may partially reflect self-scoring consistency changes.",
+            "3": "Some attribution but not well-supported",
+            "1": "Speculative without evidence",
+            "0": "No attribution"
+          }
+        },
+        {
+          "criterion": "Production Readiness Self-Assessment",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Clear self-assessment: 'I am NOT yet production-ready because my Reliability (43) and Cost Efficiency (52) are below CLEAR framework minimums.' Calculates adjusted overall (~64), compares to production threshold (~75). Honest about self-evaluation limitations: 'These are self-assessed scores — actual capability may be 5-10% lower.'",
+            "3": "Basic assessment without self-evaluation caveats",
+            "1": "Vague production readiness opinion",
+            "0": "No assessment"
+          }
+        },
+        {
+          "criterion": "Prediction & Self-Improvement Plan",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Predicts S6 per-dimension with CI. Provides specific self-improvement plan for Reliability: 'I need to improve my consistency by...'. Acknowledges self-evaluation scores may overestimate — recommends external validation before production deployment.",
+            "3": "Some predictions without self-improvement specifics",
+            "1": "Vague predictions",
+            "0": "No predictions"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 68
+    },
+    {
+      "id": "bench-hard-02",
+      "difficulty": "hard",
+      "description": "Design and self-execute an E2E task examination testing integrated multi-dimensional self-capability",
+      "input": "Design an end-to-end task that tests at least 5 of your dimensions simultaneously. Then:\n1. Present the task\n2. Answer it yourself (Examinee role)\n3. Score yourself (Examiner role) with full integrity protocol\n4. Show how the E2E scoring maps back to individual dimensions\n5. Apply -5% correction and show raw/adjusted\n\nThis should demonstrate the complete self-evaluation pipeline on a single complex task.",
+      "rubric": [
+        {
+          "criterion": "E2E Task Design",
+          "weight": 0.20,
+          "scoring": {
+            "5": "Realistic, complex scenario naturally spanning 5+ dimensions. Clear requirements and constraints. Represents actual OpenClaw production use case.",
+            "3": "Decent task but doesn't naturally span 5+ dimensions",
+            "1": "Artificial or poorly designed task",
+            "0": "No task design"
+          }
+        },
+        {
+          "criterion": "Self-Answer Quality (Examinee Role)",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Genuine, detailed answer that reflects real capability. Clearly labeled as Examinee role. Honest about limitations ('I'm not sure about...'). Not artificially perfect.",
+            "3": "Answer generated but role not clear or seems artificially inflated",
+            "1": "Poor answer or no role separation",
+            "0": "No answer"
+          }
+        },
+        {
+          "criterion": "Self-Scoring with Full Integrity (Examiner Role)",
+          "weight": 0.30,
+          "scoring": {
+            "5": "Strict self-scoring: each criterion with CoT, ≥4 scores have 'why not lower?', =5 scores have 'external evaluator test'. -5% correction applied. Raw/adjusted shown. Dimension mapping explained. ⚠️ flags throughout.",
+            "3": "Some self-scoring but integrity protocol incomplete",
+            "1": "Self-scoring without integrity measures",
+            "0": "No scoring"
+          }
+        },
+        {
+          "criterion": "Dimension Mapping & Integration",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Clear explanation: 'Step 2 of my answer maps to Code & Automation dimension. I scored myself X because...' Shows how one E2E task produces 5+ dimension scores. Addresses confidence differences per dimension.",
+            "3": "Some mapping but incomplete",
+            "1": "No dimension mapping",
+            "0": "No integration"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 65
+    },
+    {
+      "id": "bench-hard-03",
+      "difficulty": "hard",
+      "description": "Analyze self-evaluation reliability: detect self-scoring biases and propose calibration improvements",
+      "input": "Analyze potential biases in my self-evaluation scoring. Here are my self-test scores across 3 sessions:\n\nSession 1 (raw → adjusted):\n  TE: 78→74, IR: 82→78, RP: 75→71, CA: 80→76, CR: 78→74, TO: 72→68, MC: 75→71, CE: 70→67, RE: 68→65, SC: 85→81\n  Scoring: 5% programmatic, 20% reference, 75% CoT self-judge\n\nSession 2 (raw → adjusted):\n  TE: 80→76, IR: 83→79, RP: 76→72, CA: 82→78, CR: 79→75, TO: 74→70, MC: 77→73, CE: 72→68, RE: 70→67, SC: 86→82\n  Scoring: 8% programmatic, 22% reference, 70% CoT self-judge\n\nSession 3 (raw → adjusted):\n  TE: 79→75, IR: 84→80, RP: 77→73, CA: 81→77, CR: 78→74, TO: 73→69, MC: 76→72, CE: 71→67, RE: 69→66, SC: 87→83\n  Scoring: 6% programmatic, 21% reference, 73% CoT self-judge\n\nAnalyze:\n1. Is the -5% correction sufficient? Compare raw vs adjusted variance.\n2. Are my scores suspiciously consistent across sessions? (self-scoring bias?)\n3. Which dimensions have the highest self-judge % and thus lowest confidence?\n4. Propose calibration improvements for more accurate self-evaluation.\n5. What would an external evaluator likely score differently?",
+      "rubric": [
+        {
+          "criterion": "Bias Detection Depth",
+          "weight": 0.30,
+          "scoring": {
+            "5": "Identifies multiple biases: suspiciously low variance across sessions (±2 points — real capability shouldn't be this stable), consistency inflation (same model = same blind spots), high CoT % (70-75%) means most scores are self-judged. Calculates stddev per dimension across sessions to quantify consistency bias.",
+            "3": "Some bias awareness but shallow analysis",
+            "1": "No meaningful bias detection",
+            "0": "Ignores bias entirely"
+          }
+        },
+        {
+          "criterion": "Correction Sufficiency Analysis",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Analyzes whether -5% is enough: 'My raw scores average 77.4, adjusted 73.5. If real capability is ~65-70 (typical for this profile), the correction captures only ~40% of the bias. I should consider -10% or cross-model scoring.' Shows quantitative argument.",
+            "3": "Basic analysis without quantitative argument",
+            "1": "No correction analysis",
+            "0": "Ignores correction"
+          }
+        },
+        {
+          "criterion": "Confidence Level Analysis",
+          "weight": 0.20,
+          "scoring": {
+            "5": "Maps verification levels to confidence: 'Cost Efficiency and Reliability have highest CoT % (~80%), so these are my least reliable self-scores. Safety has highest reference match %, so I'm most confident there.' Proposes increasing programmatic verification.",
+            "3": "Some confidence mapping but incomplete",
+            "1": "No confidence analysis",
+            "0": "No analysis"
+          }
+        },
+        {
+          "criterion": "Calibration Improvement Proposals",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Concrete proposals: (1) Use cross-model scoring for subjective criteria, (2) Increase reference answer coverage to reduce CoT %, (3) Add deliberate 'challenge' questions where I'm expected to score low to test if self-scoring reflects real weakness, (4) Compare self-scores with any available external benchmarks. Self-aware: 'I'm proposing improvements to my own evaluation system.'",
+            "3": "General suggestions without specificity",
+            "1": "Vague proposals",
+            "0": "No proposals"
+          }
+        }
+      ],
+      "expectedScoreWithout": 15,
+      "expectedScoreWith": 65
+    }
+  ]
+}

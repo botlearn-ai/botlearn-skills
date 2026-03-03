@@ -1,0 +1,83 @@
+{
+  "name": "@botlearn/openclaw-examiner",
+  "version": "3.0.0",
+  "description": "OpenClaw Agent self-evaluation system v3 — Agent autonomously generates questions, answers them via role-switching, and scores itself with integrity safeguards. CLEAR-inspired 10-dimension assessment with -5% self-judge correction, raw/adjusted dual scoring, and multi-format reporting.",
+  "category": "evaluation",
+  "author": "BotLearn",
+  "benchmarkDimension": "capability-assessment",
+  "expectedImprovement": 60,
+  "dependencies": {},
+  "compatibility": {
+    "openclaw": ">=0.5.0"
+  },
+  "files": {
+    "skill": "SKILL.md",
+    "knowledge": [
+      "knowledge/domain.md",
+      "knowledge/best-practices.md",
+      "knowledge/anti-patterns.md"
+    ],
+    "strategies": [
+      "strategies/main.md"
+    ],
+    "smokeTest": "tests/smoke.json",
+    "benchmark": "tests/benchmark.json",
+    "assets": [
+      "assets/exam-report-schema.json"
+    ]
+  },
+  "tags": [
+    "openclaw",
+    "examiner",
+    "self-evaluation",
+    "self-test",
+    "assessment",
+    "CLEAR-framework",
+    "adaptive-testing",
+    "capability",
+    "reliability",
+    "agent-as-judge",
+    "role-switching",
+    "radar-chart",
+    "heat-map"
+  ],
+  "capabilities": [
+    "evaluate-performance",
+    "self-evaluation",
+    "generate-benchmarks",
+    "score-capabilities",
+    "adaptive-testing",
+    "reliability-analysis",
+    "multi-format-reporting",
+    "role-switching"
+  ],
+  "triggers": [
+    "exam",
+    "test",
+    "evaluation",
+    "assessment",
+    "capability check",
+    "radar chart",
+    "能力评测",
+    "考试",
+    "能力评估",
+    "exam my agent",
+    "run exam",
+    "skill test",
+    "benchmark me",
+    "evaluate capabilities",
+    "adaptive exam",
+    "e2e test",
+    "能力诊断",
+    "全面评估",
+    "self-test",
+    "evaluate yourself",
+    "自我评测",
+    "自我检测",
+    "benchmark yourself",
+    "auto-exam",
+    "test yourself",
+    "自评",
+    "自测"
+  ]
+}

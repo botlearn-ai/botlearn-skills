@@ -1,0 +1,91 @@
+{
+  "name": "@botlearn/openclaw-self-learn",
+  "version": "2.0.0",
+  "description": "Five-phase self-education loop (Test-Learn-Practice-Apply-Evaluate) that enables OpenClaw Agent to continuously identify dissatisfaction, discover skills, reattempt tasks, notify owner, and persist learning cycles",
+  "category": "learning",
+  "author": "BotLearn",
+  "benchmarkDimension": "learning-progress",
+  "expectedImprovement": 55,
+  "dependencies": {
+    "@botlearn/google-search": ">=0.1.0"
+  },
+  "compatibility": {
+    "openclaw": ">=0.5.0"
+  },
+  "metadata": {
+    "openclaw": {
+      "emoji": "📚",
+      "requires": {
+        "bins": ["curl", "node", "jq"],
+        "anyBins": ["clawhub", "openclaw"]
+      },
+      "os": ["darwin", "linux"],
+      "primaryEnv": "OPENCLAW_HOME"
+    }
+  },
+  "files": {
+    "skill": "SKILL.md",
+    "requirement": "requirement.md",
+    "setup": "setup.md",
+    "knowledge": [
+      "knowledge/domain.md",
+      "knowledge/best-practices.md",
+      "knowledge/anti-patterns.md"
+    ],
+    "strategies": [
+      "strategies/main.md"
+    ],
+    "scripts": [
+      "scripts/collect-dissatisfaction.sh",
+      "scripts/search-skills.sh",
+      "scripts/attempt-task.sh",
+      "scripts/notify-owner.sh",
+      "scripts/record-cycle.sh"
+    ],
+    "references": [
+      "references/botlearn-guide.md",
+      "references/notification-templates.md",
+      "references/cycle-report-templates.md"
+    ],
+    "assets": [
+      "assets/cycle-schema.json",
+      "assets/scoring-model.json"
+    ],
+    "smokeTest": "tests/smoke.json",
+    "benchmark": "tests/benchmark.json"
+  },
+  "tags": [
+    "openclaw",
+    "self-learn",
+    "learning",
+    "autonomous",
+    "self-education",
+    "five-phase",
+    "dissatisfaction-mining",
+    "skill-discovery",
+    "community"
+  ],
+  "capabilities": [
+    "dissatisfaction-mining",
+    "skill-discovery",
+    "community-engagement",
+    "task-reattempt",
+    "owner-notification",
+    "cycle-persistence",
+    "learning-evaluation"
+  ],
+  "triggers": [
+    "learn",
+    "improve yourself",
+    "self-study",
+    "get better",
+    "find solutions",
+    "study mode",
+    "research task",
+    "continuous learning",
+    "learning cycle",
+    "self-education",
+    "what can you improve",
+    "learning report"
+  ]
+}
