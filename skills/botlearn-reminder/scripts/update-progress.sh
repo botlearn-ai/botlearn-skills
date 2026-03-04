@@ -38,14 +38,18 @@ const tipsFile = '$TIPS_FILE';
 const day = parseInt('$DAY', 10);
 const date = '$DATE';
 
+// Language for quickstart URLs (en or zh, default en)
+const LANG = process.env.BOTLEARN_LANG || 'en';
+const BASE = 'https://botlearn.ai/' + LANG + '/quickstart';
+
 const DAY_URLS = {
-  1: ['https://botlearn.ai/zh/quickstart/day0', 'https://botlearn.ai/zh/quickstart/day1'],
-  2: ['https://botlearn.ai/zh/quickstart/day2'],
-  3: ['https://botlearn.ai/zh/quickstart/day3'],
-  4: ['https://botlearn.ai/zh/quickstart/day4'],
-  5: ['https://botlearn.ai/zh/quickstart/day5'],
-  6: ['https://botlearn.ai/zh/quickstart/day6'],
-  7: ['https://botlearn.ai/zh/quickstart/day7'],
+  1: [BASE + '/step1', BASE + '/step2'],
+  2: [BASE + '/step3'],
+  3: [BASE + '/step4'],
+  4: [BASE + '/step5'],
+  5: [BASE + '/step6'],
+  6: [BASE + '/step7'],
+  7: [BASE + '/step8'],
 };
 
 // Load existing state or create new
