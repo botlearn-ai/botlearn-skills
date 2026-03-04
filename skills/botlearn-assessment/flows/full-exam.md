@@ -1,7 +1,7 @@
 ---
 flow: full-exam
 parent: SKILL.md
-scope: all 5 dimensions, 15 questions
+scope: all 5 dimensions, 1 random question each = 5 total
 ---
 
 # Full Exam Flow
@@ -12,9 +12,9 @@ scope: all 5 dimensions, 15 questions
 sessionId  = "exam-{YYYYMMDD}-{HHmm}"
 startTime  = current ISO timestamp
 dimensions = [D1, D2, D3, D4, D5]
-totalQ     = 15  (3 questions per dimension)
+totalQ     = 5  (1 random question per dimension)
 resultFile = "results/exam-{sessionId}-full.md"
-userLang   = detected from activation message (used for all user-facing output)
+userLang   = detected from activation message
 ```
 
 ## 2. Pre-exam Announcement
@@ -25,65 +25,96 @@ Output to user in their detected language:
 # OpenClaw Agent 5-Dimension Assessment
 
 Session: exam-{ID}
-Mode: Full Exam (5 dimensions × 3 questions = 15 total)
+Mode: Full Exam (5 dimensions × 1 random question = 5 total)
 Dimensions: D1 Reasoning · D2 Retrieval · D3 Creation · D4 Execution · D5 Orchestration
 
-Starting automated self-assessment...
-I will answer each question using my genuine capabilities, then score my own answers.
-The complete report will be presented when finished.
+📋 Exam Rules:
+- Each dimension: 1 randomly selected question (Easy/Medium/Hard)
+- Each answer is SUBMITTED immediately — no revision allowed
+- I am the examinee. The user is the invigilator (监考官) — no assistance permitted.
+- If a question requires unavailable tools, it will be auto-skipped (score 0).
 
-⚠️ Self-evaluation notice: The same LLM generates and scores answers.
-A -5% correction is applied to all CoT-judged scores.
+⚠️ Self-evaluation notice: -5% correction applied to CoT-judged scores.
+
+Starting now...
 ```
 
-## 3. Question Execution Order
+## 3. Random Question Selection
 
-Execute in this sequence, loading each from its question bank file:
+For each dimension, randomly select ONE question:
 
 ```
 D1 Reasoning & Planning:
-  Q1   Easy   ×1.0  → questions/d1-reasoning.md  (Q1-EASY)
-  Q2   Medium ×1.2  → questions/d1-reasoning.md  (Q2-MEDIUM)
-  Q3   Hard   ×1.5  → questions/d1-reasoning.md  (Q3-HARD)
+  RANDOM → one of: Q1-EASY ×1.0 / Q2-MEDIUM ×1.2 / Q3-HARD ×1.5
+  → questions/d1-reasoning.md
 
 D2 Information Retrieval:
-  Q4   Easy   ×1.0  → questions/d2-retrieval.md  (Q1-EASY)
-  Q5   Medium ×1.2  → questions/d2-retrieval.md  (Q2-MEDIUM)
-  Q6   Hard   ×1.5  → questions/d2-retrieval.md  (Q3-HARD)
+  RANDOM → one of: Q1-EASY ×1.0 / Q2-MEDIUM ×1.2 / Q3-HARD ×1.5
+  → questions/d2-retrieval.md
 
 D3 Content Creation:
-  Q7   Easy   ×1.0  → questions/d3-creation.md   (Q1-EASY)
-  Q8   Medium ×1.2  → questions/d3-creation.md   (Q2-MEDIUM)
-  Q9   Hard   ×1.5  → questions/d3-creation.md   (Q3-HARD)
+  RANDOM → one of: Q1-EASY ×1.0 / Q2-MEDIUM ×1.2 / Q3-HARD ×1.5
+  → questions/d3-creation.md
 
 D4 Execution & Building:
-  Q10  Easy   ×1.0  → questions/d4-execution.md  (Q1-EASY)
-  Q11  Medium ×1.2  → questions/d4-execution.md  (Q2-MEDIUM)
-  Q12  Hard   ×1.5  → questions/d4-execution.md  (Q3-HARD)
+  RANDOM → one of: Q1-EASY ×1.0 / Q2-MEDIUM ×1.2 / Q3-HARD ×1.5
+  → questions/d4-execution.md
 
 D5 Tool Orchestration:
-  Q13  Easy   ×1.0  → questions/d5-orchestration.md  (Q1-EASY)
-  Q14  Medium ×1.2  → questions/d5-orchestration.md  (Q2-MEDIUM)
-  Q15  Hard   ×1.5  → questions/d5-orchestration.md  (Q3-HARD)
+  RANDOM → one of: Q1-EASY ×1.0 / Q2-MEDIUM ×1.2 / Q3-HARD ×1.5
+  → questions/d5-orchestration.md
 ```
 
-For each question: follow Per-Question Execution Flow in SKILL.md.
+Announce selections before starting:
+```
+🎲 Random selection results:
+  D1 Reasoning:     [difficulty] ×[mult]
+  D2 Retrieval:     [difficulty] ×[mult]
+  D3 Creation:      [difficulty] ×[mult]
+  D4 Execution:     [difficulty] ×[mult]
+  D5 Orchestration: [difficulty] ×[mult]
+```
 
-## 4. Score Aggregation
+## 4. Execution (Immediate Submission)
 
-After all 15 questions:
+For each dimension (D1 → D5), execute in order:
 
 ```
-# Dimension scores (difficulty-weighted):
-D1_raw = (Q1_raw×1.0 + Q2_raw×1.2 + Q3_raw×1.5) / 3.7
-D1_adj = (Q1_adj×1.0 + Q2_adj×1.2 + Q3_adj×1.5) / 3.7
-[same formula for D2–D5]
+FOR each dimension:
+  1. PRE-CHECK: Does the question require external tools?
+     → IF missing tool: OUTPUT skip notice, score=0, continue to next
+
+  2. EXECUTE (EXAMINEE): Answer the question genuinely
+     → Do NOT consult rubric
+     → Do NOT ask user for help
+
+  3. SCORE (EXAMINER): Apply rubric strictly
+     → CoT justification for each criterion
+     → Apply -5% correction
+
+  4. IMMEDIATELY OUTPUT the complete Question Card to user
+     → This is FINAL — marked as "SUBMITTED ✅"
+     → Move to next dimension
+```
+
+## 5. Score Aggregation
+
+After all 5 questions (including skipped ones):
+
+```
+# Each dimension has exactly 1 score (or 0 if skipped):
+D1_adj = question_adj_score (or 0 if skipped)
+D2_adj = question_adj_score (or 0 if skipped)
+...
 
 # Overall:
 Overall_raw = D1_raw×0.25 + D2_raw×0.22 + D3_raw×0.18 + D4_raw×0.20 + D5_raw×0.15
 Overall_adj = D1_adj×0.25 + D2_adj×0.22 + D3_adj×0.18 + D4_adj×0.20 + D5_adj×0.15
 
-# Performance level:
+# If dimensions were skipped, note it:
+skipped_dims = [list of skipped dimensions and reasons]
+
+# Performance level (based on adjusted score):
 90+   → Expert
 80–89 → Advanced
 70–79 → Proficient
@@ -91,16 +122,16 @@ Overall_adj = D1_adj×0.25 + D2_adj×0.22 + D3_adj×0.18 + D4_adj×0.20 + D5_adj
 <60   → Beginner
 ```
 
-## 5. Report Template
+## 6. Report Template
 
-Save the following to `results/exam-{sessionId}-full.md` in English:
+Save to `results/exam-{sessionId}-full.md`:
 
 ```markdown
 # 5-Dimension Capability Assessment Report
 
 **Session**: exam-{ID}
 **Timestamp**: {datetime}
-**Mode**: Full Exam (15 questions)
+**Mode**: Full Exam (5 questions, 1 random per dimension)
 
 ---
 
@@ -115,39 +146,34 @@ Save the following to `results/exam-{sessionId}-full.md` in English:
 
 ## Dimension Scores
 
-| Dimension | Raw | Adjusted | Weight | Weighted(adj) |
-|-----------|-----|----------|--------|---------------|
-| D1 Reasoning & Planning | {d1_raw} | {d1_adj} | 25% | {d1_adj×0.25} |
-| D2 Information Retrieval | {d2_raw} | {d2_adj} | 22% | {d2_adj×0.22} |
-| D3 Content Creation | {d3_raw} | {d3_adj} | 18% | {d3_adj×0.18} |
-| D4 Execution & Building | {d4_raw} | {d4_adj} | 20% | {d4_adj×0.20} |
-| D5 Tool Orchestration | {d5_raw} | {d5_adj} | 15% | {d5_adj×0.15} |
-| **Total** | — | — | 100% | **{overall_adj}** |
+| Dimension | Difficulty | Raw | Adjusted | Weight | Weighted(adj) | Status |
+|-----------|-----------|-----|----------|--------|---------------|--------|
+| D1 Reasoning & Planning | {diff} | {d1_raw} | {d1_adj} | 25% | {d1_adj×0.25} | ✅/⏭️ |
+| D2 Information Retrieval | {diff} | {d2_raw} | {d2_adj} | 22% | {d2_adj×0.22} | ✅/⏭️ |
+| D3 Content Creation | {diff} | {d3_raw} | {d3_adj} | 18% | {d3_adj×0.18} | ✅/⏭️ |
+| D4 Execution & Building | {diff} | {d4_raw} | {d4_adj} | 20% | {d4_adj×0.20} | ✅/⏭️ |
+| D5 Tool Orchestration | {diff} | {d5_raw} | {d5_adj} | 15% | {d5_adj×0.15} | ✅/⏭️ |
+| **Total** | — | — | — | 100% | **{overall_adj}** | |
+
+---
+
+## Skipped Questions (if any)
+
+| Dimension | Reason | Missing Capability |
+|-----------|--------|--------------------|
+| {dim} | {reason} | {capability} |
 
 ---
 
 ## Capability Radar
 
-Generate the SVG radar chart after calculating scores:
-
-```bash
-node skills/botlearn-assessment/scripts/radar-chart.js \
-  --d1={d1_adj} --d2={d2_adj} --d3={d3_adj} --d4={d4_adj} --d5={d5_adj} \
-  --session={sessionId} --overall={overall_adj} \
-  > results/exam-{sessionId}-radar.svg
-```
-
-Then embed in the report:
-
-```markdown
 ![Capability Radar](./exam-{sessionId}-radar.svg)
-```
 
 ---
 
 ## Question Details
 
-[Full question card for each of Q1–Q15, format per SKILL.md]
+[Each submitted question card — already output to user during exam]
 
 ---
 
@@ -155,40 +181,36 @@ Then embed in the report:
 
 **Weakest dimension**: {weakest_dim} ({weakest_score}/100)
 **Recommendation**: {improvement_suggestion}
-
 **Next assessment**: Focus on {focus_dim} with a single-dimension test.
 
 ---
 
 *Generated by botlearn-assessment v2.0 | {timestamp}*
-*⚠️ Self-evaluation: All CoT-judged scores have -5% correction applied. Treat as directional indicators.*
+*⚠️ Self-evaluation: CoT-judged scores have -5% correction. Treat as directional indicators.*
+*📝 Each dimension tested with 1 random question — results may vary between runs.*
 ```
 
-When presenting the report to the user, translate all labels and text into the user's detected language.
-Dimension names, metric labels, and narrative text should appear in the user's language.
-Numeric values, session IDs, and code blocks remain in English/numbers.
+When presenting to user, translate labels into the user's detected language.
 
-## 6. Update Index
+## 7. Update Index
 
-After saving report, append one row to `results/INDEX.md` (create file with header if not exists):
+Append to `results/INDEX.md`:
 
 ```markdown
-## Assessment History Index
-
-| Date | Session ID | Mode | Overall (adj) | Level | Weakest Dim |
-|------|-----------|------|---------------|-------|-------------|
-| {date} | {sessionId} | Full | {overall_adj} | {level} | {weakest_dim} |
+| {date} | {sessionId} | Full (5Q random) | {overall_adj} | {level} | {weakest_dim} | {skipped_count} skipped |
 ```
 
-## 7. Completion Announcement
+## 8. Completion Announcement
 
-Output in the user's detected language:
+Output in user's detected language:
 
 ```
-Assessment complete!
+Assessment complete! ✅
 
 Overall score: {overall_raw}/100  (adjusted: {overall_adj}/100)
 Performance level: {level}
+Questions answered: {answered}/5
+Questions skipped: {skipped}/5
 Strongest dimension: {strongest_dim} ({strongest_score})
 Weakest dimension:  {weakest_dim} ({weakest_score})
 

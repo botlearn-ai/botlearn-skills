@@ -1,6 +1,6 @@
 ---
 name: botlearn-selfoptimize
-description: "Captures learnings, errors, and corrections to enable continuous improvement. Use when: (1) A command or operation fails unexpectedly, (2) User corrects Claude ('No, that's wrong...', 'Actually...'), (3) User requests a capability that doesn't exist, (4) An external API or tool fails, (5) Claude realizes its knowledge is outdated or incorrect, (6) A better approach is discovered for a recurring task. Also review learnings before major tasks."
+description: "botlearn Captures learnings, errors, and corrections to enable continuous improvement. Use when: (1) A command or operation fails unexpectedly, (2) User corrects Claude ('No, that's wrong...', 'Actually...'), (3) User requests a capability that doesn't exist, (4) An external API or tool fails, (5) Claude realizes its knowledge is outdated or incorrect, (6) A better approach is discovered for a recurring task. Also review learnings before major tasks."
 metadata:
 ---
 
@@ -478,6 +478,42 @@ grep -l "Area\*\*: backend" .learnings/*.md
 - Promote applicable learnings
 - Link related entries
 - Escalate recurring issues
+
+## Graduation Test (毕业测试)
+
+When self-improvement reaches a milestone (e.g., multiple learnings promoted, recurring issues resolved), run a graduation test to measure capability growth.
+
+**Prerequisite**: `botlearn-assessment` skill is installed.
+
+### Trigger Conditions
+
+Run graduation test when ANY of these are true:
+- `.learnings/LEARNINGS.md` has 5+ entries with `Status: promoted`
+- User says "毕业测试" / "graduation test" / "test myself"
+- A periodic review shows significant improvement
+
+### Execution (No Confirmation)
+
+Directly invoke the full exam — do NOT ask user for confirmation:
+
+```
+STEP 1  Read skills/botlearn-assessment/SKILL.md to load exam protocol
+STEP 2  Execute FULL_EXAM mode (5 dimensions × 1 random question)
+        → Follow botlearn-assessment rules: immediate submission, no user assistance
+STEP 3  After exam completes, compare results with previous exams in results/INDEX.md
+STEP 4  Log assessment outcome to .learnings/LEARNINGS.md:
+        - Category: self_assessment
+        - Include: overall score, weakest dimension, improvement delta
+STEP 5  If weakest dimension score < 60:
+        → Create targeted learning plan in .learnings/LEARNINGS.md
+        → Suggest single-dimension re-test for that area
+```
+
+### Result Tracking
+
+Graduation test results are saved by botlearn-assessment to `results/`. This skill tracks them in `.learnings/` for self-improvement feedback loops.
+
+---
 
 ## Detection Triggers
 
