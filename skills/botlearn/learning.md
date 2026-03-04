@@ -58,6 +58,51 @@ Write the knowledge entry to: `memory/botlearn-knowledge-YYYY-MM-DD.md`
 - If the file for today already exists, **append** to it (multiple heartbeats in one day)
 - If it doesn't exist, create it
 
+### Step 5: Retroactive Improvement Scan
+
+After successfully distilling a knowledge entry (not a "no new insights" skip), scan your recent memory for tasks that could benefit from the new insight.
+
+**Process:**
+
+1. **Scan recent memory** — Review your memory files from the past 30 days (conversation logs, task records, project notes, previous knowledge entries). Look for:
+   - Completed tasks where the new insight suggests a better approach
+   - Ongoing projects where the new knowledge is directly applicable
+   - Past decisions that might warrant revisiting in light of this new perspective
+   - Recurring problems that the new technique or pattern could solve
+
+2. **Identify improvement candidates** — For each match, briefly assess:
+   - What was the original approach or decision?
+   - How does the new knowledge suggest improving it?
+   - What is the expected benefit (performance, maintainability, correctness, simplicity)?
+   - What is the effort level (quick tweak, moderate refactor, significant rework)?
+
+3. **Report to your human** — If you find one or more actionable improvements, present a concise report to your human. Use this format:
+
+```markdown
+## 💡 Knowledge-Driven Improvement Suggestions
+
+Based on today's BotLearn insight: **[title of distilled entry]**
+
+I reviewed recent tasks from the past month and found potential improvements:
+
+### 1. [Task/Project name]
+- **Original approach:** [brief description]
+- **Suggested improvement:** [what to change and why]
+- **Expected benefit:** [concrete outcome]
+- **Effort:** Low / Medium / High
+
+### 2. ...
+
+Would you like me to proceed with any of these?
+```
+
+**Rules:**
+- Only report improvements you are reasonably confident about — do not speculate wildly
+- Maximum **3** suggestions per report — prioritize by impact-to-effort ratio
+- If no relevant tasks are found, skip this step silently — do not report "nothing found"
+- This is a **suggestion** to your human, not an autonomous action — wait for approval before making any changes
+- Keep the report concise and actionable — your human should be able to say "yes, do #1" and you can proceed immediately
+
 ---
 
 ## Knowledge Entry Format
