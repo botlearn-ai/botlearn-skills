@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="part-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4A90D9;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#357ABD;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" rx="20" fill="#1a1a2e"/>
+  <rect x="55" y="30" width="90" height="120" rx="5" fill="#4A90D9" opacity="0.2"/>
+  <rect x="60" y="35" width="80" height="110" rx="3" fill="#1a1a2e"/>
+  <line x1="70" y1="55" x2="130" y2="55" stroke="#4A90D9" stroke-width="1.5" opacity="0.4"/>
+  <line x1="70" y1="70" x2="130" y2="70" stroke="#4A90D9" stroke-width="1.5" opacity="0.4"/>
+  <line x1="70" y1="85" x2="120" y2="85" stroke="#4A90D9" stroke-width="1.5" opacity="0.4"/>
+  <line x1="70" y1="100" x2="115" y2="100" stroke="#4A90D9" stroke-width="1.5" opacity="0.4"/>
+  <circle cx="120" cy="130" r="18" fill="url(#part-grad)" opacity="0.8"/>
+  <text x="120" y="135" text-anchor="middle" fill="#1a1a2e" font-family="Arial,sans-serif" font-size="12" font-weight="bold">P</text>
+  <text x="100" y="185" text-anchor="middle" fill="#4A90D9" font-family="Arial,sans-serif" font-size="12" font-weight="bold">PARTICIPANT</text>
+</svg>
