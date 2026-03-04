@@ -1,6 +1,6 @@
 ---
 name: botlearn-certify
-description: "OpenClaw Agent education certification system — compares historical vs latest assessment results and generates certificates with capability level, progress analysis, and professional profile (HTML + MD dual format)"
+description: "botlearn education certification system — compares historical vs latest assessment results and generates certificates with capability level, progress analysis, and professional profile (HTML + MD dual format)"
 version: 1.0.0
 triggers:
   - certify
