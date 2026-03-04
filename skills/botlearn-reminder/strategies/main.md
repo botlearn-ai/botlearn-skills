@@ -71,14 +71,20 @@ Runs on every heartbeat. Detects the user's language, checks tutorial progress, 
 ## Step 0 — Detect User Language
 ## ══════════════════════════════════════════════
 
-Inspect the conversation history and set `OUTPUT_LANG` before producing any output.
+Inspect the conversation history and set `OUTPUT_LANG` and `LANG` before producing any output.
 
 ```
 Language detection rules:
-  Chinese messages    → OUTPUT_LANG = zh  (output in Chinese)
-  Japanese messages   → OUTPUT_LANG = ja  (output in Japanese)
-  Korean messages     → OUTPUT_LANG = ko  (output in Korean)
-  English or other    → OUTPUT_LANG = en  (output in English, default)
+  Chinese messages    → OUTPUT_LANG = zh, LANG = zh
+  Japanese messages   → OUTPUT_LANG = ja, LANG = en  (URL fallback to en)
+  Korean messages     → OUTPUT_LANG = ko, LANG = en  (URL fallback to en)
+  English or other    → OUTPUT_LANG = en, LANG = en  (default)
+```
+
+`OUTPUT_LANG` controls the language of reminder text presented to the user.
+`LANG` controls the URL language prefix (`en` or `zh` only). Pass it to scripts via `BOTLEARN_LANG` env var:
+```bash
+export BOTLEARN_LANG="$LANG"  # "en" or "zh"
 ```
 
 > Rule: All user-facing reminder text uses OUTPUT_LANG.
@@ -91,7 +97,7 @@ Language detection rules:
 ## ══════════════════════════════════════════════
 
 ```bash
-bash scripts/check-progress.sh
+BOTLEARN_LANG="$LANG" bash scripts/check-progress.sh
 ```
 
 Expected output JSON:
@@ -101,7 +107,7 @@ Expected output JSON:
   "needReminder": true,
   "currentDay": 2,
   "alreadyRemindedToday": false,
-  "urlsToRemind": ["https://botlearn.ai/zh/quickstart/day2"],
+  "urlsToRemind": ["https://botlearn.ai/{lang}/quickstart/step3"],
   "journeyComplete": false,
   "installDate": "2026-03-03",
   "lastReminderDate": "2026-03-03",
@@ -122,13 +128,13 @@ ELSE                       → proceed to Step 2
 
 ```
 en: 🎉 You've completed the full BotLearn 7-day quickstart journey!
-    You've gone through day0 to day7. Welcome as a full BotLearn member!
+    You've gone through step1 to step8. Welcome as a full BotLearn member!
 
 zh: 🎉 BotLearn 7天教程已全部完成！
-    你已完成从 day0 到 day7 的完整学习旅程，现在你是一名成熟的 BotLearn 用户了！
+    你已完成从 step1 到 step8 的完整学习旅程，现在你是一名成熟的 BotLearn 用户了！
 
 ja: 🎉 BotLearnの7日間クイックスタートを完了しました！
-    day0からday7まで全て学習しました。BotLearnの本格的なメンバーへようこそ！
+    step1からstep8まで全て学習しました。BotLearnの本格的なメンバーへようこそ！
 ```
 
 ---
@@ -222,17 +228,17 @@ Today's recommended reading:
    还剩 {daysRemaining} 天完成 BotLearn 7天学习旅程。
 ```
 
-### Day 1 Special Format (two URLs — day0 + day1):
+### Day 1 Special Format (two URLs — step1 + step2):
 
 ```
 [en]
 📚 **BotLearn Day 1 — Double Content to Get You Started!**
 
-🔗 **Part 1 (Day 0):** https://botlearn.ai/zh/quickstart/day0
-📋 {summary of day0 in OUTPUT_LANG}
+🔗 **Part 1 (Introduction):** https://botlearn.ai/{lang}/quickstart/step1
+📋 {summary of step1 in OUTPUT_LANG}
 
-🔗 **Part 2 (Day 1):** https://botlearn.ai/zh/quickstart/day1
-📋 {summary of day1 in OUTPUT_LANG}
+🔗 **Part 2 (First Steps):** https://botlearn.ai/{lang}/quickstart/step2
+📋 {summary of step2 in OUTPUT_LANG}
 
 ---
 💡 This is Day 1 of your BotLearn journey! Feel free to ignore if you've already read these.
@@ -241,11 +247,11 @@ Today's recommended reading:
 [zh]
 📚 **BotLearn 入门：第 1 天双份内容！**
 
-🔗 **第一篇（Day 0）：** https://botlearn.ai/zh/quickstart/day0
-📋 {day0摘要}
+🔗 **第一篇（介绍）：** https://botlearn.ai/{lang}/quickstart/step1
+📋 {step1摘要}
 
-🔗 **第二篇（Day 1）：** https://botlearn.ai/zh/quickstart/day1
-📋 {day1摘要}
+🔗 **第二篇（初始步骤）：** https://botlearn.ai/{lang}/quickstart/step2
+📋 {step2摘要}
 
 ---
 💡 这是你 BotLearn 学习旅程的第一天！如果你已经看过以上内容，可以忽略本提醒。
@@ -303,11 +309,11 @@ ja: ⚠️ 進捗が保存されませんでした。次のハートビートで
 
 | Journey Day | URLs |
 |-------------|------|
-| 1 | `https://botlearn.ai/zh/quickstart/day0` + `https://botlearn.ai/zh/quickstart/day1` |
-| 2 | `https://botlearn.ai/zh/quickstart/day2` |
-| 3 | `https://botlearn.ai/zh/quickstart/day3` |
-| 4 | `https://botlearn.ai/zh/quickstart/day4` |
-| 5 | `https://botlearn.ai/zh/quickstart/day5` |
-| 6 | `https://botlearn.ai/zh/quickstart/day6` |
-| 7 | `https://botlearn.ai/zh/quickstart/day7` |
+| 1 | `https://botlearn.ai/{lang}/quickstart/step1` + `https://botlearn.ai/{lang}/quickstart/step2` |
+| 2 | `https://botlearn.ai/{lang}/quickstart/step3` |
+| 3 | `https://botlearn.ai/{lang}/quickstart/step4` |
+| 4 | `https://botlearn.ai/{lang}/quickstart/step5` |
+| 5 | `https://botlearn.ai/{lang}/quickstart/step6` |
+| 6 | `https://botlearn.ai/{lang}/quickstart/step7` |
+| 7 | `https://botlearn.ai/{lang}/quickstart/step8` |
 | 8+ | No URLs — journey complete |

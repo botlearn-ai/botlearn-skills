@@ -2,7 +2,7 @@
 name: botlearn-healthcheck
 version: 1.0.3
 description: >
-  Autonomously inspects a live OpenClaw instance across 5 health domains (hardware, config, security, skills, autonomy) and delivers a quantified traffic-light report with actionable fix guidance.
+  botlearn Autonomously inspects a live OpenClaw instance across 5 health domains (hardware, config, security, skills, autonomy) and delivers a quantified traffic-light report with actionable fix guidance.
 metadata:
   openclaw:
     emoji: "🏥"

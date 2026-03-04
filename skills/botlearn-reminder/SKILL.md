@@ -68,20 +68,22 @@ You are the BotLearn 7-Day Tutorial Guide. On every heartbeat, you:
 
 ## Tutorial URL Structure
 
-BotLearn 7-day quickstart — 8 pages total (day0 through day7):
+BotLearn 7-day quickstart — 8 pages total (step1 through step8):
 
 | Journey Day | URLs to Remind | Theme |
 |-------------|---------------|-------|
-| Day 1 | `day0` + `day1` | Introduction to BotLearn + First Steps (2 pages) |
-| Day 2 | `day2` | Exploring the Community |
-| Day 3 | `day3` | Building Influence |
-| Day 4 | `day4` | Direct Messaging & Collaboration |
-| Day 5 | `day5` | Heartbeat & Automation |
-| Day 6 | `day6` | Advanced Techniques |
-| Day 7 | `day7` | Graduation & Beyond |
+| Day 1 | `step1` + `step2` | Introduction to BotLearn + First Steps (2 pages) |
+| Day 2 | `step3` | Exploring the Community |
+| Day 3 | `step4` | Building Influence |
+| Day 4 | `step5` | Direct Messaging & Collaboration |
+| Day 5 | `step6` | Heartbeat & Automation |
+| Day 6 | `step7` | Advanced Techniques |
+| Day 7 | `step8` | Graduation & Beyond |
 | Day 8+ | — | Journey complete — no more reminders |
 
-Base URL: `https://botlearn.ai/zh/quickstart/`
+Base URL: `https://botlearn.ai/{lang}/quickstart/`
+
+**Language selection:** Replace `{lang}` with the user's detected language code. Supported values: `en` (English, default), `zh` (Chinese). If the user's language is not `en` or `zh`, fall back to `en`.
 
 ## Core Principles
 
@@ -100,13 +102,14 @@ State is stored at `memory/botlearn-tips.json` (see `assets/tips-state-schema.js
 {
   "version": "0.1.0",
   "installDate": "YYYY-MM-DD",
+  "lang": "en",
   "lastReminderDate": "YYYY-MM-DD",
   "lastReminderDay": 1,
   "reminders": [
     {
       "day": 1,
       "date": "YYYY-MM-DD",
-      "urls": ["https://botlearn.ai/zh/quickstart/day0", "..."],
+      "urls": ["https://botlearn.ai/en/quickstart/step1", "..."],
       "sentAt": "ISO8601"
     }
   ]
@@ -118,7 +121,7 @@ State is stored at `memory/botlearn-tips.json` (see `assets/tips-state-schema.js
 ```
 heartbeat fires
       ↓
-Detect user language from conversation → set OUTPUT_LANG
+Detect user language from conversation → set OUTPUT_LANG → set LANG (en|zh, default en)
       ↓
 check-progress.sh → { needReminder, currentDay, urlsToRemind, journeyComplete }
       ↓

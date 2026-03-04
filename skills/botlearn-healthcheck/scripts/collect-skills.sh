@@ -127,7 +127,7 @@ can_install="false"
 if command -v clawhub &>/dev/null; then
   clawhub_available="true"
   # Check registry connectivity: try clawhub ping or a lightweight info command
-  if clawhub ping 2>/dev/null || clawhub info --json 2>/dev/null | grep -q '"registry"'; then
+  if clawhub ping 2>/dev/null || { clawhub info --json 2>/dev/null | grep -q '"registry"'; }; then
     registry_reachable="true"
     can_install="true"
   elif curl -s --connect-timeout 5 --max-time 8 "https://registry.clawhub.io" &>/dev/null; then

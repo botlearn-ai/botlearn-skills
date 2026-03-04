@@ -73,8 +73,8 @@
           "day": 1,
           "date": "2026-03-03",
           "urls": [
-            "https://botlearn.ai/zh/quickstart/day0",
-            "https://botlearn.ai/zh/quickstart/day1"
+            "https://botlearn.ai/en/quickstart/step1",
+            "https://botlearn.ai/en/quickstart/step2"
           ],
           "sentAt": "2026-03-03T09:00:00Z"
         },
@@ -82,7 +82,7 @@
           "day": 2,
           "date": "2026-03-04",
           "urls": [
-            "https://botlearn.ai/zh/quickstart/day2"
+            "https://botlearn.ai/en/quickstart/step3"
           ],
           "sentAt": "2026-03-04T09:00:00Z"
         }

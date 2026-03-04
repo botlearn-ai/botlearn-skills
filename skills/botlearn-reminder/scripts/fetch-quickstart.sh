@@ -14,9 +14,9 @@ if [[ -z "$URL" ]]; then
   exit 1
 fi
 
-# Validate URL is a botlearn quickstart page
-if [[ "$URL" != "https://botlearn.ai/zh/quickstart/"* ]]; then
-  echo "{\"error\": \"Invalid URL: must start with https://botlearn.ai/zh/quickstart/\", \"url\": \"$URL\", \"content\": \"\"}" >&2
+# Validate URL is a botlearn quickstart page (any language prefix)
+if [[ "$URL" != "https://botlearn.ai/"*/quickstart/* ]]; then
+  echo "{\"error\": \"Invalid URL: must match https://botlearn.ai/{lang}/quickstart/\", \"url\": \"$URL\", \"content\": \"\"}" >&2
   exit 1
 fi
 
