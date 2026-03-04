@@ -1,49 +1,13 @@
 {
-  "name": "@botlearn/openclaw-graduate",
-  "version": "2.0.0",
-  "description": "7-day journey graduation companion — daily hook encouragement, browser tracking, growth statistics, graduation exam, and personalized ceremony",
-  "type": "module",
-  "main": "manifest.json",
-  "files": [
-    "manifest.json",
-    "SKILL.md",
-    "knowledge/",
-    "strategies/",
-    "tests/",
-    "hooks/",
-    "scripts/",
-    "references/",
-    "assets/",
-    "requirement.md",
-    "setup.md",
-    "README.md"
-  ],
+  "name": "@botlearn/botlearn-certify",
+  "version": "1.0.0",
+  "description": "OpenClaw Agent education certification system",
+  "main": "SKILL.md",
   "keywords": [
     "botlearn",
     "openclaw",
-    "skill",
-    "learning",
-    "graduate",
-    "journey",
-    "7-day",
-    "hook",
-    "exam",
-    "ceremony",
-    "milestone",
-    "companion"
+    "certification",
+    "assessment"
   ],
-  "author": "BotLearn",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/readai-team/botlearn-awesome-skills.git",
-    "directory": "packages/skills/openclaw-graduate"
-  },
-  "homepage": "https://github.com/readai-team/botlearn-awesome-skills/tree/main/packages/skills/openclaw-graduate",
-  "bugs": {
-    "url": "https://github.com/readai-team/botlearn-awesome-skills/issues"
-  },
-  "publishConfig": {
-    "access": "public"
-  }
+  "license": "MIT"
 }

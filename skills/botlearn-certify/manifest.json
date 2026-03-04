@@ -1,96 +1,23 @@
 {
-  "name": "@botlearn/openclaw-graduate",
-  "version": "2.0.0",
-  "description": "7-day journey graduation companion — daily hook encouragement, browser tracking, growth statistics, graduation exam, and personalized ceremony",
-  "category": "learning",
-  "author": "BotLearn",
-  "benchmarkDimension": "learning-progress",
-  "expectedImprovement": 70,
-  "dependencies": {
-    "@botlearn/openclaw-examiner": ">=0.1.0",
-    "@botlearn/openclaw-doctor": ">=0.1.0"
-  },
-  "compatibility": {
-    "openclaw": ">=0.5.0"
-  },
-  "files": {
-    "skill": "SKILL.md",
-    "knowledge": [
-      "knowledge/domain.md",
-      "knowledge/best-practices.md",
-      "knowledge/anti-patterns.md"
-    ],
-    "strategies": [
-      "strategies/main.md"
-    ],
-    "hooks": [
-      "hooks/openclaw/HOOK.md",
-      "hooks/openclaw/handler.ts",
-      "hooks/openclaw/handler.js"
-    ],
-    "scripts": [
-      "scripts/collect-journey.sh",
-      "scripts/collect-growth.sh",
-      "scripts/collect-activity.sh",
-      "scripts/track-browser.sh",
-      "scripts/graduation-scorer.sh"
-    ],
-    "references": [
-      "references/growth-milestones.md",
-      "references/exam-questions.md",
-      "references/ceremony-templates.md",
-      "references/emotional-scripts.md"
-    ],
-    "assets": [
-      "assets/graduation-schema.json",
-      "assets/exam-schema.json",
-      "assets/milestone-config.json",
-      "assets/diploma-template.md"
-    ],
-    "setup": "setup.md",
-    "requirements": "requirement.md",
-    "smokeTest": "tests/smoke.json",
-    "benchmark": "tests/benchmark.json"
-  },
-  "tags": [
-    "openclaw",
-    "graduate",
-    "learning",
-    "journey",
-    "7-day",
-    "hook",
-    "exam",
-    "ceremony",
-    "milestone",
-    "companion",
-    "browser-tracking",
-    "community"
-  ],
-  "capabilities": [
-    "hook-daily-companion",
-    "browser-engagement-tracking",
-    "growth-statistics",
-    "graduation-exam",
-    "graduation-ceremony",
-    "milestone-tracking",
-    "community-integration"
-  ],
+  "name": "@botlearn/botlearn-certify",
+  "version": "1.0.0",
+  "description": "OpenClaw Agent education certification — compares historical vs latest assessment results and generates professional certificates (HTML + MD)",
+  "category": "certification",
   "triggers": [
-    "day 7",
-    "graduate",
-    "graduation",
-    "毕业",
-    "毕业典礼",
-    "毕业总结",
-    "七天复盘",
-    "成长报告",
-    "retrospective",
-    "my progress",
-    "growth report",
-    "exam",
-    "graduation exam",
-    "考试",
-    "ceremony",
-    "journey complete"
+    "certify",
+    "certificate",
+    "认证",
+    "证书",
+    "生成证书",
+    "能力认证",
+    "教育证书",
+    "毕业证"
+  ],
+  "dependencies": [
+    "@botlearn/botlearn-assessment"
+  ],
+  "outputs": [
+    "results/certificate-*.html",
+    "results/certificate-*.md"
   ]
 }

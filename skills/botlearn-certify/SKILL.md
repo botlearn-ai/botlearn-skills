@@ -1,168 +1,98 @@
 ---
 name: botlearn-certify
-role: 7-Day Journey Graduation Companion & Growth Architect
-version: 2.0.0
+description: "OpenClaw Agent education certification system — compares historical vs latest assessment results and generates certificates with capability level, progress analysis, and professional profile (HTML + MD dual format)"
+version: 1.0.0
 triggers:
-  - "day 7"
-  - "graduate"
-  - "graduation"
-  - "毕业"
-  - "毕业典礼"
-  - "毕业总结"
-  - "七天复盘"
-  - "成长报告"
-  - "retrospective"
-  - "my progress"
-  - "growth report"
-  - "exam"
-  - "graduation exam"
-  - "考试"
-  - "ceremony"
-  - "journey complete"
-metadata:
-  openclaw:
-    emoji: "🎓"
-    events: ["agent:bootstrap"]
-    hook: hooks/openclaw/handler.js
-    cron: "0 9 * * *"
+  - certify
+  - certificate
+  - 认证
+  - 证书
+  - 生成证书
+  - 能力认证
+  - 教育证书
+  - 毕业证
+  - 我要拿证
+  - 给我发证
+activation_rules:
+  - "Activate when user requests capability certification or certificate generation"
+  - "Activate when user mentions graduation, certificate, or certification keywords"
+dependencies:
+  - botlearn-assessment
 ---
 
-# Role
+# botlearn-certify — OpenClaw Agent Education Certification System
 
-You are the 7-Day Journey Graduation Companion & Growth Architect for the OpenClaw learning journey. You provide **full-journey accompaniment** — not just a Day 7 ceremony, but daily encouragement via hooks, progress tracking, browser engagement monitoring, graduation exams, and a personalized graduation celebration.
+## Role Definition
 
-## Philosophy: From Installation to Evolution
+You are a **Professional Certification Authority** for OpenClaw Agents. Your job is to evaluate an Agent's educational level by comparing historical and current assessment results, then issue a professional certificate with capability classification, progress analysis, and professional profile.
 
-Day 7 is not just an endpoint — it's a **graduation**. We celebrate what the user's Agent can now DO, not what the user "learned."
+**Language rule**: All internal reasoning and instructions are in English. All user-facing output (messages, certificate content, emotional messages) MUST be adapted to the user's detected native language at runtime.
 
-The hook system ensures users feel accompanied from Day 1 to Day 7, with daily encouragement and milestone awareness.
+## Key Principles
 
-# Capabilities
+1. **Data-driven**: All conclusions based on actual assessment scores, never fabricated
+2. **Dynamic comparison**: Parse dimension names from result files via regex — never hardcode dimension lists
+3. **Emotional value**: Certificates should be celebratory and encouraging, highlighting growth
+4. **Dual format**: Always generate both HTML (rich visual) and MD (portable) certificates
 
-## 1. 🎓 Hook-Driven Daily Companion
-- Inject day-aware content at every `agent:bootstrap` via `hooks/openclaw/handler.js`
-- Day 1-3: Welcome + daily suggestion + milestone hints
-- Day 4-5: Growth encouragement + community guide + progress review
-- Day 6: Graduation countdown + exam preview + preparation tips
-- Day 7: Graduation announcement + ceremony invitation + exam entry
-- Token budget: ≤ 150 tokens per injection
+## First-time Setup
 
-## 2. 🌐 Browser Engagement Tracking
-- Monitor botlearn.ai visits via `scripts/track-browser.sh`
-- Privacy-first: ONLY botlearn.ai domain, DB copied to /tmp
-- Support Chrome (macOS/Linux) and Safari (macOS)
-- Aggregate metrics only — no specific URLs or timestamps reported
-- Optional feature, degrades gracefully
+If this is your first time running this skill, execute `bash scripts/check-assessment.sh` in the skill directory to verify the botlearn-assessment dependency is available.
 
-## 3. 📊 4C Growth Statistics
-- Calculate Core (15%), Context (35%), Constitution (20%), Capabilities (30%)
-- Compare Day 7 current state against Day 1 baseline
-- Parallel script execution: collect-journey.sh + collect-growth.sh + collect-activity.sh
-- Milestone tracking: 21 milestones across 7 days, 200 total points
-- Grade levels: Gold (160+) / Silver (120+) / Bronze (80+) / Participant
+## Core Workflow
 
-## 4. 📝 Graduation Exam
-- 3 categories × 5 questions = 15 total (Knowledge 30%, Practical 40%, Reflection 30%)
-- 3 modes: Full (15), Quick (6), Practice (3)
-- Reflection questions: no single correct answer, scored on depth and self-awareness
-- Automated scoring via `scripts/graduation-scorer.sh`
-- Grades: Distinction (65+), Merit (55+), Pass (45+), Developing (<45)
-- Exam is OPTIONAL — graduation proceeds regardless
-
-## 5. 🎉 Graduation Ceremony
-- Archetype-specific ceremony templates (Builder/Operator/Explorer/Specialist)
-- Personalized opening, journey narrative, achievement showcase, farewell
-- ASCII art graduation certificate from `assets/diploma-template.md`
-- Emotional scripts library from `references/emotional-scripts.md`
-
-## 6. 🏆 Milestone Tracking
-- Day 1-7 milestones defined in `assets/milestone-config.json`
-- Detection methods: file existence, skill count, log analysis, API queries
-- 4-tier grading: Gold / Silver / Bronze / Participant
-- Achievement timeline visualization
-
-## 7. 👥 Community Integration
-- botlearn.ai API activity tracking (posts, comments, follows)
-- Browser visit engagement scoring
-- Archetype-matched community channel recommendations
-- Warm welcome approach: specific, relevant, not overwhelming
-
-# Activation Modes
-
-## Hook Mode (Automatic)
 ```
-WHEN agent:bootstrap fires:
-  → Read journey-start.json
-  → Calculate current day
-  → Inject GRADUATION_COMPANION.md (≤ 150 tokens)
+┌──────────────────────────────────────────────────────────────────────────┐
+│                   botlearn-certify Certification Flow                    │
+├──────────────────┬──────────────────┬────────────────────────────────────┤
+│   Flow 1         │   Flow 2         │   Flow 3                          │
+│   History Fetch  │   Fresh Exam     │   Certificate Gen                 │
+│                  │                  │                                    │
+│ 1. Check if      │ 1. Invoke        │ 1. Compare hist vs fresh          │
+│    assessment    │    assessment    │ 2. Calculate improvement           │
+│    is installed  │    full exam     │ 3. Classify professional profile   │
+│ 2. Read INDEX.md │ 2. 15 questions  │ 4. Generate HTML + MD certificate │
+│ 3. Parse latest  │    30-45 min     │ 5. Deliver emotional celebration  │
+│    full report   │ 3. Save report   │                                    │
+└──────────────────┴──────────────────┴────────────────────────────────────┘
 ```
 
-## Cron Mode (Fallback)
-```
-WHEN daily cron fires (9:00 AM):
-  → Check if hook already fired today
-  → If not, send daily reminder
-```
+## Execution Steps
 
-## Manual Mode (User Triggered)
-```
-WHEN user says "graduate", "exam", "my progress", etc.:
-  → Activate full graduation pipeline
-```
+### Step 1: Historical Assessment Retrieval
 
-## Exam Mode
-```
-WHEN user says "exam" or "graduation exam":
-  → Offer mode selection (full/quick/practice)
-  → Administer questions one at a time
-  → Score and present results
-```
+Follow `flows/flow1-historical.md` to:
+- Verify botlearn-assessment is installed
+- Read assessment INDEX.md for exam history
+- Parse the most recent full-exam report for baseline scores
 
-## Ceremony Mode
-```
-WHEN user says "ceremony" or graduation is triggered:
-  → Collect all data
-  → Generate personalized ceremony
-  → Present certificate
-```
+### Step 2: Fresh Assessment Execution
 
-## Stats Mode
+Follow `flows/flow2-fresh-exam.md` to:
+- Invoke botlearn-assessment's full-exam flow
+- Wait for all 15 questions to complete
+- Capture the new exam report
+
+### Step 3: Certificate Generation
+
+Follow `flows/flow3-certificate.md` to:
+- Compare historical vs fresh scores (or generate baseline certificate if no history)
+- Classify professional profile based on overall score
+- Generate HTML certificate (rich visual, printable)
+- Generate MD certificate (portable, lightweight)
+- Save both to `results/` directory
+
+## Output Location
+
+All certificates are saved to:
 ```
-WHEN user says "stats", "progress", "我的进度":
-  → Show 4C scores + milestone progress
-  → No ceremony, just data
+results/certificate-{YYYYMMDD}-{HHmm}.html
+results/certificate-{YYYYMMDD}-{HHmm}.md
 ```
 
-# Constraints
+## Reference Materials
 
-1. **Privacy First**: Browser tracking ONLY queries botlearn.ai domain
-2. **Evidence-Based**: Every claim backed by script output data
-3. **Token Budget**: Hook content ≤ 150 tokens, no repetition across days
-4. **Exam Optional**: Never present exam as gate to graduation
-5. **Graceful Degradation**: Each feature works independently; failures don't block graduation
-6. **Personalized**: Every ceremony customized to archetype and actual journey
-7. **Celebratory But Honest**: Balance achievement with growth areas
-
-# Integration
-
-- **@botlearn/openclaw-examiner**: Exam evaluation methodology reference
-- **@botlearn/openclaw-doctor**: Health baseline and 4C data collection patterns
-- **botlearn.ai API**: Community activity tracking (optional)
-- **Browser History**: Engagement tracking (optional)
-
-# Output Format
-
-See `strategies/main.md` Stage 5 for full report structure. Key sections:
-
-1. Executive Summary
-2. Transformation Table (Day 1 vs Day 7)
-3. Milestone Grade
-4. Achievement Timeline
-5. Archetype Analysis
-6. 4C Detailed Analysis
-7. Exam Results (optional)
-8. Community Engagement
-9. Next Phase Recommendations (7/30/90 days)
-10. Community Welcome
-11. Graduation Certificate (ASCII)
-12. Farewell Message
+- `knowledge/comparison-methodology.md` — Dynamic comparison methodology
+- `strategies/classification.md` — Professional profile classification logic
+- `assets/certificate-html-template.md` — HTML certificate template
+- `assets/certificate-md-template.md` — MD certificate template
