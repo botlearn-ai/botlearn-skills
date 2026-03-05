@@ -10,14 +10,14 @@
 
 Run each command and capture output:
 
-| Binary | Check Command | Requirement |
-|--------|--------------|-------------|
-| `node` | `node --version` | ✅ Required — must be ≥ 18.0.0 |
-| `bash` | `bash --version` | ✅ Required |
-| `curl` | `curl --version` | ✅ Required |
+| Binary | Check Command      | Requirement |
+|--------|--------------------|-------------|
+| `node` | `node --version`   | ✅ Required — must be ≥ 18.0.0 |
+| `bash` | `bash --version`   | ✅ Required |
+| `curl` | `bash --version`   | ✅ Required |
 | `openclaw` | `openclaw --version` | ✅ At least one of these two |
-| `clawhub` | `clawhub --version` | ✅ At least one of these two |
-| `jq` | `jq --version` | ⚠️ Optional — enhances JSON parsing speed |
+| `clawhub` | `clawhub -V`       | ✅ At least one of these two |
+| `jq` | `jq --version`     | ⚠️ Optional — enhances JSON parsing speed |
 
 **Failure conditions — halt immediately and report:**
 - `node` missing or version < 18.0.0
@@ -56,38 +56,22 @@ If not found: proceed with warning — some data sources will return null.
 
 Check presence of each subdirectory under `$OPENCLAW_HOME`:
 
-| Directory | Purpose | Required |
-|-----------|---------|---------|
-| `config/` | openclaw.json and channel configs | ✅ Required |
-| `logs/` | gateway.err.log and other logs | ✅ Required |
-| `skills/` | Installed skill packages | ✅ Required |
-| `memory/` | Agent memory files | ⚠️ Expected |
-| `workspace/` | HEARTBEAT.md and active task files | ⚠️ Expected |
+| Directory | Purpose                             | Required |
+|-----------|-------------------------------------|---------|
+| `agents/` | openclaw agent config               | ✅ Required |
+| `logs/` | gateway.err.log and other logs      | ✅ Required |
+| `memory/` | Agent memory files                  | ⚠️ Expected |
+| `workspace/` | HEARTBEAT.md and active task files  | ⚠️ Expected |
 | `cron/` | Scheduled task definitions (*.json) | ⚠️ Expected |
-| `identity/` | Authenticated device credentials | ⚠️ Expected |
+| `completions/` | openclaw bash tool                  | ⚠️ Expected |
+| `identity/` | Authenticated device credentials    | ⚠️ Expected |
 
 Missing ⚠️ directories: note as findings in Domain 5 (Autonomous Intelligence) — do not abort.
 Missing ✅ directories: include as ❌ finding in Domain 2 (Configuration Health).
 
 ---
 
-## Step 4 — Environment Variables Audit
-
-Check these variables and note their effective values:
-
-| Variable | Default | Notes |
-|----------|---------|-------|
-| `OPENCLAW_HOME` | `$HOME/.openclaw` | Override of base directory |
-| `OPENCLAW_CONFIG_PATH` | `$OPENCLAW_HOME/openclaw.json` | If set, must point to valid file |
-| `OPENCLAW_STATE_DIR` | `$OPENCLAW_HOME` | Alternate state directory |
-| `OPENCLAW_LOG_DIR` | `$OPENCLAW_HOME/logs` | Log output path |
-| `OPENCLAW_SKILLS_DIR` | `$OPENCLAW_HOME/skills` | Installed skills path |
-
-**Conflict check:** If `OPENCLAW_CONFIG_PATH` is set but points outside `OPENCLAW_HOME`, flag as ⚠️.
-
----
-
-## Step 5 — Readiness Confirmation
+## Step 4 — Readiness Confirmation
 
 After all checks complete, output a readiness confirmation to the user in REPORT_LANG.
 The message must convey: environment verified, OpenClaw home path, Node.js version,

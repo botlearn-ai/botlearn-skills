@@ -4,49 +4,129 @@
 set -euo pipefail
 
 OPENCLAW_HOME="${OPENCLAW_HOME:-$HOME/.openclaw}"
-SKILLS_DIR="${OPENCLAW_SKILLS_DIR:-$OPENCLAW_HOME/skills}"
 
-# ─── 1. Installed @botlearn skills ───────────────────────────────────────────
-skills_dir_exists="false"
-installed_count=0
-skill_list="[]"
+# ─── 1. Discover all skill directories ───────────────────────────────────────
+# Search multiple known locations for installed skills
+SKILL_SEARCH_DIRS=(
+  "${OPENCLAW_SKILLS_DIR:-$OPENCLAW_HOME/skills}"
+  "$OPENCLAW_HOME/workspace/skills"
+  "$OPENCLAW_HOME/agents/main/skills"
+)
+
+# Collect unique skill dirs that exist
+found_skill_dirs=""
+for search_dir in "${SKILL_SEARCH_DIRS[@]}"; do
+  [[ -d "$search_dir" ]] && found_skill_dirs="$found_skill_dirs $search_dir"
+done
+found_skill_dirs=$(echo "$found_skill_dirs" | xargs)
+
+# Scan all skill directories using Node for reliable JSON output
+_tmpjs_skills=$(mktemp /tmp/collect-skills-XXXXXX.js)
+trap 'rm -f "$_tmpjs_skills"' EXIT
+cat > "$_tmpjs_skills" <<'SCANSCRIPT'
+const fs = require("fs");
+const path = require("path");
+
+const searchDirs = (process.env.SKILL_SEARCH_DIRS || "").split(" ").filter(Boolean);
+const seen = new Set();
+const skills = [];
+const sources = [];
+
+for (const dir of searchDirs) {
+  if (!fs.existsSync(dir)) continue;
+  sources.push(dir.replace(process.env.HOME, "~"));
+
+  // Check for skills-lock.json (openclaw workspace format)
+  const lockPath = path.join(dir, "skills-lock.json");
+  let lockData = {};
+  try { lockData = JSON.parse(fs.readFileSync(lockPath, "utf8")).skills || {}; } catch {}
+
+  // Scan subdirectories: each subdir with SKILL.md is a skill
+  let entries = [];
+  try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch { continue; }
+
+  for (const entry of entries) {
+    if (!entry.isDirectory()) continue;
+    const name = entry.name;
+    if (seen.has(name)) continue;
+    seen.add(name);
+
+    const skillDir = path.join(dir, name);
+    const hasSkillMd = fs.existsSync(path.join(skillDir, "SKILL.md"));
+    if (!hasSkillMd) continue;
+
+    // Read metadata from skill.json, _meta.json, manifest.json, or package.json
+    let meta = {};
+    for (const metaFile of ["skill.json", "_meta.json", "manifest.json", "package.json"]) {
+      try {
+        meta = JSON.parse(fs.readFileSync(path.join(skillDir, metaFile), "utf8"));
+        break;
+      } catch {}
+    }
+
+    // Lock file info
+    const lock = lockData[name] || {};
+
+    skills.push({
+      name: name,
+      version: meta.version || lock.computedHash ? "installed" : "unknown",
+      category: meta.category || "unknown",
+      source_dir: dir.replace(process.env.HOME, "~"),
+      source_type: lock.sourceType || "local",
+      source_repo: lock.source || null,
+      has_skill_md: true,
+      has_meta: Object.keys(meta).length > 0,
+      files: fs.readdirSync(skillDir).filter(f => !f.startsWith("."))
+    });
+  }
+
+  // Also check @botlearn/ scoped packages (npm-style)
+  const scopedDir = path.join(dir, "@botlearn");
+  if (fs.existsSync(scopedDir)) {
+    try {
+      for (const entry of fs.readdirSync(scopedDir, { withFileTypes: true })) {
+        if (!entry.isDirectory()) continue;
+        const name = "@botlearn/" + entry.name;
+        if (seen.has(name)) continue;
+        seen.add(name);
+        const skillDir = path.join(scopedDir, entry.name);
+        let meta = {};
+        for (const metaFile of ["manifest.json", "package.json", "skill.json"]) {
+          try { meta = JSON.parse(fs.readFileSync(path.join(skillDir, metaFile), "utf8")); break; } catch {}
+        }
+        skills.push({
+          name,
+          version: meta.version || "unknown",
+          category: meta.category || "unknown",
+          source_dir: dir.replace(process.env.HOME, "~"),
+          source_type: "npm",
+          source_repo: null,
+          has_skill_md: fs.existsSync(path.join(skillDir, "SKILL.md")),
+          has_meta: Object.keys(meta).length > 0,
+          files: fs.readdirSync(skillDir).filter(f => !f.startsWith("."))
+        });
+      }
+    } catch {}
+  }
+}
+
+console.log(JSON.stringify({ skills, sources, total: skills.length }));
+SCANSCRIPT
+
+scan_result=$(SKILL_SEARCH_DIRS="$found_skill_dirs" node "$_tmpjs_skills" 2>/dev/null || echo '{"skills":[],"sources":[],"total":0}')
+skill_list=$(echo "$scan_result" | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>console.log(JSON.stringify(JSON.parse(d).skills)))" 2>/dev/null || echo "[]")
+skill_sources=$(echo "$scan_result" | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>console.log(JSON.stringify(JSON.parse(d).sources)))" 2>/dev/null || echo "[]")
+installed_count=$(echo "$scan_result" | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>console.log(JSON.parse(d).total))" 2>/dev/null || echo 0)
+
 outdated="[]"
 broken_deps="[]"
-
-if [[ -d "$SKILLS_DIR" ]]; then
-  skills_dir_exists="true"
-
-  if [[ -d "$SKILLS_DIR/@botlearn" ]]; then
-    skill_list=$(ls -d "$SKILLS_DIR/@botlearn"/*/ 2>/dev/null | while read -r dir; do
-      name=$(basename "$dir")
-      version="unknown"
-      category="unknown"
-
-      if [[ -f "$dir/manifest.json" ]]; then
-        version=$(node -e "try{const m=JSON.parse(require('fs').readFileSync('$dir/manifest.json','utf8'));console.log(m.version||'unknown')}catch(e){console.log('unknown')}" 2>/dev/null || echo "unknown")
-        category=$(node -e "try{const m=JSON.parse(require('fs').readFileSync('$dir/manifest.json','utf8'));console.log(m.category||'unknown')}catch(e){console.log('unknown')}" 2>/dev/null || echo "unknown")
-      fi
-
-      has_skill_md="false"; [[ -f "$dir/SKILL.md" ]] && has_skill_md="true"
-      has_knowledge="false"; [[ -d "$dir/knowledge" ]] && has_knowledge="true"
-      has_strategies="false"; [[ -d "$dir/strategies" ]] && has_strategies="true"
-
-      echo "{\"name\":\"@botlearn/$name\",\"version\":\"$version\",\"category\":\"$category\",\"has_skill_md\":$has_skill_md,\"has_knowledge\":$has_knowledge,\"has_strategies\":$has_strategies}"
-    done | paste -sd',' - | awk '{print "["$0"]"}')
-
-    installed_count=$(echo "$skill_list" | node -e \
-      "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>console.log(JSON.parse(d).length))" \
-      2>/dev/null || echo 0)
-  fi
-
-  if command -v clawhub &>/dev/null; then
-    outdated=$(clawhub list --outdated --json 2>/dev/null || echo "[]")
-    broken_deps=$(clawhub list --check-deps --json 2>/dev/null || echo "[]")
-  fi
+if command -v clawhub &>/dev/null; then
+  outdated=$(clawhub list --outdated --json 2>/dev/null || echo "[]")
+  broken_deps=$(clawhub list --check-deps --json 2>/dev/null || echo "[]")
 fi
 
-# Managed skills count (global)
-managed_skills_count=$(find "$HOME/.openclaw/skills" -name "SKILL.md" -maxdepth 3 2>/dev/null | wc -l | tr -d ' ') || managed_skills_count=0
+# Managed skills count (all SKILL.md across openclaw home)
+managed_skills_count=$(find "$OPENCLAW_HOME" -name "SKILL.md" -maxdepth 5 2>/dev/null | wc -l | tr -d ' ') || managed_skills_count=0
 
 # ─── 2. Agent built-in tools check (from agent.md) ───────────────────────────
 # Look for agent.md in common OpenClaw locations
@@ -86,8 +166,9 @@ if [[ -n "$AGENT_MD_PATH" ]]; then
     gateway_port=$(node -e "
       try {
         const f='${OPENCLAW_HOME}/openclaw.json';
-        const c=JSON.parse(require('fs').readFileSync(f,'utf8')
-          .replace(/\/\/[^\n]*/g,'').replace(/\/\*[\s\S]*?\*\//g,''));
+        const raw=require('fs').readFileSync(f,'utf8');
+        const c=JSON.parse(raw.replace(/\"(?:[^\"\\\\]|\\\\.)*\"|\/\/[^\\n]*|\/\\*[\\s\\S]*?\\*\//g,
+          m=>m.startsWith('\"')?m:''));
         console.log(c.gateway?.port||18789);
       } catch(e){ console.log(18789); }
     " 2>/dev/null || echo 18789)
@@ -101,10 +182,11 @@ if [[ -n "$AGENT_MD_PATH" ]]; then
         echo "$gateway_tools_raw" | grep -q "\"$tool\"" && available="true" || true
       else
         # Fallback: basic binary/command check for executable tools
-        case "$tool" in
-          bash|node|curl) command -v "$tool" &>/dev/null && available="true" || true ;;
-          *) available="unknown" ;;  # MCP tools need gateway
-        esac
+        if [[ "$tool" == "bash" || "$tool" == "node" || "$tool" == "curl" ]]; then
+          command -v "$tool" &>/dev/null && available="true" || true
+        else
+          available="\"unknown\""
+        fi
       fi
       echo "{\"name\":\"$tool\",\"available\":$available}"
     done | paste -sd',' - | awk '{print "["$0"]"}')
@@ -202,8 +284,7 @@ category_coverage=$(echo "$skill_list" | node -e "
 cat <<EOF
 {
   "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-  "skills_dir": "$SKILLS_DIR",
-  "skills_dir_exists": $skills_dir_exists,
+  "skill_sources": $skill_sources,
   "installed_count": $installed_count,
   "managed_skills_count": $managed_skills_count,
   "skills": $skill_list,

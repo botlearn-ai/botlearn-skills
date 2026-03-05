@@ -1,6 +1,7 @@
 #!/bin/bash
-# collect-precheck.sh — Run `openclaw doctor` built-in precheck, parse output to JSON
-# Timeout: 15s | Compatible: macOS (darwin) + Linux
+# collect-precheck.sh — Run `openclaw doctor --deep --non-interactive`, parse output to JSON
+# Parses the ◇ section-box format used by openclaw doctor
+# Timeout: 30s | Compatible: macOS (darwin) + Linux
 set -euo pipefail
 
 # Check if openclaw CLI is available
@@ -19,8 +20,8 @@ if [[ -z "$OPENCLAW_BIN" ]]; then
   "precheck_ran": false,
   "status": "skipped",
   "message": "Neither openclaw nor clawhub CLI found",
-  "checks": [],
-  "summary": { "pass": 0, "warn": 0, "error": 0, "total": 0 }
+  "sections": [],
+  "summary": { "pass": 0, "warn": 0, "info": 0, "total": 0 }
 }
 EOF
   exit 0
@@ -29,12 +30,7 @@ fi
 # Run openclaw doctor (built-in precheck) and capture output
 PRECHECK_OUTPUT=""
 PRECHECK_EXIT=0
-PRECHECK_OUTPUT=$($OPENCLAW_BIN doctor --json 2>/dev/null) || PRECHECK_EXIT=$?
-
-# If --json is not supported, try plain text parsing
-if [[ -z "$PRECHECK_OUTPUT" || "$PRECHECK_EXIT" -ne 0 ]]; then
-  PRECHECK_OUTPUT=$($OPENCLAW_BIN doctor 2>&1) || PRECHECK_EXIT=$?
-fi
+PRECHECK_OUTPUT=$($OPENCLAW_BIN doctor --deep --non-interactive 2>&1) || PRECHECK_EXIT=$?
 
 # Parse the output with Node.js
 node -e '
@@ -47,66 +43,104 @@ const result = {
   cli_used: process.argv[3],
   precheck_ran: true,
   exit_code: exitCode,
-  checks: [],
-  summary: { pass: 0, warn: 0, error: 0, total: 0 }
+  sections: [],
+  summary: { pass: 0, warn: 0, info: 0, total: 0 }
 };
 
-// Try JSON parse first
-try {
-  const parsed = JSON.parse(output);
-  if (parsed.checks) {
-    result.checks = parsed.checks;
-  } else if (Array.isArray(parsed)) {
-    result.checks = parsed;
+// Parse version from header line
+const verMatch = output.match(/OpenClaw\s+([0-9]+\.[0-9]+[^\s(]*)\s*\(([0-9a-f]+)\)/);
+if (verMatch) {
+  result.version = verMatch[1];
+  result.commit = verMatch[2];
+}
+
+const lines = output.split("\n");
+
+// Parse ◇ section-box format used by openclaw doctor
+// Format: ◇  Section name ─────╮ ... content lines ... ├─────╯
+let currentSection = null;
+let currentContent = [];
+
+function flushSection() {
+  if (!currentSection) return;
+  const content = currentContent
+    .map(l => l.replace(/^[│|]\s?/, "").replace(/\s*[│|]\s*$/, "").trim())
+    .filter(l => l && !l.match(/^[├┤┌┐└┘─┼┬┴╋═\s]+$/));
+
+  // Determine section severity based on content
+  let severity = "info";
+  const fullText = content.join(" ").toLowerCase();
+  if (fullText.match(/not found|not installed|break|error|fail|does not match|not ready|not configured/)) {
+    severity = "warn";
   }
-} catch {
-  // Parse plain text output line by line
-  // Expected patterns: ✓ / ✔ / PASS / OK → pass, ⚠ / WARN → warn, ✗ / ✘ / FAIL / ERROR → error
-  const lines = output.split("\n").filter(l => l.trim());
-  for (const line of lines) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith("#") || trimmed.startsWith("---")) continue;
+  if (fullText.match(/no .* warnings detected|all .* pass/)) {
+    severity = "pass";
+  }
 
-    let status = "unknown";
-    if (/[✓✔]|PASS|OK|\bpass\b/i.test(trimmed)) status = "pass";
-    else if (/[⚠]|WARN|\bwarn/i.test(trimmed)) status = "warn";
-    else if (/[✗✘]|FAIL|ERROR|\berror\b/i.test(trimmed)) status = "error";
-    else continue; // skip non-check lines
+  result.sections.push({
+    name: currentSection,
+    severity,
+    items: content
+  });
 
-    // Extract check name: remove status indicators and clean up
-    const name = trimmed
-      .replace(/[✓✔✗✘⚠]/g, "")
-      .replace(/\b(PASS|OK|WARN|FAIL|ERROR)\b/gi, "")
-      .replace(/^\s*[-:•]\s*/, "")
-      .trim()
-      .substring(0, 200);
+  currentSection = null;
+  currentContent = [];
+}
 
-    if (name) {
-      result.checks.push({ name, status, raw: trimmed.substring(0, 200) });
+for (const line of lines) {
+  const t = line.trim();
+
+  // Detect section header: ◇  Section name ───...╮
+  const sectionMatch = t.match(/^◇\s+(.+?)\s*[─╮]+/);
+  if (sectionMatch) {
+    flushSection();
+    currentSection = sectionMatch[1].trim();
+    continue;
+  }
+
+  // Detect section with no box (plain ◇ line, e.g. agent info)
+  if (t.startsWith("◇") && !t.includes("─")) {
+    flushSection();
+    currentSection = "__agents__";
+    // The rest of the line after ◇ is content
+    const rest = t.replace(/^◇\s*/, "").trim();
+    if (rest) currentContent.push(rest);
+    continue;
+  }
+
+  // Section end markers
+  if (t.match(/^[├└].*[╯┘]/) || t === "│") {
+    continue;
+  }
+
+  // Content inside a section
+  if (currentSection && (t.startsWith("│") || t.startsWith("|") || t.startsWith("-") || t.match(/^\S/))) {
+    if (currentSection === "__agents__") {
+      // Agent info lines are not boxed
+      if (t && !t.match(/^[├└│─]/) && !t.startsWith("Run ")) {
+        currentContent.push(t);
+      }
+    } else if (t.startsWith("│") || t.startsWith("|")) {
+      currentContent.push(t);
+    } else if (t.startsWith("-") && currentSection) {
+      currentContent.push(t);
     }
   }
 }
+flushSection();
 
 // Calculate summary
-for (const check of result.checks) {
-  const s = (check.status || "").toLowerCase();
-  if (s === "pass" || s === "ok") result.summary.pass++;
-  else if (s === "warn" || s === "warning") result.summary.warn++;
-  else if (s === "error" || s === "fail") result.summary.error++;
+for (const section of result.sections) {
+  result.summary.total++;
+  if (section.severity === "pass") result.summary.pass++;
+  else if (section.severity === "warn") result.summary.warn++;
+  else result.summary.info++;
 }
-result.summary.total = result.checks.length;
 
 // Overall status
-if (result.summary.error > 0) result.status = "error";
-else if (result.summary.warn > 0) result.status = "warn";
+if (result.summary.warn > 0) result.status = "warn";
 else if (result.summary.pass > 0) result.status = "pass";
-else result.status = "unknown";
-
-// If no checks parsed but command ran, note it
-if (result.checks.length === 0 && output) {
-  result.raw_output = output.substring(0, 1000);
-  result.status = exitCode === 0 ? "pass" : "error";
-}
+else result.status = "info";
 
 console.log(JSON.stringify(result, null, 2));
 ' "$PRECHECK_OUTPUT" "$PRECHECK_EXIT" "$OPENCLAW_BIN"

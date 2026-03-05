@@ -20,9 +20,9 @@ if command -v openclaw &>/dev/null; then
   validate_output=$(openclaw config validate 2>&1) || validate_exit=$?
 fi
 
-# Parse version and commit from validation output
-oc_version=$(echo "$validate_output" | grep -oE 'OpenClaw [0-9]+\.[0-9]+[^ ]*' | awk '{print $2}' | head -1)
-oc_commit=$(echo "$validate_output"  | grep -oE '\([0-9a-f]{6,}\)' | tr -d '()' | head -1)
+# Parse version and commit from validation output (grep may not match — guard against set -e)
+oc_version=$(echo "$validate_output" | grep -oE 'OpenClaw [0-9]+\.[0-9]+[^ ]*' | awk '{print $2}' | head -1 || true)
+oc_commit=$(echo "$validate_output"  | grep -oE '\([0-9a-f]{6,}\)' | tr -d '()' | head -1 || true)
 oc_version="${oc_version:-}"
 oc_commit="${oc_commit:-}"
 
@@ -33,8 +33,10 @@ validate_success="false"
 validate_output_escaped=$(echo "$validate_output" | head -5 | sed 's/\\/\\\\/g; s/"/\\"/g' | tr '\n' '|' | sed 's/|$//')
 
 # ─── Step 2: Content analysis via Node.js ────────────────────────────────────
-node_output=$(OPENCLAW_HOME="$OPENCLAW_HOME" OPENCLAW_CONFIG_PATH="$OPENCLAW_CONFIG_PATH" \
-  node <<'NODESCRIPT'
+# Use temp file to avoid bash 3.2 heredoc-in-subshell quoting bug
+_tmpjs=$(mktemp /tmp/collect-config-XXXXXX.js)
+trap 'rm -f "$_tmpjs"' EXIT
+cat > "$_tmpjs" <<'NODESCRIPT'
 const fs   = require("fs");
 const path = require("path");
 
@@ -67,10 +69,10 @@ out.config_exists = true;
 let config = {};
 try {
   const raw   = fs.readFileSync(CONFIG, "utf8");
-  // Strip JSON5-style comments before parsing
-  const clean = raw
-    .replace(/\/\/[^\n]*/g, "")
-    .replace(/\/\*[\s\S]*?\*\//g, "");
+  // Strip JSON5-style comments but preserve // inside quoted strings
+  const clean = raw.replace(/"(?:[^"\\]|\\.)*"|\/\/[^\n]*|\/\*[\s\S]*?\*\//g, m =>
+    m.startsWith('"') ? m : m.startsWith('/*') ? '' : ''
+  );
   config = JSON.parse(clean);
   out.json_valid = true;
 } catch (e) {
@@ -217,20 +219,27 @@ if (ag) {
 
 console.log(JSON.stringify(out, null, 2));
 NODESCRIPT
-)
+node_output=$(OPENCLAW_HOME="$OPENCLAW_HOME" OPENCLAW_CONFIG_PATH="$OPENCLAW_CONFIG_PATH" node "$_tmpjs")
 
 # ─── Step 3: Merge and output final JSON ─────────────────────────────────────
-node - <<MERGESCRIPT
-const analysis = ${node_output};
+ANALYSIS="$node_output" \
+VALIDATE_RAN="$validate_ran" \
+VALIDATE_SUCCESS="$validate_success" \
+VALIDATE_EXIT="$validate_exit" \
+OC_VERSION="$oc_version" \
+OC_COMMIT="$oc_commit" \
+VALIDATE_OUTPUT="$validate_output_escaped" \
+node <<'MERGESCRIPT'
+const analysis = JSON.parse(process.env.ANALYSIS);
 const result = {
   timestamp: new Date().toISOString(),
   cli_validation: {
-    ran:     ${validate_ran},
-    success: ${validate_success},
-    exit_code: ${validate_exit},
-    openclaw_version: "${oc_version}",
-    openclaw_commit:  "${oc_commit}",
-    output_preview:   "${validate_output_escaped}"
+    ran:              process.env.VALIDATE_RAN === "true",
+    success:          process.env.VALIDATE_SUCCESS === "true",
+    exit_code:        parseInt(process.env.VALIDATE_EXIT) || 0,
+    openclaw_version: process.env.OC_VERSION || "",
+    openclaw_commit:  process.env.OC_COMMIT || "",
+    output_preview:   process.env.VALIDATE_OUTPUT || ""
   },
   ...analysis
 };

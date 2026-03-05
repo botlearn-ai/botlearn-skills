@@ -1,123 +1,132 @@
 #!/bin/bash
-# collect-channels.sh — Query OpenClaw platform registered channels, output JSON
+# collect-channels.sh — Run `openclaw channels list`, parse output to JSON
+# Parses: Config warnings, Chat channels, Auth providers, Plugin registration, Usage
 # Timeout: 10s | Compatible: macOS (darwin) + Linux
 set -euo pipefail
 
 OPENCLAW_HOME="${OPENCLAW_HOME:-$HOME/.openclaw}"
-OPENCLAW_CONFIG_PATH="${OPENCLAW_CONFIG_PATH:-$OPENCLAW_HOME/openclaw.json}"
-CHANNEL_CONFIG="${OPENCLAW_HOME}/config/doctor-channels.json"
 
-node -e '
-const fs = require("fs");
-const path = require("path");
+if ! command -v openclaw &>/dev/null; then
+  echo '{"timestamp":"'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'","ran":false,"error":"openclaw CLI not found","channels":[],"auth_providers":[],"config_warnings":[],"plugins":[]}'
+  exit 0
+fi
 
-const HOME = process.env.OPENCLAW_HOME || (process.env.HOME + "/.openclaw");
-const CONFIG = process.env.OPENCLAW_CONFIG_PATH || (HOME + "/openclaw.json");
-const CHANNEL_CONFIG = HOME + "/config/doctor-channels.json";
+# macOS has no `timeout` — use perl fallback
+run_with_timeout() {
+  local secs="$1"; shift
+  if command -v timeout &>/dev/null; then
+    timeout "$secs" "$@"
+  else
+    perl -e "alarm $secs; exec @ARGV" -- "$@"
+  fi
+}
+
+raw_output=$(run_with_timeout 10 openclaw channels list 2>&1) || true
+
+# Parse via temp file (bash 3.2 compat)
+_tmpjs=$(mktemp /tmp/collect-channels-XXXXXX.js)
+trap 'rm -f "$_tmpjs"' EXIT
+cat > "$_tmpjs" <<'NODESCRIPT'
+const raw = process.env.CHANNELS_RAW || "";
+const lines = raw.split("\n");
 
 const result = {
   timestamp: new Date().toISOString(),
-  channels: [],
-  channel_config_exists: false,
-  channel_config_valid: false,
+  ran: true,
+  config_warnings: [],
+  plugins_loaded: [],
+  chat_channels: [],
+  auth_providers: [],
+  usage: null,
   enabled_count: 0,
   disabled_count: 0,
   issues: []
 };
 
-// Check doctor-channels.json
-if (fs.existsSync(CHANNEL_CONFIG)) {
-  result.channel_config_exists = true;
-  try {
-    const channelConf = JSON.parse(fs.readFileSync(CHANNEL_CONFIG, "utf8"));
-    result.channel_config_valid = true;
-    result.default_channel = channelConf.default_channel || "terminal";
+// Parse version from header
+const verMatch = raw.match(/OpenClaw\s+([0-9]+\.[0-9]+[^\s(]*)\s*\(([^)]+)\)/);
+if (verMatch) {
+  result.version = verMatch[1];
+  result.commit = verMatch[2];
+}
 
-    const channels = channelConf.channels || {};
-    for (const [name, conf] of Object.entries(channels)) {
-      const enabled = conf.enabled === true;
-      const ch = {
-        name,
-        enabled,
-        has_webhook: !!(conf.webhook_url && conf.webhook_url.length > 0),
-        configured: false
-      };
+for (let i = 0; i < lines.length; i++) {
+  const line = lines[i];
+  const t = line.trim();
 
-      // Check if properly configured
-      if (name === "terminal" || name === "browser") {
-        ch.configured = true; // always configured
-      } else if (name === "email") {
-        ch.configured = !!(conf.to && conf.to.length > 0);
-        if (enabled && !ch.configured) {
-          result.issues.push({ channel: name, issue: "Email enabled but no recipient configured" });
-        }
-      } else {
-        ch.configured = ch.has_webhook;
-        if (enabled && !ch.configured) {
-          result.issues.push({ channel: name, issue: name + " enabled but no webhook_url configured" });
-        }
+  // Config warnings: lines starting with "- " after "Config warnings:" or inside ◇ Config warnings box
+  // Pattern: "- plugins.entries.feishu: ..."
+  if (t.startsWith("- ") && t.includes(": ")) {
+    const warnMatch = t.match(/^-\s+(.+)$/);
+    if (warnMatch) {
+      const msg = warnMatch[1];
+      // Config warnings (contain field paths like "plugins.entries.xxx")
+      if (msg.match(/^[a-z]+\.[a-z]+/)) {
+        result.config_warnings.push(msg);
+        continue;
       }
+    }
+  }
 
+  // Plugin registration: "[plugins] name: Registered ..."
+  const pluginMatch = t.match(/\[plugins\]\s+(\w+):\s+Registered\s+(.+)/);
+  if (pluginMatch) {
+    result.plugins_loaded.push({
+      plugin: pluginMatch[1],
+      tools: pluginMatch[2].split(/,\s*/).map(s => s.trim())
+    });
+    continue;
+  }
+
+  // Plugin auto-load warning
+  const pluginWarnMatch = t.match(/\[plugins\]\s+plugins\.allow is empty.*?:\s+(\w+)/);
+  if (pluginWarnMatch) {
+    result.issues.push({
+      type: "plugin_autoload",
+      detail: "plugins.allow is empty, plugin " + pluginWarnMatch[1] + " may auto-load"
+    });
+    continue;
+  }
+
+  // Chat channels: "- Name: configured, enabled" or "- Name: configured, disabled"
+  if (t.startsWith("- ") && (t.includes("configured") || t.includes("enabled") || t.includes("disabled"))) {
+    // Parse: "- Feishu default: configured, enabled"
+    const chMatch = t.match(/^-\s+(.+?):\s+(.*)/);
+    if (chMatch && !chMatch[1].match(/^[a-z]+\.[a-z]+/)) {
+      const name = chMatch[1].trim();
+      const detail = chMatch[2].trim();
+      const enabled = detail.includes("enabled");
+      const configured = detail.includes("configured");
+      result.chat_channels.push({ name, enabled, configured, detail });
       if (enabled) result.enabled_count++;
       else result.disabled_count++;
-
-      result.channels.push(ch);
+      continue;
     }
-  } catch (e) {
-    result.issues.push({ channel: "config", issue: "Invalid JSON in doctor-channels.json: " + e.message });
   }
-} else {
-  result.issues.push({ channel: "config", issue: "Channel config not found at " + CHANNEL_CONFIG.replace(process.env.HOME, "~") });
-}
 
-// Check OpenClaw main config for channel-related settings
-if (fs.existsSync(CONFIG)) {
-  try {
-    const raw = fs.readFileSync(CONFIG, "utf8");
-    const clean = raw.replace(/\/\/.*$/gm, "").replace(/\/\*[\s\S]*?\*\//g, "");
-    const config = JSON.parse(clean);
-
-    // Check if messages section has channel config
-    if (config.messages) {
-      result.platform_channels = {
-        messages_section_exists: true,
-        notification_channels: config.messages.channels || [],
-        webhook_count: (config.messages.webhooks || []).length
-      };
+  // Auth providers: "- name (type)"
+  // Appears after "Auth providers (OAuth + API keys):" header
+  if (t.startsWith("- ") && t.match(/\(.*(api_key|oauth|token).*\)/i)) {
+    const authMatch = t.match(/^-\s+(.+?)\s+\(([^)]+)\)/);
+    if (authMatch) {
+      result.auth_providers.push({
+        name: authMatch[1].trim(),
+        type: authMatch[2].trim()
+      });
+      continue;
     }
-  } catch {}
+  }
+
+  // Usage line
+  if (t.startsWith("Usage:")) {
+    result.usage = t.replace(/^Usage:\s*/, "").trim();
+  }
 }
 
-// Check clawhub channel list if available
-result.clawhub_available = false;
-console.log(JSON.stringify(result, null, 2));
-' 2>/dev/null
+// Deduplicate config warnings
+result.config_warnings = [...new Set(result.config_warnings)];
 
-# Augment with clawhub channel list if CLI available
-if command -v clawhub &>/dev/null; then
-  CLAWHUB_CHANNELS=$(clawhub channels list --json 2>/dev/null || echo "")
-  if [[ -n "$CLAWHUB_CHANNELS" ]]; then
-    # Merge clawhub channels into result
-    node -e '
-      const result = JSON.parse(process.argv[1]);
-      result.clawhub_available = true;
-      try {
-        result.clawhub_channels = JSON.parse(process.argv[2]);
-      } catch {
-        result.clawhub_channels = [];
-      }
-      console.log(JSON.stringify(result, null, 2));
-    ' "$(cat /dev/stdin)" "$CLAWHUB_CHANNELS" <<< "$(node -e '
-      const fs = require("fs");
-      const HOME = process.env.OPENCLAW_HOME || (process.env.HOME + "/.openclaw");
-      const CHANNEL_CONFIG = HOME + "/config/doctor-channels.json";
-      const result = {
-        timestamp: new Date().toISOString(),
-        channels: [],
-        channel_config_exists: fs.existsSync(CHANNEL_CONFIG),
-        clawhub_available: true
-      };
-      console.log(JSON.stringify(result));
-    ')"
-  fi
-fi
+console.log(JSON.stringify(result, null, 2));
+NODESCRIPT
+
+CHANNELS_RAW="$raw_output" node "$_tmpjs"
