@@ -57,13 +57,16 @@ try {
 } catch {}
 
 // Check log rotation
-result.log_rotation_enabled = logFiles.some(f => /openclaw\.log\.\d/.test(path.basename(f)));
+result.log_rotation_enabled = logFiles.some(f => /\.(log|err\.log)\.\d/.test(path.basename(f)));
 
-const mainLog = path.join(LOG_DIR, "openclaw.log");
+// Find main log: prefer gateway.log, fallback to openclaw.log
+const mainLogCandidates = ["gateway.log", "openclaw.log"];
+const mainLog = mainLogCandidates.map(f => path.join(LOG_DIR, f)).find(f => fs.existsSync(f)) || path.join(LOG_DIR, "gateway.log");
 let lines = [];
 
 if (fs.existsSync(mainLog)) {
   result.main_log.exists = true;
+  result.main_log.file = path.basename(mainLog);
   const stat = fs.statSync(mainLog);
   result.main_log.size_kb = Math.round(stat.size / 1024);
 
@@ -242,10 +245,12 @@ if (fs.existsSync(mainLog)) {
   result.anomaly_summary.info = result.anomalies.filter(a => a.severity === "info").length;
 }
 
-// Error log
-const errorLog = path.join(LOG_DIR, "error.log");
-if (fs.existsSync(errorLog)) {
+// Error log: prefer gateway.err.log, fallback to error.log
+const errLogCandidates = ["gateway.err.log", "error.log"];
+const errorLog = errLogCandidates.map(f => path.join(LOG_DIR, f)).find(f => fs.existsSync(f));
+if (errorLog && fs.existsSync(errorLog)) {
   result.error_log.exists = true;
+  result.error_log.file = path.basename(errorLog);
   result.error_log.size_kb = Math.round(fs.statSync(errorLog).size / 1024);
 }
 

@@ -8,13 +8,16 @@ OPENCLAW_HOME="${OPENCLAW_HOME:-$HOME/.openclaw}"
 OPENCLAW_CONFIG_PATH="${OPENCLAW_CONFIG_PATH:-$OPENCLAW_HOME/openclaw.json}"
 TIMEOUT_SEC=5
 
-# Read gateway config from openclaw.json (JSON5 — strip comments before parsing)
-GATEWAY_CONFIG=$(node <<'NODESCRIPT'
+# Read gateway config from openclaw.json via temp file (bash 3.2 compat)
+_tmpjs=$(mktemp /tmp/collect-health-XXXXXX.js)
+trap 'rm -f "$_tmpjs"' EXIT
+cat > "$_tmpjs" <<'NODESCRIPT'
 const fs = require("fs");
 const CONFIG = process.env.OPENCLAW_CONFIG_PATH || ((process.env.OPENCLAW_HOME || process.env.HOME + "/.openclaw") + "/openclaw.json");
 try {
   const raw = fs.readFileSync(CONFIG, "utf8");
-  const clean = raw.replace(/\/\/.*$/gm, "").replace(/\/\*[\s\S]*?\*\//g, "");
+  const clean = raw.replace(/"(?:[^"\\]|\\.)*"|\/\/[^\n]*|\/\*[\s\S]*?\*\//g, m =>
+    m.startsWith('"') ? m : '');
   const c = JSON.parse(clean);
   console.log(JSON.stringify({
     port: c.gateway?.port || 18789,
@@ -28,9 +31,10 @@ try {
   console.log(JSON.stringify({port:18789,bind:"loopback",mode:"ws+http",auth:"none",reload:"hybrid",controlUI:true}));
 }
 NODESCRIPT
-)
 
-GATEWAY_PORT=$(echo "$GATEWAY_CONFIG" | node -e "console.log(JSON.parse(require('fs').readFileSync('/dev/stdin','utf8')).port)" 2>/dev/null || echo 18789)
+GATEWAY_CONFIG=$(OPENCLAW_CONFIG_PATH="$OPENCLAW_CONFIG_PATH" OPENCLAW_HOME="$OPENCLAW_HOME" node "$_tmpjs" 2>/dev/null || echo '{"port":18789,"bind":"loopback","mode":"ws+http","auth":"none","reload":"hybrid","controlUI":true}')
+
+GATEWAY_PORT=$(echo "$GATEWAY_CONFIG" | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>console.log(JSON.parse(d).port))" 2>/dev/null || echo 18789)
 GATEWAY_URL="http://localhost:${GATEWAY_PORT}"
 
 probe_endpoint() {
@@ -49,15 +53,16 @@ probe_endpoint() {
   latency_ms=$(awk "BEGIN{printf \"%d\", $latency_s * 1000}")
 
   local status="unknown"
-  case "$http_code" in
-    200|204) status="healthy" ;;
-    301|302|303|307|308) status="redirect" ;;
-    401|403) status="auth_required" ;;
-    404) status="not_found" ;;
-    503) status="unavailable" ;;
-    000) status="unreachable" ;;
-    *)   status="error" ;;
-  esac
+  if [[ "$http_code" == "101" ]]; then status="websocket"
+  elif [[ "$http_code" == "200" || "$http_code" == "204" ]]; then status="healthy"
+  elif [[ "$http_code" == "301" || "$http_code" == "302" || "$http_code" == "307" || "$http_code" == "308" ]]; then status="redirect"
+  elif [[ "$http_code" == "401" || "$http_code" == "403" ]]; then status="auth_required"
+  elif [[ "$http_code" == "404" ]]; then status="not_found"
+  elif [[ "$http_code" == "426" ]]; then status="upgrade_required"
+  elif [[ "$http_code" == "503" ]]; then status="unavailable"
+  elif [[ "$http_code" == "000" ]]; then status="unreachable"
+  else status="error"
+  fi
 
   echo "{\"endpoint\":\"$endpoint\",\"status_code\":$http_code,\"status\":\"$status\",\"latency_ms\":$latency_ms}"
 }
@@ -71,16 +76,20 @@ control_ui=$(probe_endpoint "/openclaw")
 hooks_api=$(probe_endpoint "/hooks")
 
 # Determine gateway status
-root_code=$(echo "$root_probe" | node -e "console.log(JSON.parse(require('fs').readFileSync('/dev/stdin','utf8')).status_code)" 2>/dev/null || echo 0)
-control_code=$(echo "$control_ui" | node -e "console.log(JSON.parse(require('fs').readFileSync('/dev/stdin','utf8')).status_code)" 2>/dev/null || echo 0)
+root_code=$(echo "$root_probe" | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>console.log(JSON.parse(d).status_code))" 2>/dev/null || echo 0)
+control_code=$(echo "$control_ui" | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>console.log(JSON.parse(d).status_code))" 2>/dev/null || echo 0)
 
 gateway_reachable="false"
 gateway_operational="false"
 
 # Reachable = root responds (any non-000 code)
 [[ "$root_code" != "0" && "$root_code" != "000" ]] && gateway_reachable="true"
-# Operational = control UI responds (200, or auth required 401/403 means gateway is running)
-[[ "$control_code" == "200" || "$control_code" == "401" || "$control_code" == "403" ]] && gateway_operational="true"
+# Operational = control UI responds (200, auth required 401/403, or WebSocket 101/426 — all mean gateway is running)
+[[ "$control_code" == "200" || "$control_code" == "401" || "$control_code" == "403" || "$control_code" == "101" || "$control_code" == "426" ]] && gateway_operational="true"
+# Also check root — WebSocket gateway may only respond with 101 at root
+if [[ "$gateway_operational" == "false" ]]; then
+  [[ "$root_code" == "101" || "$root_code" == "200" || "$root_code" == "426" ]] && gateway_operational="true"
+fi
 
 # Check CLIs
 clawhub_version="NOT_FOUND"

@@ -9,13 +9,22 @@ if ! command -v openclaw &>/dev/null; then
   exit 0
 fi
 
+# macOS has no `timeout` — use perl fallback
+run_with_timeout() {
+  local secs="$1"; shift
+  if command -v timeout &>/dev/null; then
+    timeout "$secs" "$@"
+  else
+    perl -e "alarm $secs; exec @ARGV" -- "$@"
+  fi
+}
+
 # Capture full output (stdout + stderr merged, timeout guard)
-raw_output=$(timeout 20 openclaw status --all --deep 2>&1) || true
+raw_output=$(run_with_timeout 20 openclaw status --all --deep 2>&1) || true
 
 # Try --json flag first (future-proofing)
-json_output=$(timeout 20 openclaw status --all --deep --json 2>/dev/null) || json_output=""
+json_output=$(run_with_timeout 20 openclaw status --all --deep --json 2>/dev/null) || json_output=""
 if echo "$json_output" | node -e "const d=require('fs').readFileSync('/dev/stdin','utf8'); JSON.parse(d); process.exit(0);" 2>/dev/null; then
-  # Structured JSON available — wrap with metadata and pass through
   echo "$json_output" | node -e "
     let d=''; process.stdin.on('data',c=>d+=c).on('end',()=>{
       const s = JSON.parse(d);
@@ -78,17 +87,24 @@ process.stdin.on('end', () => {
     if (key) overviewMap[key.trim()] = rest.join(' │ ').trim();
   }
 
-  // Extract structured fields from Overview values
+  // Extract structured fields from Overview Gateway value
+  // e.g. local · ws://host:port (local loopback) · reachable 37ms · auth token
   function parseGateway(raw) {
     if (!raw) return {};
-    const latencyMatch = raw.match(/reachable\s+(\d+)ms/);
+    const latencyMatch = raw.match(/reachable\s+(\d+)\s*ms/);
     const authMatch    = raw.match(/auth\s+(\w+)/);
-    const bindMatch    = raw.match(/\(([^)]+)\)/);
     const urlMatch     = raw.match(/(wss?:\/\/[^\s]+)/);
+    const bindMatch    = raw.match(/\(([^)]+)\)/);
+    const bindRaw      = bindMatch ? bindMatch[1].trim() : null;
+    const bind         = bindRaw ? bindRaw.split(/\s+/).pop() : null;
+    const modeMatch    = raw.match(/^([^·]+)/);
+    const mode         = modeMatch ? modeMatch[1].trim() : null;
     return {
       raw,
       url:         urlMatch    ? urlMatch[1]    : null,
-      bind:        bindMatch   ? bindMatch[1]   : null,
+      mode,
+      bind,
+      bind_raw:    bindRaw,
       latency_ms:  latencyMatch ? parseInt(latencyMatch[1]) : null,
       auth_type:   authMatch   ? authMatch[1]   : null
     };
@@ -180,30 +196,36 @@ process.stdin.on('end', () => {
 
   // ── Parse Diagnosis section ────────────────────────────────────────────────
   const checks = [];
-  const logLines = [];
-  const logIssues = [];
-  let inLogs = false;
   let skillsEligible = 0, skillsMissing = 0;
+
+  // Gateway connection details block (indented key: value pairs after header)
+  const gatewayDiag = {};
+  let inGatewayBlock = false;
 
   for (const line of sections.diagnosis) {
     const t = line.trim();
 
-    // Log section detection
-    if (t.startsWith('Gateway logs') || t.startsWith('# stderr') || t.startsWith('# stdout')) {
-      inLogs = true;
-    }
-
-    if (inLogs) {
-      // Collect notable log lines (errors, warnings, timeouts)
-      if (t.match(/timeout|ENOENT|error|timed out|LLM|failed|ENOENT|command not found/i)) {
-        const redacted = t.replace(/(token|secret|password|api.?key)[^\s]*/gi, '[REDACTED]');
-        logLines.push(redacted);
-        if (logLines.length <= 20) logIssues.push(redacted);
-      }
+    // Detect Gateway connection details block
+    if (t.startsWith('Gateway connection details')) {
+      inGatewayBlock = true;
       continue;
     }
 
-    // Check lines
+    // Parse indented key-value pairs inside gateway block
+    if (inGatewayBlock) {
+      const kvMatch = t.match(/^([A-Za-z][A-Za-z ]+):\s+(.+)$/);
+      if (kvMatch) {
+        const key = kvMatch[1].trim().toLowerCase().replace(/\s+/g, '_');
+        gatewayDiag[key] = kvMatch[2].trim();
+      } else if (t === '' || t.startsWith('✓') || t.startsWith('!') || t.startsWith('·')) {
+        // End of gateway block — fall through to check parsing below
+        inGatewayBlock = false;
+      } else {
+        continue;
+      }
+    }
+
+    // Check lines: ✓ = ok, ! = warn, · = info
     if (t.startsWith('✓') || t.startsWith('!') || t.startsWith('·')) {
       const status = t.startsWith('✓') ? 'ok' : t.startsWith('!') ? 'warn' : 'info';
       const rest = t.slice(1).trim();
@@ -235,14 +257,14 @@ process.stdin.on('end', () => {
     agents,
     diagnosis: {
       checks,
+      gateway_details: Object.keys(gatewayDiag).length > 0 ? gatewayDiag : null,
       skills_eligible: skillsEligible,
       skills_missing:  skillsMissing,
       config_valid:    checks.some(c => c.label === 'Config' && c.status === 'ok'),
       port_conflicts:  checks.filter(c => c.label.startsWith('Port') && c.status === 'warn').map(c => c.detail),
       tailscale_issue: checks.some(c => c.label === 'Tailscale' && c.status === 'warn'),
       channel_issues:  checks.some(c => c.label.startsWith('Channel') && c.status === 'warn')
-    },
-    log_issues: logIssues
+    }
   };
 
   console.log(JSON.stringify(result, null, 2));

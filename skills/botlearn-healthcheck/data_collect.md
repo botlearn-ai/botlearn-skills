@@ -34,6 +34,9 @@ Store full text output as `DATA.doctor_deep`.
 ### DATA.status — Key Fields Reference
 
 `collect-status.sh` runs `openclaw status --all --deep` and parses its structured output.
+
+**Gateway Overview 行实际格式**：`local · ws://127.0.0.1:18789 (local loopback) · reachable 37ms · auth token`
+
 Key fields used across domains:
 
 | Field Path | Example Value | Used In |
@@ -45,23 +48,27 @@ Key fields used across domains:
 | `status.overview.tailscale_on` | `false` | Config, Security |
 | `status.overview.up_to_date` | `true` | Config |
 | `status.overview.update_channel` | `"stable (default)"` | Config |
-| `status.overview.gateway.latency_ms` | `17` | Config |
+| `status.overview.gateway.mode` | `"local"` | Config |
+| `status.overview.gateway.url` | `"ws://127.0.0.1:18789"` | Config |
+| `status.overview.gateway.latency_ms` | `37` | Config |
 | `status.overview.gateway.auth_type` | `"token"` | Config, Security |
 | `status.overview.gateway.bind` | `"loopback"` | Config, Security |
+| `status.overview.gateway.bind_raw` | `"local loopback"` | Config |
+| `status.overview.gateway_self` | `"hostname (10.x.x.x) app 2026.3.2 macos 15.7.1"` | Config |
 | `status.overview.gateway_service.running` | `true` | Config, Autonomy |
-| `status.overview.gateway_service.pid` | `10714` | Autonomy |
+| `status.overview.gateway_service.pid` | `65418` | Autonomy |
 | `status.overview.node_service.installed` | `false` | Autonomy |
 | `status.overview.agents_overview.total` | `1` | Autonomy |
 | `status.overview.agents_overview.active` | `1` | Autonomy |
 | `status.agents[].name` | `"main"` | Autonomy |
 | `status.agents[].bootstrap_present` | `false` | Autonomy |
-| `status.agents[].active_since` | `"1m ago"` | Autonomy |
-| `status.channels[]` | `[{name, enabled, state}]` | Config |
+| `status.agents[].active_since` | `"7m ago"` | Autonomy |
+| `status.channels[]` | `[{name, enabled, state, detail}]` | Config |
+| `status.diagnosis.gateway_details` | `{gateway_target, source, config, bind}` | Config, Security |
 | `status.diagnosis.config_valid` | `true` | Config |
 | `status.diagnosis.skills_eligible` | `9` | Skills |
 | `status.diagnosis.skills_missing` | `0` | Skills |
 | `status.diagnosis.port_conflicts` | `[]` | Config |
-| `status.log_issues[]` | `["LLM request timed out", ...]` | Autonomy |
 
 ---
 

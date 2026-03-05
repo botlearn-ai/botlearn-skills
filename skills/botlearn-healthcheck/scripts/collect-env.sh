@@ -107,8 +107,7 @@ get_uptime_hours() {
   if [[ "$(uname -s)" == "Darwin" ]]; then
     local boot_sec now
     boot_sec=$(sysctl -n kern.boottime 2>/dev/null \
-      | grep -oE 'sec = [0-9]+' \
-      | grep -oE '[0-9]+')
+      | sed -n 's/.*{ sec = \([0-9]*\),.*/\1/p')
     if [[ -n "$boot_sec" && "$boot_sec" =~ ^[0-9]+$ ]]; then
       now=$(date +%s)
       echo $(( (now - boot_sec) / 3600 ))

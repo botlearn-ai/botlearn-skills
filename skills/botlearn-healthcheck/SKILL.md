@@ -1,6 +1,6 @@
 ---
 name: botlearn-healthcheck
-version: 1.0.3
+version: 1.0.4
 description: >
   botlearn Autonomously inspects a live OpenClaw instance across 5 health domains (hardware, config, security, skills, autonomy) and delivers a quantified traffic-light report with actionable fix guidance.
 metadata:
@@ -88,7 +88,6 @@ Read **`data_collect.md`** for the complete collection protocol.
 | `DATA.health` | `scripts/collect-health.sh` | Gateway reachability, endpoint latency |
 | `DATA.precheck` | `scripts/collect-precheck.sh` | Built-in openclaw doctor check results |
 | `DATA.channels` | `scripts/collect-channels.sh` | Channel registration, config status |
-| `DATA.tools` | `scripts/collect-tools.sh` | MCP + CLI tool availability |
 | `DATA.security` | `scripts/collect-security.sh` | Credential exposure, permissions, network |
 | `DATA.workspace_audit` | `scripts/collect-workspace-audit.sh` | Storage, config cross-validation |
 | `DATA.doctor_deep` | `openclaw doctor --deep --non-interactive` | Deep self-diagnostic text output |

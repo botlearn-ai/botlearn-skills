@@ -1,45 +1,146 @@
 #!/bin/bash
-# collect-security.sh — Security risk assessment: credential exposure, file permissions,
-# dependency vulnerabilities, network exposure, VCS sensitive info
-# Output: JSON to stdout | Timeout: 10s | Compatible: macOS (darwin) + Linux
+# collect-security.sh — Security risk assessment, output JSON
+# Sources: 1) openclaw security audit  2) file permission checks  3) credential exposure scan
 # PRIVACY: All credential values are REDACTED — only type + location are reported
+# Timeout: 20s | Compatible: macOS (darwin) + Linux
 set -euo pipefail
 
 OPENCLAW_HOME="${OPENCLAW_HOME:-$HOME/.openclaw}"
-OPENCLAW_CONFIG_PATH="${OPENCLAW_CONFIG_PATH:-$OPENCLAW_HOME/openclaw.json}"
-OPENCLAW_LOG_DIR="${OPENCLAW_LOG_DIR:-$OPENCLAW_HOME/logs}"
-OPENCLAW_GATEWAY="${OPENCLAW_GATEWAY:-http://localhost:18789}"
 
-node <<'NODESCRIPT'
+# macOS has no `timeout` — use perl fallback
+run_with_timeout() {
+  local secs="$1"; shift
+  if command -v timeout &>/dev/null; then
+    timeout "$secs" "$@"
+  else
+    perl -e "alarm $secs; exec @ARGV" -- "$@"
+  fi
+}
+
+# Capture openclaw security audit if available
+security_audit=""
+if command -v openclaw &>/dev/null; then
+  security_audit=$(run_with_timeout 15 openclaw security audit --deep --json 2>/dev/null) || security_audit=""
+fi
+
+# Parse and augment with file-level checks via temp file (bash 3.2 compat)
+_tmpjs=$(mktemp /tmp/collect-security-XXXXXX.js)
+trap 'rm -f "$_tmpjs"' EXIT
+cat > "$_tmpjs" <<'NODESCRIPT'
 const fs = require("fs");
 const path = require("path");
-const { execSync } = require("child_process");
 
 const HOME = process.env.OPENCLAW_HOME || (process.env.HOME + "/.openclaw");
-const CONFIG = process.env.OPENCLAW_CONFIG_PATH || (HOME + "/openclaw.json");
-const LOG_DIR = process.env.OPENCLAW_LOG_DIR || (HOME + "/logs");
-const GATEWAY = process.env.OPENCLAW_GATEWAY || "http://localhost:18789";
 
 const result = {
   timestamp: new Date().toISOString(),
-  credential_exposure: { findings: [], scanned_files: 0, issues_found: 0 },
-  file_permissions: { findings: [], checked_files: 0, issues_found: 0 },
-  dependency_vulnerabilities: { outdated_count: 0, cve_check_available: false, findings: [] },
+  // 1. Platform security audit (from openclaw CLI)
+  platform_audit: null,
+  // 2. File permission checks
+  file_permissions: { findings: [], checked: 0, issues: 0 },
+  // 3. Credential exposure scan
+  credential_exposure: { findings: [], scanned: 0, issues: 0 },
+  // 4. Network exposure (from config)
   network_exposure: { findings: [] },
-  vcs_sensitive: { findings: [] }
+  // Summary
+  summary: { critical: 0, high: 0, warning: 0, info: 0 }
 };
 
-// --- 1. Credential Exposure Scan ---
+// ── 1. Platform Security Audit ──────────────────────────────────────────────
+const auditRaw = process.env.SECURITY_AUDIT || "";
+if (auditRaw) {
+  try {
+    const audit = JSON.parse(auditRaw);
+    result.platform_audit = {
+      summary: audit.summary || null,
+      findings: (audit.findings || []).map(f => ({
+        id: f.checkId,
+        severity: f.severity,
+        title: f.title,
+        detail: (f.detail || "").substring(0, 300),
+        remediation: f.remediation || null
+      }))
+    };
+    // Count platform findings
+    for (const f of result.platform_audit.findings) {
+      if (f.severity === "critical") result.summary.critical++;
+      else if (f.severity === "high") result.summary.high++;
+      else if (f.severity === "warn" || f.severity === "warning") result.summary.warning++;
+      else result.summary.info++;
+    }
+  } catch {}
+}
+
+// ── 2. File Permission Checks ───────────────────────────────────────────────
+// Sensitive files/dirs that should be owner-only (0600/0700)
+const sensitiveTargets = [
+  HOME + "/openclaw.json",
+  HOME + "/identity",
+  HOME + "/.env"
+];
+
+// Find auth-profiles.json in agent dirs
+try {
+  const agentsDir = HOME + "/agents";
+  if (fs.existsSync(agentsDir)) {
+    for (const agent of fs.readdirSync(agentsDir)) {
+      const authFile = path.join(agentsDir, agent, "agent", "auth-profiles.json");
+      if (fs.existsSync(authFile)) sensitiveTargets.push(authFile);
+    }
+  }
+} catch {}
+
+// Find .key/.pem/.p12 files
+function findSensitiveFiles(dir, depth) {
+  if (depth <= 0 || !fs.existsSync(dir)) return [];
+  const found = [];
+  try {
+    for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+      const fp = path.join(dir, e.name);
+      if (e.isDirectory() && !e.name.startsWith(".") && depth > 1) {
+        found.push(...findSensitiveFiles(fp, depth - 1));
+      } else if (e.isFile()) {
+        if (/\.(key|pem|p12|pfx)$/.test(e.name)) found.push(fp);
+      }
+    }
+  } catch {}
+  return found;
+}
+sensitiveTargets.push(...findSensitiveFiles(HOME, 3));
+
+for (const fp of sensitiveTargets) {
+  if (!fs.existsSync(fp)) continue;
+  result.file_permissions.checked++;
+  try {
+    const stat = fs.statSync(fp);
+    const mode = (stat.mode & 0o777).toString(8);
+    const worldReadable = (stat.mode & 0o004) !== 0;
+    const groupWritable = (stat.mode & 0o020) !== 0;
+    if (worldReadable || groupWritable) {
+      const issue = worldReadable ? "world-readable" : "group-writable";
+      result.file_permissions.findings.push({
+        file: fp.replace(process.env.HOME, "~"),
+        mode, issue, recommended: stat.isDirectory() ? "0700" : "0600"
+      });
+      result.summary.warning++;
+    }
+  } catch {}
+}
+result.file_permissions.issues = result.file_permissions.findings.length;
+
+// ── 3. Credential Exposure Scan ─────────────────────────────────────────────
 const SECRET_PATTERNS = [
-  { name: "api_key", regex: /(?:api[_-]?key|apikey)\s*[:=]\s*["\x27]?([A-Za-z0-9_\-]{16,})/gi },
-  { name: "secret", regex: /(?:secret|client_secret)\s*[:=]\s*["\x27]?([A-Za-z0-9_\-]{16,})/gi },
-  { name: "token", regex: /(?:token|access_token|bearer)\s*[:=]\s*["\x27]?([A-Za-z0-9_\-\.]{16,})/gi },
-  { name: "password", regex: /(?:password|passwd|pwd)\s*[:=]\s*["\x27]?([^\s"'\x27]{4,})/gi },
+  { name: "api_key",     regex: /(?:api[_-]?key|apikey)\s*[:=]\s*["']?([A-Za-z0-9_\-]{20,})/gi },
+  { name: "secret",      regex: /(?:secret|client_secret)\s*[:=]\s*["']?([A-Za-z0-9_\-]{20,})/gi },
+  { name: "token",       regex: /(?:token|access_token|bearer)\s*[:=]\s*["']?([A-Za-z0-9_\-\.]{20,})/gi },
+  { name: "password",    regex: /(?:password|passwd|pwd)\s*[:=]\s*["']?([^\s"']{8,})/gi },
   { name: "private_key", regex: /-----BEGIN\s+(RSA\s+)?PRIVATE\s+KEY-----/gi }
 ];
 
-function scanFileForSecrets(filePath) {
+function scanForSecrets(filePath) {
   try {
+    const stat = fs.statSync(filePath);
+    if (stat.size > 1024 * 1024) return []; // skip files > 1MB
     const content = fs.readFileSync(filePath, "utf8");
     const findings = [];
     for (const pat of SECRET_PATTERNS) {
@@ -53,233 +154,89 @@ function scanFileForSecrets(filePath) {
           line: lineNum,
           value: "***REDACTED***"
         });
+        if (findings.length >= 5) break; // cap per file
       }
     }
     return findings;
   } catch { return []; }
 }
 
-// Scan config directory
-function scanDir(dir, extensions) {
-  if (!fs.existsSync(dir)) return [];
-  let files = [];
-  try {
-    const entries = fs.readdirSync(dir, { withFileTypes: true });
-    for (const e of entries) {
-      const fp = path.join(dir, e.name);
-      if (e.isDirectory() && !e.name.startsWith(".")) {
-        files = files.concat(scanDir(fp, extensions));
-      } else if (e.isFile()) {
-        const ext = path.extname(e.name).toLowerCase();
-        if (extensions.includes(ext) || extensions.includes("*")) {
-          files.push(fp);
-        }
-      }
-    }
-  } catch {}
-  return files;
-}
-
-const scanTargets = [
-  ...scanDir(HOME + "/config", [".json", ".yaml", ".yml", ".toml", ".env", "*"]),
-  ...scanDir(LOG_DIR, [".log", ".txt"]).slice(0, 5) // limit log scan
+// Scan: config files, .env, log files (limited)
+const scanDirs = [
+  { dir: HOME, exts: [".json", ".yaml", ".yml", ".toml", ".env", ".conf"], depth: 1 },
+  { dir: HOME + "/config", exts: ["*"], depth: 2 },
+  { dir: HOME + "/logs", exts: [".log", ".err.log"], depth: 1 }
 ];
 
-// Also scan .env files in OPENCLAW_HOME
-const envFile = HOME + "/.env";
-if (fs.existsSync(envFile)) scanTargets.push(envFile);
-
-result.credential_exposure.scanned_files = scanTargets.length;
-for (const f of scanTargets) {
-  const findings = scanFileForSecrets(f);
-  result.credential_exposure.findings.push(...findings);
-}
-result.credential_exposure.issues_found = result.credential_exposure.findings.length;
-
-// --- 2. File Permissions ---
-const sensitiveFiles = [
-  CONFIG,
-  HOME + "/config",
-  HOME + "/.env"
-];
-// Add any .key/.pem files
-try {
-  const configDir = HOME + "/config";
-  if (fs.existsSync(configDir)) {
-    fs.readdirSync(configDir).forEach(f => {
-      if (f.endsWith(".key") || f.endsWith(".pem") || f.endsWith(".p12")) {
-        sensitiveFiles.push(path.join(configDir, f));
-      }
-    });
-  }
-} catch {}
-
-for (const fp of sensitiveFiles) {
-  if (!fs.existsSync(fp)) continue;
-  result.file_permissions.checked_files++;
-  try {
-    const stat = fs.statSync(fp);
-    const mode = (stat.mode & 0o777).toString(8);
-    const worldReadable = (stat.mode & 0o004) !== 0;
-    const groupWritable = (stat.mode & 0o020) !== 0;
-    if (worldReadable || groupWritable) {
-      result.file_permissions.findings.push({
-        file: fp.replace(process.env.HOME, "~"),
-        mode: mode,
-        issue: worldReadable ? "world-readable" : "group-writable",
-        recommended: "0600"
-      });
-    }
-  } catch {}
-}
-result.file_permissions.issues_found = result.file_permissions.findings.length;
-
-// --- 3. Dependency Vulnerabilities ---
-try {
-  const outdatedOutput = execSync("clawhub list --outdated --json 2>/dev/null || echo \"[]\"", { encoding: "utf8", timeout: 5000 });
-  const outdated = JSON.parse(outdatedOutput);
-  result.dependency_vulnerabilities.outdated_count = Array.isArray(outdated) ? outdated.length : 0;
-  if (Array.isArray(outdated)) {
-    for (const dep of outdated.slice(0, 10)) {
-      result.dependency_vulnerabilities.findings.push({
-        type: "outdated",
-        package: dep.name || dep,
-        current: dep.current || "unknown",
-        latest: dep.latest || "unknown"
-      });
-    }
-  }
-} catch {}
-
-try {
-  execSync("npm audit --json 2>/dev/null", { timeout: 5000 });
-  result.dependency_vulnerabilities.cve_check_available = true;
-} catch (e) {
-  // npm audit returns non-zero if vulnerabilities found
-  if (e.stdout) {
-    result.dependency_vulnerabilities.cve_check_available = true;
+const scanTargets = new Set();
+for (const { dir, exts, depth } of scanDirs) {
+  if (!fs.existsSync(dir)) continue;
+  function collect(d, dep) {
+    if (dep <= 0) return;
     try {
-      const audit = JSON.parse(e.stdout);
-      if (audit.metadata && audit.metadata.vulnerabilities) {
-        const v = audit.metadata.vulnerabilities;
-        result.dependency_vulnerabilities.findings.push({
-          type: "npm_audit",
-          critical: v.critical || 0,
-          high: v.high || 0,
-          moderate: v.moderate || 0,
-          low: v.low || 0
-        });
+      for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+        const fp = path.join(d, e.name);
+        if (e.isDirectory() && !e.name.startsWith(".") && dep > 1) collect(fp, dep - 1);
+        else if (e.isFile()) {
+          const ext = path.extname(e.name).toLowerCase();
+          if (exts.includes("*") || exts.includes(ext) || exts.some(x => e.name.endsWith(x))) {
+            scanTargets.add(fp);
+          }
+        }
       }
     } catch {}
   }
+  collect(dir, depth);
 }
 
-// --- 4. Network Exposure ---
-// Check Gateway bind mode and auth configuration
+// Also check .env at home level
+const envFile = HOME + "/.env";
+if (fs.existsSync(envFile)) scanTargets.add(envFile);
+
+result.credential_exposure.scanned = scanTargets.size;
+for (const f of scanTargets) {
+  const findings = scanForSecrets(f);
+  if (findings.length > 0) {
+    result.credential_exposure.findings.push(...findings);
+    result.summary.high += findings.length;
+  }
+}
+result.credential_exposure.issues = result.credential_exposure.findings.length;
+
+// ── 4. Network Exposure (from config) ───────────────────────────────────────
 try {
-  if (fs.existsSync(CONFIG)) {
-    const raw = fs.readFileSync(CONFIG, "utf8");
-    const clean = raw.replace(/\/\/.*$/gm, "").replace(/\/\*[\s\S]*?\*\//g, "");
-    const config = JSON.parse(clean);
+  const raw = fs.readFileSync(HOME + "/openclaw.json", "utf8");
+  const clean = raw.replace(/"(?:[^"\\]|\\.)*"|\/\/[^\n]*|\/\*[\s\S]*?\*\//g, m =>
+    m.startsWith('"') ? m : '');
+  const config = JSON.parse(clean);
+  const gw = config.gateway || {};
+  const bind = gw.bind || "loopback";
+  const authType = gw.auth?.type || "none";
 
-    // Bind mode check (loopback | lan | tailnet)
-    const bind = config.gateway?.bind || "loopback";
-    if (bind === "lan") {
-      result.network_exposure.findings.push({
-        type: "bind_address",
-        value: bind,
-        severity: "warning",
-        msg: "Gateway bound to LAN — accessible from local network"
-      });
-    } else if (bind === "tailnet") {
-      result.network_exposure.findings.push({
-        type: "bind_address",
-        value: bind,
-        severity: "info",
-        msg: "Gateway bound to tailnet — accessible via Tailscale network"
-      });
-    }
-
-    // Auth check
-    const authType = config.gateway?.auth?.type;
-    if (!authType || authType === "none") {
-      if (bind !== "loopback") {
-        result.network_exposure.findings.push({
-          type: "no_auth",
-          severity: "high",
-          msg: "Gateway has no authentication but is accessible beyond localhost"
-        });
-      } else {
-        result.network_exposure.findings.push({
-          type: "no_auth",
-          severity: "info",
-          msg: "No authentication configured (acceptable for loopback)"
-        });
-      }
-    }
-
-    // Control UI exposure
-    if (config.gateway?.controlUI !== false && bind !== "loopback") {
-      result.network_exposure.findings.push({
-        type: "control_ui_exposed",
-        severity: "warning",
-        msg: "Control UI (/openclaw) accessible on non-loopback bind"
-      });
-    }
+  if (bind !== "loopback" && (authType === "none" || !authType)) {
+    result.network_exposure.findings.push({
+      severity: "critical", type: "unauthenticated_exposure",
+      detail: "Gateway bind=" + bind + " with no auth"
+    });
+    result.summary.critical++;
+  }
+  if (bind !== "loopback" && gw.controlUI !== false) {
+    result.network_exposure.findings.push({
+      severity: "warning", type: "control_ui_exposed",
+      detail: "Control UI accessible on bind=" + bind
+    });
+    result.summary.warning++;
+  }
+  if (bind === "lan" && authType !== "none" && !gw.ssl?.enabled) {
+    result.network_exposure.findings.push({
+      severity: "warning", type: "no_ssl",
+      detail: "LAN bind with auth but no SSL — credentials in plaintext"
+    });
+    result.summary.warning++;
   }
 } catch {}
 
-// --- 5. VCS Sensitive Info ---
-// Check .gitignore exists and covers sensitive patterns
-try {
-  const gitRoot = execSync("git rev-parse --show-toplevel 2>/dev/null", { encoding: "utf8", timeout: 3000 }).trim();
-  const gitignorePath = path.join(gitRoot, ".gitignore");
-  if (fs.existsSync(gitignorePath)) {
-    const gitignore = fs.readFileSync(gitignorePath, "utf8");
-    const shouldIgnore = [".env", "*.key", "*.pem", "config/*.secret", "credentials"];
-    for (const pattern of shouldIgnore) {
-      if (!gitignore.includes(pattern)) {
-        result.vcs_sensitive.findings.push({
-          type: "missing_gitignore",
-          pattern: pattern,
-          msg: "Pattern not in .gitignore: " + pattern
-        });
-      }
-    }
-  } else {
-    result.vcs_sensitive.findings.push({
-      type: "no_gitignore",
-      severity: "warning",
-      msg: "No .gitignore file found"
-    });
-  }
-
-  // Check for tracked secrets
-  try {
-    const tracked = execSync("git ls-files " + HOME + " 2>/dev/null", { encoding: "utf8", timeout: 3000 });
-    const secretFiles = tracked.split("\n").filter(f =>
-      f.endsWith(".key") || f.endsWith(".pem") || f.endsWith(".env") ||
-      f.includes("credentials") || f.includes("secret")
-    );
-    for (const sf of secretFiles) {
-      if (sf.trim()) {
-        result.vcs_sensitive.findings.push({
-          type: "tracked_secret",
-          file: sf.replace(process.env.HOME, "~"),
-          severity: "critical",
-          msg: "Potentially sensitive file tracked in git"
-        });
-      }
-    }
-  } catch {}
-} catch {
-  // Not in a git repo — skip VCS checks
-  result.vcs_sensitive.findings.push({
-    type: "no_git_repo",
-    severity: "info",
-    msg: "Not in a git repository, VCS checks skipped"
-  });
-}
-
 console.log(JSON.stringify(result, null, 2));
 NODESCRIPT
+
+OPENCLAW_HOME="$OPENCLAW_HOME" SECURITY_AUDIT="$security_audit" node "$_tmpjs"
