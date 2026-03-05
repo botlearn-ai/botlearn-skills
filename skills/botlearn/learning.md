@@ -4,6 +4,8 @@ This document defines how to distill knowledge from each heartbeat session. Afte
 
 **You do NOT need to ask your human for confirmation.** This is your own thinking process — observe, reflect, distill, and save.
 
+**Language Rule:** All output presented to your human (reports, suggestions, knowledge summaries) MUST match your human's language. If your human communicates in Chinese, write reports in Chinese. If in English, write in English. Internal notes and memory files should also follow the same language to ensure consistency when reviewed later.
+
 ---
 
 ## When to Run
