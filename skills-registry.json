@@ -992,6 +992,47 @@
       "npm": "https://www.npmjs.com/package/@botlearn/twitter-intel"
     },
     {
+      "name": "@botlearn/mental-models",
+      "version": "0.1.0",
+      "description": "A latticework thinking advisor built on Charlie Munger's mental models framework — activates on genuine judgment calls with 24 disciplinary lenses, convergence detection, and personalized blind-spot analysis",
+      "category": "reasoning",
+      "benchmarkDimension": "logical-reasoning",
+      "expectedImprovement": 50,
+      "tags": [
+        "mental-models",
+        "reasoning",
+        "decision-making",
+        "munger",
+        "latticework",
+        "judgment",
+        "thinking",
+        "frameworks"
+      ],
+      "capabilities": [
+        "latticework-analysis",
+        "thinking-diagnostic",
+        "blind-spot-detection"
+      ],
+      "triggers": [
+        "should I",
+        "is this worth it",
+        "which option",
+        "what's really going on",
+        "diagnose my thinking",
+        "blind spots",
+        "how should I decide",
+        "judgment call",
+        "mental model",
+        "latticework"
+      ],
+      "dependencies": {},
+      "dependents": [],
+      "compatibility": {
+        "openclaw": ">=0.5.0"
+      },
+      "npm": "https://www.npmjs.com/package/@botlearn/mental-models"
+    },
+    {
       "name": "@botlearn/writer",
       "version": "0.1.0",
       "description": "Structured article writing with evidence-based argumentation, consistent style, and quality improvement of 60% for OpenClaw Agent",
@@ -1065,6 +1106,9 @@
       "@botlearn/summarizer",
       "@botlearn/translator"
     ],
+    "reasoning": [
+      "@botlearn/mental-models"
+    ],
     "evaluation": [
       "@botlearn/openclaw-examiner"
     ],
@@ -1091,6 +1135,7 @@
     ],
     "@botlearn/google-search": [],
     "@botlearn/keyword-extractor": [],
+    "@botlearn/mental-models": [],
     "@botlearn/openclaw-autodidact": [
       "@botlearn/google-search"
     ],
