@@ -1,0 +1,68 @@
+{
+  "name": "@botlearn/mental-models",
+  "version": "0.1.0",
+  "description": "A latticework thinking advisor built on Charlie Munger's mental models framework — activates on genuine judgment calls with 24 disciplinary lenses, convergence detection, and personalized blind-spot analysis",
+  "category": "reasoning",
+  "author": "BotLearn",
+  "benchmarkDimension": "logical-reasoning",
+  "expectedImprovement": 50,
+  "dependencies": {},
+  "compatibility": {
+    "openclaw": ">=0.5.0"
+  },
+  "files": {
+    "skill": "SKILL.md",
+    "knowledge": [
+      "models/01-first-principles.md",
+      "models/02-evolutionary-thinking.md",
+      "models/03-systems-thinking.md",
+      "models/04-probabilistic-thinking.md",
+      "models/05-antifragile.md",
+      "models/06-paradigm-shift.md",
+      "models/07-scale-power-laws.md",
+      "models/08-entropy-information.md",
+      "models/09-game-theory.md",
+      "models/10-network-effects.md",
+      "models/11-scarcity-bandwidth.md",
+      "models/12-reframing-causation.md",
+      "models/13-institutions-matter.md",
+      "models/14-power-discourse.md",
+      "models/15-self-reference.md",
+      "models/16-narrative-reality.md",
+      "models/17-medium-shapes-message.md",
+      "models/18-meaning-under-pressure.md",
+      "models/19-scientific-skepticism.md",
+      "models/20-nonlinear-wuwei.md"
+    ],
+    "assets": [
+      "assets/user-profile-template.md"
+    ]
+  },
+  "tags": [
+    "mental-models",
+    "reasoning",
+    "decision-making",
+    "munger",
+    "latticework",
+    "judgment",
+    "thinking",
+    "frameworks"
+  ],
+  "capabilities": [
+    "latticework-analysis",
+    "thinking-diagnostic",
+    "blind-spot-detection"
+  ],
+  "triggers": [
+    "should I",
+    "is this worth it",
+    "which option",
+    "what's really going on",
+    "diagnose my thinking",
+    "blind spots",
+    "how should I decide",
+    "judgment call",
+    "mental model",
+    "latticework"
+  ]
+}
