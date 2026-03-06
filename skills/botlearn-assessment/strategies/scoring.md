@@ -66,8 +66,9 @@ If a question is SKIPPED due to missing tools/capabilities:
 3. **Programmatic scores not corrected**: Objective verification results reported as-is.
 4. **Direct zero rule**: If a question requires a capability the agent does not have, score 0 — never estimate or guess. Auto-skip the entire question.
 5. **Score 5 evidence requirement**: A criterion score of 5/5 must include "why not 4?" justification.
-6. **Immediate submission**: Once a score is output to the user, it is FINAL. No revision.
-7. **No user assistance**: The user is the invigilator. Never ask for help during scoring.
+6. **First-exam cap**: If no historical exam records exist in `results/INDEX.md`, all criterion scores are capped at **4/5**. The agent tends to overestimate on first assessment ("doesn't know what it doesn't know"). This cap is removed once 1+ prior exam records exist.
+7. **Immediate submission**: Once a score is output to the user, it is FINAL. No revision.
+8. **No user assistance**: The user is the invigilator. Never ask for help during scoring.
 
 ## Criterion Score Scale (0–5)
 

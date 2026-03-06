@@ -94,8 +94,29 @@ From `DATA.config.agents`:
 | `heartbeat.auto_recovery` | true | false | — | ⚠️ -10 |
 | `heartbeat.enabled` | true | false | — | ⚠️ -10 |
 | `memory.auto_compact` | true | false | — | note only |
+| `model.fallbacks` | ≥1 different model | empty or same as primary | — | ⚠️ -10 |
+| `subagents.maxConcurrent` | scaled to hardware | default (8) on powerful machine | — | note only |
 
-### 2.5 Models & Rate Limit
+**Model Fallbacks:** If `agents.defaults.model.fallbacks` is empty or only contains the same model as `primary`, flag ⚠️ — single point of failure. Recommend `fix_cases.md` Case 2.7.
+
+**Concurrency Tuning:** If machine has ≥8 CPU cores and ≥16GB RAM (from `DATA.env`) but `maxConcurrent` ≤ 4 and `subagents.maxConcurrent` ≤ 8, add a note suggesting scaling up. Recommend `fix_cases.md` Case 2.8.
+
+### 2.5 Session Configuration
+
+From `DATA.config.session` and `DATA.openclaw_json`:
+
+| Parameter | Healthy | Warning | Error | Score Impact |
+|-----------|---------|---------|-------|-------------|
+| `session` section | present | missing entirely | — | ⚠️ -10 |
+| `dmScope` | `per-channel-peer` or `per-account-channel-peer` | `main` (all DMs shared) | — | ⚠️ -10 |
+| `reset` | configured (daily or idle) | missing | — | ⚠️ -5 |
+| `maintenance.mode` | `enforce` | `warn` or missing | — | ⚠️ -5 |
+| `maintenance.maxDiskBytes` | set | unset | — | note only |
+| `parentForkMaxTokens` | set and ≤ 200000 | unset or > 200000 | — | note only |
+
+If session config is missing or minimal, recommend `fix_cases.md` Case 2.9 with full recommended config.
+
+### 2.6 Models & Rate Limit
 
 From `DATA.config.models`, `DATA.models` and `DATA.logs`:
 
@@ -124,7 +145,7 @@ For each model with undersized window, output: model name, current values, recom
 Recommended: `contextWindow >= 100000`, `maxTokens >= 16384`. For complex skills: `contextWindow >= 500000`, `maxTokens >= 65536`.
 If any model flagged, recommend `fix_cases.md` Case 2.6.
 
-### 2.6 Tools Section
+### 2.7 Tools Section
 
 From `DATA.config.tools`:
 
@@ -134,7 +155,7 @@ From `DATA.config.tools`:
 | `mcp_servers` | ≥1 | 0 | ⚠️ -5 |
 | `enabled` list | non-empty | empty | ⚠️ -5 |
 
-### 2.7 Gateway Runtime Status
+### 2.8 Gateway Runtime Status
 
 Primary source: `DATA.health` (from `openclaw health --json`). Cross-validate with `DATA.status.overview.gateway`.
 
@@ -157,7 +178,7 @@ assessment in Stage 4 (treat as `bind=tailnet` equivalent for security posture).
 If `DATA.status.diagnosis.config_valid = false` AND `DATA.config.cli_validation.success = true`:
 flag as inconsistency ⚠️ — two validation methods disagree.
 
-### 2.8 Channels
+### 2.9 Channels
 
 Primary source: `DATA.channels`. Cross-validate with `DATA.status.channels[]`.
 
@@ -170,7 +191,7 @@ Primary source: `DATA.channels`. Cross-validate with `DATA.status.channels[]`.
 For each channel in `DATA.status.channels[]`, if `enabled=true` but `state` is not "active" or "connected",
 report channel name + state as a finding. Cross-reference against `DATA.channels` for confirmation.
 
-### 2.9 CLI Tools
+### 2.10 CLI Tools
 
 From `DATA.tools`:
 
