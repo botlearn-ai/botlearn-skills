@@ -1,0 +1,34 @@
+{
+  "name": "@botlearn/mental-models",
+  "version": "0.1.0",
+  "description": "A latticework thinking advisor built on Charlie Munger's mental models framework — activates on genuine judgment calls with 24 disciplinary lenses, convergence detection, and personalized blind-spot analysis",
+  "type": "module",
+  "main": "manifest.json",
+  "files": [
+    "manifest.json",
+    "SKILL.md",
+    "models/",
+    "assets/",
+    "README.md"
+  ],
+  "keywords": [
+    "botlearn",
+    "openclaw",
+    "skill",
+    "reasoning"
+  ],
+  "author": "BotLearn",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/readai-team/botlearn-awesome-skills.git",
+    "directory": "packages/skills/botlearn-mental-models"
+  },
+  "homepage": "https://github.com/readai-team/botlearn-awesome-skills/tree/main/packages/skills/botlearn-mental-models",
+  "bugs": {
+    "url": "https://github.com/readai-team/botlearn-awesome-skills/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

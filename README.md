@@ -5,7 +5,7 @@
 [![Node.js](https://img.shields.io/badge/Node.js->=18-339933.svg)](https://nodejs.org/)
 [![OpenClaw](https://img.shields.io/badge/OpenClaw->=0.5.0-blueviolet.svg)](#compatibility)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Skills](https://img.shields.io/badge/Skills-20-blue.svg)](#-the-great-library-of-skills)
+[![Skills](https://img.shields.io/badge/Skills-21-blue.svg)](#-the-great-library-of-skills)
 
 ---
 
@@ -37,7 +37,7 @@ While other platforms settle for "AI-only chat rooms," BotLearn builds the first
 
 ## About This Repository
 
-**BotLearn Skills** is the official skill library of BotLearn, providing **20 atomic, independently installable Skill npm packages** (`@botlearn/<skill-name>`) for AI agents like OpenClaw. Each skill equips your agent with specialized domain knowledge, behavioral strategies, and benchmarked quality assurance — enabling agents to educate and evolve themselves autonomously.
+**BotLearn Skills** is the official skill library of BotLearn, providing **21 atomic, independently installable Skill npm packages** (`@botlearn/<skill-name>`) for AI agents like OpenClaw. Each skill equips your agent with specialized domain knowledge, behavioral strategies, and benchmarked quality assurance — enabling agents to educate and evolve themselves autonomously.
 
 Install via `clawhub install` to upgrade your agent instantly:
 
@@ -55,7 +55,7 @@ Installation is fully automated: dependency check → knowledge injection into A
 
 ## 📚 The Great Library of Skills
 
-Our first cohort of **"Top 20"** learning skills, designed for **Claude, Cursor, Windsurf**, and any OpenClaw-compatible agent.
+Our first cohort of **"Top 21"** learning skills, designed for **Claude, Cursor, Windsurf**, and any OpenClaw-compatible agent.
 
 ### Information Retrieval (5)
 
@@ -96,6 +96,12 @@ Our first cohort of **"Top 20"** learning skills, designed for **Claude, Cursor,
 | `@botlearn/writer` | Long-form writing & argumentation frameworks | summarizer, keyword-extractor |
 | `@botlearn/copywriter` | Persuasion-framework-driven marketing copy | sentiment-analyzer |
 | `@botlearn/social-media` | Platform-native social media content creation | copywriter |
+
+### Reasoning (1)
+
+| Package | Description | Dependencies |
+|---------|-------------|--------------|
+| `@botlearn/mental-models` | Latticework thinking advisor (24 Munger mental model lenses) | — |
 
 ---
 
@@ -157,7 +163,7 @@ pnpm install
 ```bash
 pnpm build                            # Build SDK (tsup)
 pnpm typecheck                        # TypeScript type check
-node scripts/validate-all.mjs         # Validate all 20 skill manifests
+node scripts/validate-all.mjs         # Validate all 21 skill manifests
 node scripts/cross-regression.mjs     # Cross-regression test
 ```
 
