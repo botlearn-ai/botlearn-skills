@@ -91,6 +91,41 @@ openclaw workspace status
 openclaw workspace init --file <agent|user|soul|tool|identity>
 ```
 
+### Session Configuration
+
+```bash
+# Session config is set in openclaw.json under the "session" key.
+# Key fields:
+
+# dmScope — how DMs are grouped:
+#   main: all DMs share the main session
+#   per-peer: isolate by sender id across channels
+#   per-channel-peer: isolate per channel + sender (recommended for multi-user)
+#   per-account-channel-peer: isolate per account + channel + sender (recommended for multi-account)
+
+# reset — primary reset policy:
+#   mode: "daily" resets at atHour local time; "idle" resets after idleMinutes
+#   When both configured, whichever expires first wins
+
+# resetByType — per-type overrides (direct, group, thread)
+
+# parentForkMaxTokens — max parent-session totalTokens when forking thread session (default 100000)
+#   If parent totalTokens exceeds this, starts a fresh thread session instead
+
+# maintenance — session-store cleanup:
+#   mode: "warn" (logs only) or "enforce" (applies cleanup)
+#   pruneAfter: age cutoff for stale entries (default 30d)
+#   maxEntries: max entries in sessions.json (default 500)
+#   rotateBytes: rotate sessions.json when exceeding this size (default 10mb)
+#   maxDiskBytes: optional sessions-directory disk budget
+#   highWaterBytes: target after budget cleanup (default 80% of maxDiskBytes)
+
+# threadBindings — thread-bound session features:
+#   enabled: master switch
+#   idleHours: inactivity auto-unfocus (0 disables)
+#   maxAgeHours: hard max age (0 disables)
+```
+
 ### Rate Limit & Model Config
 
 ```bash

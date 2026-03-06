@@ -501,6 +501,261 @@ openclaw restart
 
 ---
 
+### Case 2.7 — Model Fallbacks Not Configured
+
+**Applicable Version:** All
+
+**Symptom:** When the primary model is unavailable (rate limited, API outage, maintenance window), the agent stops responding entirely. Single point of failure on one model.
+
+**Root Cause:** `agents.defaults.model` only has `primary` set without `fallbacks`, or `fallbacks` is empty / points to the same model as primary.
+
+**Diagnosis:**
+```bash
+# Check model config in openclaw.json
+node -e "
+const cfg = JSON.parse(require('fs').readFileSync('$OPENCLAW_HOME/openclaw.json','utf8'));
+const agents = cfg.agents?.defaults?.model || {};
+console.log('primary:', agents.primary || 'NOT SET');
+console.log('fallbacks:', JSON.stringify(agents.fallbacks || []));
+"
+```
+
+**Fix Steps:**
+```bash
+# 1. Backup config
+cp $OPENCLAW_HOME/openclaw.json $OPENCLAW_HOME/openclaw.json.bak
+
+# 2. Configure multiple fallback models
+node -e "
+const fs = require('fs');
+const path = '$OPENCLAW_HOME/openclaw.json';
+const cfg = JSON.parse(fs.readFileSync(path, 'utf8'));
+cfg.agents = cfg.agents || {};
+cfg.agents.defaults = cfg.agents.defaults || {};
+cfg.agents.defaults.model = cfg.agents.defaults.model || {};
+const model = cfg.agents.defaults.model;
+// Ensure fallbacks includes at least one different model
+if (!model.fallbacks || model.fallbacks.length === 0) {
+  model.fallbacks = [model.primary || 'zai/glm-5', 'zai/glm-7'];
+  console.log('fallbacks set to:', model.fallbacks);
+}
+fs.writeFileSync(path, JSON.stringify(cfg, null, 2) + '\n');
+"
+
+# 3. Also register fallback models in agents.defaults.models
+# (ensure each fallback has an alias entry)
+node -e "
+const fs = require('fs');
+const path = '$OPENCLAW_HOME/openclaw.json';
+const cfg = JSON.parse(fs.readFileSync(path, 'utf8'));
+cfg.agents.defaults.models = cfg.agents.defaults.models || {};
+const fallbacks = cfg.agents.defaults.model?.fallbacks || [];
+for (const fb of fallbacks) {
+  if (!cfg.agents.defaults.models[fb]) {
+    cfg.agents.defaults.models[fb] = { alias: fb.split('/').pop().toUpperCase() };
+    console.log('registered model:', fb);
+  }
+}
+fs.writeFileSync(path, JSON.stringify(cfg, null, 2) + '\n');
+"
+
+# 4. Restart
+openclaw restart
+```
+
+**Rollback:**
+```bash
+cp $OPENCLAW_HOME/openclaw.json.bak $OPENCLAW_HOME/openclaw.json
+openclaw restart
+```
+
+**Prevention:**
+- Always configure at least 2 different models in `fallbacks`
+- Ensure fallback models are from different providers when possible for maximum resilience
+- Verify fallback models are accessible (valid API keys, correct model names)
+
+---
+
+### Case 2.8 — Agent Concurrency Too Low for Hardware
+
+**Applicable Version:** All
+
+**Symptom:** Agent handles requests one at a time; user-facing latency high when multiple tasks are queued; subagent tasks execute sequentially instead of in parallel; hardware resources (CPU, memory) underutilized.
+
+**Root Cause:** `agents.defaults.maxConcurrent` and `subagents.maxConcurrent` left at default values (4 and 8 respectively), even though the machine has sufficient CPU cores and memory to handle more.
+
+**Diagnosis:**
+```bash
+# Check current concurrency settings
+node -e "
+const cfg = JSON.parse(require('fs').readFileSync('$OPENCLAW_HOME/openclaw.json','utf8'));
+const defaults = cfg.agents?.defaults || {};
+console.log('maxConcurrent:', defaults.maxConcurrent || 'NOT SET (default: 4)');
+console.log('subagents.maxConcurrent:', defaults.subagents?.maxConcurrent || 'NOT SET (default: 8)');
+"
+
+# Check machine resources
+sysctl -n hw.ncpu 2>/dev/null || nproc 2>/dev/null    # CPU cores
+sysctl -n hw.memsize 2>/dev/null | awk '{print $0/1073741824 " GB"}' || free -g 2>/dev/null | awk '/Mem:/{print $2 " GB"}'   # Total RAM
+```
+
+**Fix Steps:**
+```bash
+# Recommended: scale based on available resources
+# Rule of thumb: maxConcurrent = CPU cores, subagents = CPU cores * 2-4
+# Example for 10-core 32GB machine:
+
+# 1. Set agent concurrency
+openclaw config set agents.defaults.maxConcurrent 20
+
+# 2. Set subagent concurrency
+openclaw config set agents.defaults.subagents.maxConcurrent 80
+
+# 3. Restart
+openclaw restart
+
+# 4. Monitor resource usage under load
+ps aux | grep openclaw | grep -v grep
+```
+
+**Rollback:**
+```bash
+openclaw config set agents.defaults.maxConcurrent 4
+openclaw config set agents.defaults.subagents.maxConcurrent 8
+openclaw restart
+```
+
+**Prevention:**
+- After deploying to a new machine, tune concurrency based on available CPU and memory
+- Defaults (4 / 8) are conservative for development; production machines should scale up
+- Monitor memory usage — if memory pressure > 85%, reduce concurrency
+- Rule of thumb: 1 concurrent agent per 2GB available RAM
+
+---
+
+### Case 2.9 — Session Configuration Not Optimized
+
+**Applicable Version:** All
+
+**Symptom:** DMs from different users bleed into the same session; sessions never reset causing stale context; thread sessions inherit bloated parent transcripts; sessions.json grows unbounded; stale session files consume disk.
+
+**Root Cause:** Session configuration is absent or uses minimal defaults, causing suboptimal isolation, no auto-reset, and no storage maintenance.
+
+**Diagnosis:**
+```bash
+# Check current session config
+node -e "
+const cfg = JSON.parse(require('fs').readFileSync('$OPENCLAW_HOME/openclaw.json','utf8'));
+console.log(JSON.stringify(cfg.session || 'NOT CONFIGURED', null, 2));
+"
+
+# Check sessions.json size
+ls -lh $OPENCLAW_HOME/agents/*/sessions/sessions.json 2>/dev/null
+du -sh $OPENCLAW_HOME/agents/*/sessions/ 2>/dev/null
+```
+
+**Fix Steps:**
+```bash
+# 1. Backup
+cp $OPENCLAW_HOME/openclaw.json $OPENCLAW_HOME/openclaw.json.bak
+
+# 2. Apply recommended session configuration
+node -e "
+const fs = require('fs');
+const path = '$OPENCLAW_HOME/openclaw.json';
+const cfg = JSON.parse(fs.readFileSync(path, 'utf8'));
+cfg.session = {
+  scope: 'per-sender',
+  dmScope: 'per-channel-peer',
+  reset: {
+    mode: 'idle',          // idle mode: session persists while user is active
+    idleMinutes: 1440      // reset after 24h of inactivity
+  },
+  resetByType: {
+    direct: { mode: 'idle', idleMinutes: 1440 },  // DMs: 24h idle window
+    group:  { mode: 'idle', idleMinutes: 120 },    // Groups: 2h idle window
+    thread: { mode: 'daily', atHour: 4 }           // Threads: daily reset at 4am
+  },
+  parentForkMaxTokens: 100000,
+  maintenance: {
+    mode: 'enforce',
+    pruneAfter: '30d',
+    maxEntries: 500,
+    rotateBytes: '10mb',
+    resetArchiveRetention: '30d',
+    maxDiskBytes: '500mb',
+    highWaterBytes: '400mb'
+  },
+  threadBindings: {
+    enabled: true,
+    idleHours: 24,
+    maxAgeHours: 0
+  }
+};
+fs.writeFileSync(path, JSON.stringify(cfg, null, 2) + '\n');
+console.log('session config applied');
+"
+
+# 3. Restart
+openclaw restart
+```
+
+**Key Configuration Fields:**
+
+| Field | Recommended | Why |
+|-------|-------------|-----|
+| `dmScope` | `per-channel-peer` | Isolate DMs per channel + sender, prevents cross-user session bleeding |
+| `reset.mode` | depends on use case | See reset strategy below |
+| `parentForkMaxTokens` | `100000` | Prevent forking bloated parent sessions into threads |
+| `maintenance.mode` | `enforce` | Actually clean up stale sessions (not just warn) |
+| `maintenance.pruneAfter` | `30d` | Remove sessions older than 30 days |
+| `maintenance.maxEntries` | `500` | Cap session store entries |
+| `maintenance.maxDiskBytes` | `500mb` | Hard disk budget for session data |
+
+**Reset Strategy — the most impactful setting:**
+
+The `reset` config controls when session context is cleared. Choose based on your use case:
+
+| Scenario | Mode | Config | Effect |
+|----------|------|--------|--------|
+| **Quick task bot** | `daily` | `atHour: 4` | Resets every day at 4am, fresh context daily |
+| **Long-term companion** | `idle` | `idleMinutes: 1440` (24h) | Session persists as long as user stays active within 24h |
+| **Persistent memory agent** | `idle` | `idleMinutes: 4320` (3 days) | Maximum continuity, resets only after 3 days of silence |
+| **Balanced** | both | `mode: "daily", atHour: 4, idleMinutes: 60` | Whichever triggers first wins |
+
+**To keep long-term session continuity**, set `reset.mode: "idle"` with a large `idleMinutes` value. This way the agent remembers the full conversation as long as the user keeps interacting within the idle window:
+
+```json
+"reset": {
+  "mode": "idle",
+  "idleMinutes": 1440
+}
+```
+
+You can also override per chat type — e.g., keep direct chats persistent but reset groups more aggressively:
+
+```json
+"resetByType": {
+  "direct": { "mode": "idle", "idleMinutes": 1440 },
+  "group": { "mode": "idle", "idleMinutes": 120 },
+  "thread": { "mode": "daily", "atHour": 4 }
+}
+```
+
+**Rollback:**
+```bash
+cp $OPENCLAW_HOME/openclaw.json.bak $OPENCLAW_HOME/openclaw.json
+openclaw restart
+```
+
+**Prevention:**
+- Configure session settings during initial setup, not after problems appear
+- For multi-user inboxes: use `per-channel-peer` or `per-account-channel-peer` dmScope
+- Set `maintenance.mode: "enforce"` to automatically clean up — `warn` only logs but never acts
+- Monitor session directory size in periodic health checks
+
+---
+
 ## Domain 3: Security Risks
 
 ### Case 3.1 — Credentials Exposed in Config
