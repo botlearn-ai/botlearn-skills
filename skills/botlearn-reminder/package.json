@@ -1,7 +1,7 @@
 {
-  "name": "@botlearn/botlearn-tips",
-  "version": "0.1.0",
-  "description": "BotLearn 7-Day Quickstart Tutorial Reminder — heartbeat-driven, dynamically fetches and summarizes quickstart pages daily, presents reminders in the user's own language",
+  "name": "@botlearn/botlearn-reminder",
+  "version": "0.1.5",
+  "description": "BotLearn 7-Step Quickstart Tutorial Reminder — heartbeat-driven, fetches and summarizes quickstart pages every 24 hours, presents reminders in the user's own language",
   "type": "module",
   "main": "manifest.json",
   "files": [

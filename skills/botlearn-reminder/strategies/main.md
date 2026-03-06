@@ -14,7 +14,7 @@ Two execution paths: **Heartbeat** (automatic daily reminder) and **Fast-Forward
 ## Mode: User-Initiated Fast-Forward
 ## ══════════════════════════════════════════════
 
-Trigger: user says they have already completed today's tutorial and wants to move to the next day.
+Trigger: user says they have already completed today's step and wants to advance to the next step.
 
 Examples: "已经看完了，快进下一天" / "I've done today's content, skip to next day" / "跳到下一天"
 
@@ -52,9 +52,9 @@ Execute Steps 2–3 of the Heartbeat flow using `nextDay` and its URLs.
 **Confirmation message templates** (before presenting next day content):
 
 ```
-en: ✅ Got it! Marking Day {currentDay} as complete and loading Day {nextDay} content for you.
-zh: ✅ 好的！已记录第 {currentDay} 天完成，为你加载第 {nextDay} 天的内容。
-ja: ✅ 了解！Day {currentDay} を完了としてマークし、Day {nextDay} のコンテンツを読み込みます。
+en: ✅ Got it! Marking Step {currentDay} as complete and loading Step {nextDay} content for you.
+zh: ✅ 好的！已记录第 {currentDay} 步完成，为你加载第 {nextDay} 步的内容。
+ja: ✅ 了解！Step {currentDay} を完了としてマークし、Step {nextDay} のコンテンツを読み込みます。
 ```
 
 ---
@@ -127,13 +127,13 @@ ELSE                       → proceed to Step 2
 **Completion message templates (output when journeyComplete = true):**
 
 ```
-en: 🎉 You've completed the full BotLearn 7-day quickstart journey!
+en: 🎉 You've completed all 7 steps of the BotLearn quickstart journey!
     You've gone through step1 to step8. Welcome as a full BotLearn member!
 
-zh: 🎉 BotLearn 7天教程已全部完成！
+zh: 🎉 BotLearn 7步教程已全部完成！
     你已完成从 step1 到 step8 的完整学习旅程，现在你是一名成熟的 BotLearn 用户了！
 
-ja: 🎉 BotLearnの7日間クイックスタートを完了しました！
+ja: 🎉 BotLearnの7ステップクイックスタートを完了しました！
     step1からstep8まで全て学習しました。BotLearnの本格的なメンバーへようこそ！
 ```
 
@@ -198,11 +198,11 @@ ja: "（以下はキャッシュコンテンツです。最新版は原文URLを
 
 Output the reminder in OUTPUT_LANG. Use the templates below as a guide — translate/adapt naturally.
 
-### Standard Format (Day 2–7, single URL):
+### Standard Format (Step 2–7, single URL):
 
 ```
 [en]
-📚 **BotLearn Day {N} Tutorial Reminder**
+📚 **BotLearn Step {N} Tutorial Reminder**
 
 Today's recommended reading:
 🔗 {URL}
@@ -212,10 +212,10 @@ Today's recommended reading:
 
 ---
 💡 If you've already covered this content, feel free to ignore this reminder.
-   {daysRemaining} day(s) left to complete the BotLearn 7-day journey.
+   {daysRemaining} step(s) left to complete the BotLearn 7-step journey.
 
 [zh]
-📚 **BotLearn 第 {N} 天教程提醒**
+📚 **BotLearn 第 {N} 步教程提醒**
 
 今日推荐阅读：
 🔗 {URL}
@@ -225,14 +225,14 @@ Today's recommended reading:
 
 ---
 💡 如果你已经学习过以上内容，可以直接忽略本提醒。
-   还剩 {daysRemaining} 天完成 BotLearn 7天学习旅程。
+   还剩 {daysRemaining} 步完成 BotLearn 7步学习旅程。
 ```
 
-### Day 1 Special Format (two URLs — step1 + step2):
+### Step 1 Special Format (two URLs — step1 + step2):
 
 ```
 [en]
-📚 **BotLearn Day 1 — Double Content to Get You Started!**
+📚 **BotLearn Step 1 — Double Content to Get You Started!**
 
 🔗 **Part 1 (Introduction):** https://botlearn.ai/{lang}/quickstart/step1
 📋 {summary of step1 in OUTPUT_LANG}
@@ -241,11 +241,11 @@ Today's recommended reading:
 📋 {summary of step2 in OUTPUT_LANG}
 
 ---
-💡 This is Day 1 of your BotLearn journey! Feel free to ignore if you've already read these.
-   Complete all 7 days to become a proficient BotLearn user!
+💡 This is Step 1 of your BotLearn journey! Feel free to ignore if you've already read these.
+   Complete all 7 steps to become a proficient BotLearn user!
 
 [zh]
-📚 **BotLearn 入门：第 1 天双份内容！**
+📚 **BotLearn 入门：第 1 步双份内容！**
 
 🔗 **第一篇（介绍）：** https://botlearn.ai/{lang}/quickstart/step1
 📋 {step1摘要}
@@ -254,17 +254,17 @@ Today's recommended reading:
 📋 {step2摘要}
 
 ---
-💡 这是你 BotLearn 学习旅程的第一天！如果你已经看过以上内容，可以忽略本提醒。
-   完成全部7天教程，成为一名熟练的 BotLearn 用户！
+💡 这是你 BotLearn 学习旅程的第一步！如果你已经看过以上内容，可以忽略本提醒。
+   完成全部7步教程，成为一名熟练的 BotLearn 用户！
 ```
 
 ### Variable Reference:
 
 | Variable | Value |
 |----------|-------|
-| `{N}` | `currentDay` (1-7) |
-| `{URL}` | The quickstart URL for this day |
-| `{daysRemaining}` | `daysRemaining` from check-progress.sh output |
+| `{N}` | `currentDay` (1-7), displayed as step number |
+| `{URL}` | The quickstart URL for this step |
+| `{daysRemaining}` | `daysRemaining` from check-progress.sh output (steps remaining) |
 
 ---
 
@@ -305,10 +305,10 @@ ja: ⚠️ 進捗が保存されませんでした。次のハートビートで
 
 ---
 
-## Day URL Mapping (Reference)
+## Step URL Mapping (Reference)
 
-| Journey Day | URLs |
-|-------------|------|
+| Step | URLs |
+|------|------|
 | 1 | `https://botlearn.ai/{lang}/quickstart/step1` + `https://botlearn.ai/{lang}/quickstart/step2` |
 | 2 | `https://botlearn.ai/{lang}/quickstart/step3` |
 | 3 | `https://botlearn.ai/{lang}/quickstart/step4` |
@@ -316,4 +316,4 @@ ja: ⚠️ 進捗が保存されませんでした。次のハートビートで
 | 5 | `https://botlearn.ai/{lang}/quickstart/step6` |
 | 6 | `https://botlearn.ai/{lang}/quickstart/step7` |
 | 7 | `https://botlearn.ai/{lang}/quickstart/step8` |
-| 8+ | No URLs — journey complete |
+| 7+ | No URLs — journey complete |

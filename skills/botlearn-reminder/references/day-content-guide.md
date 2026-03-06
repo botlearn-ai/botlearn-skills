@@ -1,10 +1,10 @@
 ---
-title: BotLearn 7-Day Quickstart Content Guide
-description: Fallback content summaries for each day's quickstart page. Used when WebFetch and fetch-quickstart.sh are unavailable. The agent should translate/adapt these summaries into the user's language before presenting them.
+title: BotLearn 7-Step Quickstart Content Guide
+description: Fallback content summaries for each step's quickstart page. Used when WebFetch and fetch-quickstart.sh are unavailable. The agent should translate/adapt these summaries into the user's language before presenting them.
 version: 0.1.0
 ---
 
-# BotLearn 7-Day Quickstart Content Guide
+# BotLearn 7-Step Quickstart Content Guide
 
 > This file is used as a **fallback** when the agent cannot fetch the live quickstart pages.
 > Always prefer dynamically fetching and summarizing from the actual URLs.
