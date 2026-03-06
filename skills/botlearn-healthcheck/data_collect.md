@@ -18,7 +18,7 @@ Execute each script via bash, capture JSON from stdout, store in context:
 | `DATA.config` | `scripts/collect-config.sh` | 15s | Config validation (`openclaw config validate`), sections, agent/gateway/tools settings |
 | `DATA.logs` | `scripts/collect-logs.sh` | 20s | Error rate, anomaly spikes, critical events |
 | `DATA.skills` | `scripts/collect-skills.sh` | 30s | Installed skills, agent tools, botlearn ecosystem, install capability |
-| `DATA.health` | `scripts/collect-health.sh` | 10s | Gateway endpoint reachability, latency |
+| `DATA.health` | `openclaw health --json` | 10s | Gateway reachability, endpoint latency, service status |
 | `DATA.precheck` | `scripts/collect-precheck.sh` | 30s | `openclaw doctor` built-in self-check results |
 | `DATA.channels` | `scripts/collect-channels.sh` | 10s | Channel registration, configuration status |
 | `DATA.tools` | `scripts/collect-tools.sh` | 15s | MCP + CLI tool availability |
@@ -151,7 +151,39 @@ Store as `DATA.memory_stats`:
 
 ---
 
-### 2.6 Workspace Heartbeat
+### 2.6 Model Configuration
+
+```bash
+cat "${OPENCLAW_HOME:-$HOME/.openclaw}/agent/models.json" 2>/dev/null
+```
+
+Store as `DATA.models`. Parse each model entry for `contextWindow` (or `context_window`) and `maxTokens` (or `max_tokens`).
+If file missing: `DATA.models = null`.
+
+---
+
+### 2.7 Cache Stats
+
+```bash
+# Check if openclaw cache commands are available
+openclaw cache stats 2>/dev/null
+```
+
+Store as `DATA.cache`:
+```json
+{
+  "available": true,
+  "history_count": 150,
+  "index_size_mb": 2.3,
+  "total_size_mb": 45.6
+}
+```
+
+If `openclaw cache stats` is unavailable or fails: `DATA.cache = { available: false }`.
+
+---
+
+### 2.8 Workspace Heartbeat
 
 ```bash
 cat "${OPENCLAW_HOME:-$HOME/.openclaw}/workspace/HEARTBEAT.md" 2>/dev/null
@@ -161,7 +193,7 @@ If file missing: `DATA.heartbeat = null`.
 
 ---
 
-### 2.7 Workspace Identity Files
+### 2.9 Workspace Identity Files
 
 Read the agent's core identity and configuration files from the workspace directory.
 These define who the agent is, who the user is, and what tools the agent has access to.
