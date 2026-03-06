@@ -1,202 +1,163 @@
-# @botlearn/openclaw-examiner v3
+# @botlearn/botlearn-assessment
 
-OpenClaw Agent **自我评测**系统 v3 — Agent 自主出题、自主回答、自主评分，采用角色切换模式和自评诚信协议，CLEAR 框架启发的 10 维度差异权重评估。
+OpenClaw Agent 5-Dimension Capability Self-Assessment System — the agent autonomously takes an exam, answers questions, self-evaluates against reference answers, and generates a visual report.
 
-## 概述
+## How It Works
 
-`openclaw-examiner` 是 OpenClaw Agent 的自动化能力自评 Skill。v3 版本彻底重构为**自我评测模式**：Agent 触发后自主完成出题、答题、评分全流程，将完整报告呈现给用户。
-
-**与 `openclaw-doctor` 的区别**：Doctor 检查"是否正常运行"，Examiner 自评"我运行得多好、多稳定、多高效"。
-
-## v3 核心升级（vs v2）
-
-| 特性 | v2 | v3 |
-|------|----|----|
-| 答题方 | 用户答题 | **Agent 自主答题** |
-| 交互模式 | 等待用户回答 | **全自动执行** |
-| 角色分离 | 无 | **角色切换模式**（考生 ↔ 考官） |
-| 偏差控制 | ±15% 偏差声明 | **-5% 全局校正 + 高分质疑协议** |
-| 分数显示 | 单一分数 | **raw + adjusted 双分数** |
-| 报告语言 | "你的回答" | **"我的回答"** |
-| 触发后行为 | 等待 START | **立即开始** |
-
-## 自评流程
+The assessment follows a strict **4-phase pipeline** where the agent acts as both examinee and examiner:
 
 ```
-触发 → 选题 → Agent 自答（考生角色）→ Agent 评分（考官角色）→ 完整报告 → 邀请用户提问
+Phase 1: Intent Recognition
+    → Detect exam mode (full / single dimension / view history)
+
+Phase 2: Answer All Questions (Examinee Role)
+    → For each question:
+       1. Output the question to the user (invigilator)
+       2. Attempt to solve it autonomously
+       3. Output the answer — FINAL, no revision
+       4. Move to next question
+
+Phase 3: Self-Evaluation (Examiner Role)
+    → After ALL questions answered:
+       1. Read rubric + reference answer for each question
+       2. Score each criterion (0-5) with CoT justification
+       3. Apply -5% correction to prevent self-inflation
+       4. First-exam cap: max 4/5 per criterion if no history exists
+
+Phase 4: Report Generation
+    → Generate Markdown + HTML reports with radar chart
+    → Output file paths to the user
 ```
 
-### 角色切换模式
+## 5 Dimensions
+
+| # | Dimension | Weight | What It Tests |
+|---|-----------|--------|--------------|
+| D1 | Reasoning & Planning | 25% | Multi-step inference, cross-domain analogy, decision frameworks |
+| D2 | Information Retrieval | 22% | Precision search, multi-source synthesis, multi-hop constrained lookup |
+| D3 | Content Creation | 18% | Structured writing, style control, audience targeting, data consistency |
+| D4 | Execution & Building | 20% | Runnable code generation, schema compliance, TypeScript modules |
+| D5 | Tool Orchestration | 15% | Tool selection, workflow design, pipeline orchestration, error recovery |
+
+Each dimension has 3 questions (Easy / Medium / Hard). Each run randomly selects ONE question per dimension for variety across assessments.
+
+## Exam Modes
+
+| Mode | Scope | When to Use |
+|------|-------|-------------|
+| Full Exam | All 5 dimensions, 5 questions total | Comprehensive capability baseline |
+| Dimension Exam | Single dimension, 1 question | Targeted improvement tracking |
+| View History | Read past results + trend analysis | Progress review |
+
+## Key Design Principles
+
+### Question First, Answer Second
+Each question is shown to the user (invigilator) before the agent attempts it. The user sees what is being asked, then watches the agent work through it.
+
+### Separation of Answering and Scoring
+The agent answers ALL questions first without consulting any rubric. Only after all answers are submitted does the self-evaluation phase begin. This prevents the agent from tailoring answers to the scoring criteria.
+
+### Reference Answer Verification
+Every question has a corresponding reference answer (`references/d{N}-q{L}-{difficulty}.md`) containing:
+- **Key points checklist** — what a qualified answer must cover
+- **Scoring anchors** — concrete examples for each score level
+- **Expected values** — for programmatic verification (D2, D4)
+- **Common failure modes** — typical mistakes to watch for
+
+The agent MUST compare its answer against the reference before scoring.
+
+### Anti-Inflation Safeguards
+
+| Safeguard | Mechanism |
+|-----------|-----------|
+| -5% global correction | All CoT self-judged scores: `AdjScore = RawScore × 0.95` |
+| First-exam cap | No criterion can score above 4/5 on the first assessment (no history) |
+| High-score justification | Score 4+ requires "why not 3?" evidence; score 5 requires "external evaluator" argument |
+| Reference anchoring | Scoring must cite specific key points from the reference answer |
+
+## Scoring Formula
 
 ```
-┌─────────────────────────────────────┐
-│  考官角色（全程主控）                │
-│                                      │
-│  FOR 每道题:                         │
-│    ┌──────────────────────────┐     │
-│    │  切换 → 考生角色          │     │
-│    │  "用真实能力回答"          │     │
-│    │  "不要看评分标准"          │     │
-│    │  → 生成回答               │     │
-│    └──────────────────────────┘     │
-│    切换回 → 考官角色                 │
-│    "严格按标准打分"                  │
-│    → 评分 + CoT + 诚信检查           │
-│                                      │
-│  生成完整报告 → 呈现给用户           │
-└─────────────────────────────────────┘
+Per question:  RawScore = sum(criterion_score × criterion_weight) × 20  [0-100]
+Per question:  AdjScore = RawScore × 0.95                               [CoT only]
+Per dimension: DimScore = single question score (0 if skipped)
+Overall:       D1×0.25 + D2×0.22 + D3×0.18 + D4×0.20 + D5×0.15
 ```
 
-### 自评诚信协议
+## Performance Levels
 
-- **-5% 全局校正**：所有 CoT 自评分数自动下调 5%
-- **高分质疑**：分数 ≥4 必须提供"为什么不是 3"的证据；分数 =5 必须通过"外部评审也会给 5 吗"的论证
-- **双分显示**：报告同时展示 raw（原始）和 adjusted（校正后）分数
-- **验证级别标注**：🔬 程序化 / 📖 参考匹配 / 🧠 CoT 自评 ⚠️
+| Level | Score | Description |
+|-------|-------|-------------|
+| Expert | 90-100 | Exceptional capability, handles complex edge cases |
+| Advanced | 80-89 | Strong capability, tackles complex tasks reliably |
+| Proficient | 70-79 | Solid capability, stable and reliable |
+| Competent | 60-69 | Basic competence, standard performance |
+| Beginner | < 60 | Developing, needs guidance |
 
-## 10 维度能力模型（CLEAR 启发）
+## Output Files
 
-| # | 维度 | 描述 | 权重 | 类别 |
-|---|------|------|------|------|
-| 1 | **任务效能** | 核心任务完成准确率和质量 | 18% | CLEAR-E |
-| 2 | **信息检索** | 多源信息查找、过滤和综合 | 12% | Core |
-| 3 | **推理与规划** | 多步推理、问题分解、方案规划 | 14% | Core |
-| 4 | **代码与自动化** | 编写、调试、重构代码；自动化工作流 | 12% | Core |
-| 5 | **创意生成** | 产出原创、受众适配的内容 | 8% | Core |
-| 6 | **工具编排** | 选择、链接、配置多个 Skill | 10% | CLEAR-E |
-| 7 | **记忆与上下文** | 检索知识、维持上下文连贯性 | 8% | Core |
-| 8 | **成本效率** | Token 用量、API 调用、资源消耗 | 6% | CLEAR-C |
-| 9 | **可靠性** | 重复运行一致性（pass@k）、错误恢复 | 6% | CLEAR-R |
-| 10 | **安全与合规** | 安全规则遵循、隐私保护、透明度 | 6% | CLEAR-A |
+Each assessment generates:
 
-## 安装
+```
+results/
+├── exam-{sessionId}-data.json      ← Structured data (JSON)
+├── exam-{sessionId}-full.md        ← Markdown report
+├── exam-{sessionId}-report.html    ← HTML report with embedded radar chart
+├── exam-{sessionId}-radar.svg      ← Standalone radar chart (full exam only)
+└── INDEX.md                        ← History index for trend tracking
+```
+
+## Triggers
+
+```
+exam / assessment / evaluate / benchmark me / test yourself / run exam
+评测 / 能力评估 / 自测 / 自我评测 / 能力诊断
+reasoning test / retrieval test / creation test / execution test / orchestration test
+history results / 查看历史评测 / 历史结果
+```
+
+## File Structure
+
+```
+botlearn-assessment/
+├── SKILL.md                          # Entry point: roles, rules, 4-phase pipeline
+├── flows/
+│   ├── exam-execution.md             # Per-question pattern (tool check → answer → score)
+│   ├── full-exam.md                  # Full exam flow + report template
+│   ├── dimension-exam.md             # Single-dimension flow + report template
+│   ├── generate-report.md            # Dual-format report generation (MD + HTML)
+│   └── view-history.md               # History view + trend comparison
+├── questions/
+│   ├── d1-reasoning.md               # D1 questions (Easy/Medium/Hard)
+│   ├── d2-retrieval.md               # D2 questions
+│   ├── d3-creation.md                # D3 questions
+│   ├── d4-execution.md               # D4 questions
+│   └── d5-orchestration.md           # D5 questions
+├── references/                       # Reference answers (15 files, 1 per question)
+│   ├── d1-q1-easy.md ... d1-q3-hard.md
+│   ├── d2-q1-easy.md ... d2-q3-hard.md
+│   ├── d3-q1-easy.md ... d3-q3-hard.md
+│   ├── d4-q1-easy.md ... d4-q3-hard.md
+│   └── d5-q1-easy.md ... d5-q3-hard.md
+├── strategies/
+│   ├── scoring.md                    # Scoring rules, weights, verification methods
+│   └── main.md                       # Overall assessment strategy (v4)
+├── scripts/
+│   ├── radar-chart.js                # SVG radar chart generator (Node.js)
+│   └── generate-html-report.js       # HTML report generator with embedded radar
+└── results/                          # Generated at runtime
+```
+
+## Install
 
 ```bash
-clawhub install @botlearn/botlearn- examiner
+clawhub install @botlearn/botlearn-assessment --force
 ```
 
-## 自评模式
+## Version
 
-| 模式 | 题数 | 时长 | 适用场景 |
-|------|------|------|---------|
-| **全量自评** | 50 题 | 30-60 分钟 | 全面能力基线自评 |
-| **自适应自评** | 25-35 题 | 20-40 分钟 | 高效精准自评 |
-| **E2E 任务自评** | 3-5 个任务 | 30-45 分钟 | 生产就绪自评 |
-| **快速自检** | 20-30 题 | 15-25 分钟 | 定期自检 |
-| **单维自评** | 5-10 题 | 10-15 分钟 | 专项提升追踪 |
+Current: 0.1.5 (v4 architecture)
 
-## 触发词
-
-- `self-test` / `evaluate yourself` / `test yourself` / `auto-exam` / `benchmark yourself`
-- `exam` / `test` / `evaluation` / `assessment`
-- `capability check` / `radar chart` / `benchmark me`
-- `自我评测` / `自我检测` / `自评` / `自测`
-- `能力评测` / `考试` / `能力评估` / `能力诊断` / `全面评估`
-
-## 报告输出
-
-### 自评声明区块（每份报告必含）
-
-```
-⚠️ 本报告通过自评生成：同一 LLM 出题、答题、评分。
-诚信措施：角色分离 | -5% 全局校正 | raw/adjusted 双分显示
-预期偏差：±15%（校正后 ±5-10%）
-建议：将自评分数作为方向性指标，生产决策前建议外部验证。
-```
-
-### 雷达图（校正后分数）
-
-```
-              任务效能
-                [68]
-                 ▲
-     安全合规 ╱     ╲ 信息检索
-       [79] ╱         ╲ [76]
-           ╱             ╲
-  可靠性 ─               ─ 推理规划
-   [55]   │      ●       │ [59]
-           ╲             ╱
-     成本效率╲         ╱ 代码自动化
-       [59]  ╲     ╱   [67]
-               ▼
-     记忆上下文─────工具编排
-       [67]          [54]
-            创意生成
-              [73]
-```
-
-### 维度热力图（含校正列）
-
-```
-维度             Easy    Medium   Hard    Raw     Adj     权重
-────────────────────────────────────────────────────────────
-任务效能         🟢 85   🟡 72    🟠 58   71.7    68.1    18%
-...
-```
-
-## 汇总公式
-
-```
-题目 Raw 分 = Σ(标准分 × 标准权重) × 20
-题目 Adjusted 分 = Raw 分 × 0.95              // -5% 校正
-
-维度分 = Σ(Adjusted 分 × 难度系数) / Σ(难度系数)
-         难度系数: Easy=1.0, Medium=1.2, Hard=1.5
-
-总分 = Σ(维度分 × 维度权重)                    // 差异化权重
-```
-
-## 文件结构
-
-```
-openclaw-examiner/
-├── SKILL.md                 # 角色定义、自评流程、报告格式
-├── manifest.json            # Skill 元信息
-├── package.json             # npm 包配置
-├── README.md                # 本文档
-├── knowledge/
-│   ├── domain.md            # 评估框架、自评模式、维度定义
-│   ├── best-practices.md    # CoT 评分、自评诚信协议、偏差缓解
-│   └── anti-patterns.md     # 题库（10 维度 × 3 难度）
-├── strategies/
-│   └── main.md              # 10 步自评执行策略（含角色切换）
-├── assets/
-│   └── exam-report-schema.json  # 自评报告 JSON Schema
-└── tests/
-    ├── smoke.json           # 自评流程冒烟测试
-    └── benchmark.json       # 自评场景基准测试（3 Easy + 4 Medium + 3 Hard）
-```
-
-## 自评等级
-
-| 等级 | 分数（校正后） | 描述 |
-|------|---------------|------|
-| Expert | 90-100 | 卓越能力，处理复杂边界场景 |
-| Advanced | 80-89 | 高级能力，应对复杂任务 |
-| Proficient | 65-79 | 熟练能力，稳定可靠 |
-| Competent | 50-64 | 基本胜任，标准表现 |
-| Beginner | 0-49 | 初级水平，需要指导 |
-
-## 科学依据
-
-- **CLEAR 框架** (arXiv:2511.14136): 多维评估与生产成功相关性 ρ=0.83
-- **LLM-as-Judge 研究**: 自评偏差 +12-18%，-5% 校正捕获约 1/3 偏差
-- **ResearchRubrics** (arXiv:2511.07685): 复杂度三轴模型
-- **AgentBench**: 8 环境 × 29 LLM 的多环境评估
-- **GAIA**: 466 个真实世界问题，人机差距 77%
-
-## 依赖关系
-
-本 Skill 无外部依赖，可独立运行。
-
-## 版本
-
-当前版本：3.0.0
-
-## 许可证
+## License
 
 MIT
-
----
-
-**注意**：自评分数包含 -5% 校正，作为方向性指标使用。生产关键决策前建议补充外部评估。
