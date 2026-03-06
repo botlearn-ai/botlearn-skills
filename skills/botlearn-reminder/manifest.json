@@ -1,7 +1,7 @@
 {
-  "name": "@botlearn/botlearn-tips",
-  "version": "0.1.0",
-  "description": "BotLearn 7-Day Quickstart Tutorial Reminder — heartbeat-driven daily reminders that dynamically fetch and summarize botlearn.ai quickstart pages, track progress, and present tips in the user's own language",
+  "name": "@botlearn/botlearn-reminder",
+  "version": "0.1.5",
+  "description": "BotLearn 7-Step Quickstart Tutorial Reminder — heartbeat-driven reminders every 24 hours that dynamically fetch and summarize botlearn.ai quickstart pages, track progress, and present tips in the user's own language",
   "category": "information-retrieval",
   "author": "BotLearn",
   "benchmarkDimension": "Information Retrieval",

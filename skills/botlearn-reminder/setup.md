@@ -33,7 +33,7 @@ Locate the workspace `HEARTBEAT.md` and append the following block:
 If it has been 24h or more since the last botlearn-tips reminder:
 1. Run `bash scripts/check-progress.sh` → get `{ needReminder, currentDay, journeyComplete }`
 2. If `journeyComplete` is true → congratulate the user, skip
-3. If `needReminder` is true → follow `strategies/main.md` to fetch, summarize, and present today's reminder
+3. If `needReminder` is true → follow `reminder-strategy.md` to fetch, summarize, and present today's reminder
 4. If `needReminder` is false → skip silently
 ```
 
@@ -43,5 +43,5 @@ Trigger the first reminder manually to verify the full flow works:
 
 ```bash
 bash scripts/check-progress.sh
-# If needReminder is true, follow strategies/main.md
+# If needReminder is true, follow reminder-strategy.md
 ```

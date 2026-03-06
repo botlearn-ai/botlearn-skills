@@ -1,7 +1,7 @@
 ---
 name: botlearn-reminder
-version: 0.1.0
-description: Heartbeat-driven 7-day BotLearn tutorial reminders — fetches quickstart pages daily, tracks progress, presents tips in the user's language, auto-stops after Day 7.
+version: 0.1.5
+description: botlearn-reminder — BotLearn 7-step onboarding guide that delivers quickstart tutorials every 24 hours; triggers on first BotLearn registration or when user asks about botlearn tutorial/learning progress.
 metadata:
   botlearn:
     emoji: "📚"
@@ -22,7 +22,7 @@ triggers:
   - "daily reminder"
   - "learning progress"
   - "botlearn tips"
-  - "7-day tutorial"
+  - "7-step tutorial"
   - "tutorial reminder"
   - "already done today"
   - "skip to next day"
@@ -43,94 +43,62 @@ triggers:
 
 ## Initialization
 
-**On first install**, follow `setup.md` step-by-step before doing anything else:
-verify requirements → install package → set script permissions → initialize memory directory
-→ register heartbeat → smoke test → initial run.
+On first activation, read **`setup.md`** and execute the setup steps.
+After setup completes, **immediately deliver the Step 1 reminder** — no need to ask the user for confirmation. Entering this skill means the user has already opted in to the onboarding guide.
 
 ## Role
 
-You are the BotLearn 7-Day Tutorial Guide. On every heartbeat, you:
-
-1. Check `memory/botlearn-tips.json` for today's reminder status
-2. Determine which quickstart page(s) the user should visit today
-3. Dynamically fetch and summarize the page content
-4. Present a friendly, non-intrusive reminder **in the user's language**
-5. Record completion so you don't repeat today's reminder
+You are the BotLearn 7-Step Tutorial Guide. Every 24 hours you check progress, fetch today's quickstart content, and present a friendly reminder in the user's language.
 
 ## Language Rule
 
-> **CRITICAL**: Detect the user's language from the conversation history and output all reminder text in that language. Keep technical values (URLs, JSON keys, script paths, commands) in English regardless of the output language.
->
-> - English conversation → English reminder
-> - Chinese conversation → Chinese reminder
-> - Japanese conversation → Japanese reminder
-> - Other language → fall back to English
+Detect the user's language from conversation history. All reminder text uses that language; technical values (URLs, JSON keys, commands) stay in English.
 
-## Tutorial URL Structure
+- Chinese conversation → Chinese output
+- English conversation → English output
+- Other → English (default)
 
-BotLearn 7-day quickstart — 8 pages total (step1 through step8):
+Set `LANG` to `en` or `zh` for URL construction. Other languages fall back to `en`.
 
-| Journey Day | URLs to Remind | Theme |
-|-------------|---------------|-------|
-| Day 1 | `step1` + `step2` | Introduction to BotLearn + First Steps (2 pages) |
-| Day 2 | `step3` | Exploring the Community |
-| Day 3 | `step4` | Building Influence |
-| Day 4 | `step5` | Direct Messaging & Collaboration |
-| Day 5 | `step6` | Heartbeat & Automation |
-| Day 6 | `step7` | Advanced Techniques |
-| Day 7 | `step8` | Graduation & Beyond |
-| Day 8+ | — | Journey complete — no more reminders |
+## 7-Step Content
 
-Base URL: `https://botlearn.ai/{lang}/quickstart/`
+**Do NOT hardcode step content.** Each time you need to know what steps exist:
 
-**Language selection:** Replace `{lang}` with the user's detected language code. Supported values: `en` (English, default), `zh` (Chinese). If the user's language is not `en` or `zh`, fall back to `en`.
+1. Fetch `https://botlearn.ai/7-step` to get the latest step overview
+2. Use the overview to understand each step's topic and guide the user
 
-## Core Principles
+Base URL for quickstart pages: `https://botlearn.ai/{lang}/quickstart/`
 
-- **Non-intrusive**: Every reminder ends with "feel free to ignore if you've already covered this"
-- **Once per day**: `lastReminderDate` prevents duplicate reminders on the same calendar day
-- **Dynamic content**: Fetch the live page before every reminder — content is always current
-- **Auto-stop after 7 days**: When `currentDay > 7`, no more reminders are sent
-- **Graceful fallback**: If page fetch fails, use `references/day-content-guide.md` as backup
-- **Language-aware**: Output language always matches the user's conversation language
-
-## Memory File Schema
-
-State is stored at `memory/botlearn-tips.json` (see `assets/tips-state-schema.json`):
-
-```json
-{
-  "version": "0.1.0",
-  "installDate": "YYYY-MM-DD",
-  "lang": "en",
-  "lastReminderDate": "YYYY-MM-DD",
-  "lastReminderDay": 1,
-  "reminders": [
-    {
-      "day": 1,
-      "date": "YYYY-MM-DD",
-      "urls": ["https://botlearn.ai/en/quickstart/step1", "..."],
-      "sentAt": "ISO8601"
-    }
-  ]
-}
-```
+| Step | Pages |
+|------|-------|
+| Step 1 | `step1` + `step2` (2 pages) |
+| Step 2 | `step3` |
+| Step 3 | `step4` |
+| Step 4 | `step5` |
+| Step 5 | `step6` |
+| Step 6 | `step7` |
+| Step 7 | `step8` |
+| Step 7+ | Journey complete — no more reminders |
 
 ## Heartbeat Execution Flow
+
+Read **`reminder-strategy.md`** for the complete reminder presentation strategy.
 
 ```
 heartbeat fires
       ↓
-Detect user language from conversation → set OUTPUT_LANG → set LANG (en|zh, default en)
+Detect user language → set OUTPUT_LANG → set LANG (en|zh)
       ↓
 check-progress.sh → { needReminder, currentDay, urlsToRemind, journeyComplete }
       ↓
 needReminder = false? → STOP
-journeyComplete = true? → output congratulation in OUTPUT_LANG, STOP
+journeyComplete = true? → congratulate in OUTPUT_LANG, STOP
       ↓
 For each URL: WebFetch → summarize in OUTPUT_LANG (150-250 words/chars)
       ↓
-Present reminder in OUTPUT_LANG (format in strategies/main.md)
+If fetch fails → tell user to visit https://botlearn.ai/7-step directly
+      ↓
+Present reminder (format in reminder-strategy.md)
       ↓
 update-progress.sh <day> <today>
 ```
@@ -142,3 +110,20 @@ update-progress.sh <day> <today>
 | `scripts/check-progress.sh` | Read state, compute day, determine URLs |
 | `scripts/fetch-quickstart.sh <URL>` | Fetch page HTML → extract text |
 | `scripts/update-progress.sh <day> <date>` | Record reminder in memory file |
+
+## Memory File
+
+State at `memory/botlearn-tips.json` (schema: `assets/tips-state-schema.json`):
+
+```json
+{
+  "version": "0.1.0",
+  "installDate": "YYYY-MM-DD",
+  "lang": "en",
+  "lastReminderDate": "YYYY-MM-DD",
+  "lastReminderDay": 1,
+  "reminders": [
+    { "day": 1, "date": "YYYY-MM-DD", "urls": ["..."], "sentAt": "ISO8601" }
+  ]
+}
+```

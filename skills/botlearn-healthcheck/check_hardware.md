@@ -87,6 +87,26 @@ Extract: `DATA.env.system.platform`
 
 ---
 
+### 6. OpenClaw Cache Pressure
+
+Extract: `DATA.cache` (from `openclaw cache stats`)
+Cross-reference: `DATA.env.memory` — if memory used > 70% AND cache is large, cache is likely contributor.
+
+| Condition | Status | Score Impact | Qualitative |
+|-----------|--------|-------------|-------------|
+| `DATA.cache` unavailable | — | 0 (skip) | Cannot assess cache |
+| `total_size_mb` < 50 | ✅ | 0 | Normal cache size |
+| `total_size_mb` 50–200 | ⚠️ | -5 | Cache growing, consider clearing |
+| `total_size_mb` > 200 | ⚠️ | -15 | Large cache, likely contributing to memory pressure |
+| `history_count` > 200 | ⚠️ | -5 | History cache bloated |
+| Memory > 85% AND cache > 50MB | ❌ | -10 (additional) | Cache is aggravating memory crisis |
+
+**Risk:** Large caches consume resident memory and slow startup. Suspected memory leak in older versions may cause cache to grow unbounded.
+
+**Fix:** See `fix_cases.md` Case 1.4 for detailed cache clearing and limit configuration.
+
+---
+
 ## Scoring
 
 ```
@@ -111,6 +131,7 @@ Produce in REPORT_LANG (domain label and summary translated; metrics and command
 [Hardware Resources — translated domain label] [STATUS] — Score: XX/100
 [One-sentence summary in REPORT_LANG]
 
+Cache:   XX MB total  history=[X] entries      [STATUS]
 Memory:  XX.X GB used / XX.X GB total (XX%)   [STATUS]
 Disk:    XX.X GB used / XX.X GB total (XX%)   [STATUS]
 CPU:     load XX.XX / X cores = XX.X per core [STATUS]

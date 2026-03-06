@@ -1,6 +1,6 @@
 #!/bin/bash
-# collect-health.sh — Probe OpenClaw Gateway status, output JSON
-# Gateway default port: 18789 | Control UI: /openclaw | Hooks: /hooks
+# collect-health.sh — Collect OpenClaw health status via `openclaw health --json`
+# Fallback: probe gateway endpoints directly if CLI unavailable
 # Timeout: 10s | Compatible: macOS (darwin) + Linux
 set -euo pipefail
 
@@ -8,6 +8,19 @@ OPENCLAW_HOME="${OPENCLAW_HOME:-$HOME/.openclaw}"
 OPENCLAW_CONFIG_PATH="${OPENCLAW_CONFIG_PATH:-$OPENCLAW_HOME/openclaw.json}"
 TIMEOUT_SEC=5
 
+# --- Primary: use `openclaw health --json` ---
+if command -v openclaw &>/dev/null; then
+  health_output=$(openclaw health --json 2>/dev/null || echo "")
+  if [[ -n "$health_output" ]]; then
+    # Validate it's valid JSON
+    if echo "$health_output" | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{JSON.parse(d);process.exit(0)})" 2>/dev/null; then
+      echo "$health_output"
+      exit 0
+    fi
+  fi
+fi
+
+# --- Fallback: probe gateway endpoints directly ---
 # Read gateway config from openclaw.json via temp file (bash 3.2 compat)
 _tmpjs=$(mktemp /tmp/collect-health-XXXXXX.js)
 trap 'rm -f "$_tmpjs"' EXIT
@@ -68,9 +81,6 @@ probe_endpoint() {
 }
 
 # Probe OpenClaw Gateway endpoints
-# /         — Gateway root (connectivity check)
-# /openclaw — Control UI (operational check)
-# /hooks    — Hooks API (hooks system check)
 root_probe=$(probe_endpoint "/")
 control_ui=$(probe_endpoint "/openclaw")
 hooks_api=$(probe_endpoint "/hooks")
@@ -82,16 +92,12 @@ control_code=$(echo "$control_ui" | node -e "let d='';process.stdin.on('data',c=
 gateway_reachable="false"
 gateway_operational="false"
 
-# Reachable = root responds (any non-000 code)
 [[ "$root_code" != "0" && "$root_code" != "000" ]] && gateway_reachable="true"
-# Operational = control UI responds (200, auth required 401/403, or WebSocket 101/426 — all mean gateway is running)
 [[ "$control_code" == "200" || "$control_code" == "401" || "$control_code" == "403" || "$control_code" == "101" || "$control_code" == "426" ]] && gateway_operational="true"
-# Also check root — WebSocket gateway may only respond with 101 at root
 if [[ "$gateway_operational" == "false" ]]; then
   [[ "$root_code" == "101" || "$root_code" == "200" || "$root_code" == "426" ]] && gateway_operational="true"
 fi
 
-# Check CLIs
 clawhub_version="NOT_FOUND"
 command -v clawhub &>/dev/null && clawhub_version=$(clawhub --version 2>/dev/null || echo "unknown")
 
@@ -100,6 +106,7 @@ command -v openclaw &>/dev/null && openclaw_cli_version=$(openclaw --version 2>/
 
 cat <<EOF
 {
+  "source": "fallback_probe",
   "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
   "gateway_url": "$GATEWAY_URL",
   "gateway_port": $GATEWAY_PORT,
