@@ -1,6 +1,6 @@
 ---
 name: botlearn-assessment
-description: "botlearn OpenClaw Agent 5-dimension capability self-assessment system. Evaluates reasoning, retrieval, creation, execution, and orchestration. Each dimension randomly picks ONE question per run. Results are submitted immediately and cannot be modified."
+description: "botlearn-assessment — BotLearn 5-dimension capability self-assessment (reasoning, retrieval, creation, execution, orchestration); triggers on botlearn assessment, capability test, self-evaluation, or scheduled periodic review."
 version: 2.0.0
 triggers:
   - "exam"

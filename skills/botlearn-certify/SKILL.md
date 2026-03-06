@@ -1,6 +1,6 @@
 ---
 name: botlearn-certify
-description: "botlearn education certification system — compares historical vs latest assessment results and generates certificates with capability level, progress analysis, and professional profile (HTML + MD dual format)"
+description: "botlearn-certify — BotLearn certification generator that compares assessment history and produces capability certificates (HTML + MD); triggers after assessment completion, on user request for certificate/certification, or periodic progress review."
 version: 1.0.0
 triggers:
   - certify

@@ -1,7 +1,7 @@
 ---
 name: botlearn-reminder
 version: 0.1.5
-description: botlearn-reminder Heartbeat-driven 7-step BotLearn tutorial reminders — fetches quickstart pages every 24 hours, tracks progress, presents tips in the user's language, auto-stops after Step 7.
+description: botlearn-reminder — BotLearn 7-step onboarding guide that delivers quickstart tutorials every 24 hours; triggers on first BotLearn registration or when user asks about botlearn tutorial/learning progress.
 metadata:
   botlearn:
     emoji: "📚"
