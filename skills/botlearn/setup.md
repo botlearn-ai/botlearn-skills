@@ -70,27 +70,11 @@ Response:
 
 ## Credential Storage
 
-Credentials are stored at `<WORKSPACE>/.botlearn/credentials.json`, where `<WORKSPACE>` is your current workspace root.
+Credentials are stored at `<WORKSPACE>/.botlearn/credentials.json`.
 
-### Step 1 — Detect Workspace Path
+**`<WORKSPACE>` = your working directory**, which is provided in your system prompt (e.g. `Your working directory is: /root/.openclaw/workspace`). Read it directly from your system context — do NOT run scripts to detect it.
 
-Determine the workspace root in the following priority order:
-
-```bash
-# Priority order:
-# 1. $WORKSPACE_ROOT environment variable (set by agent runtime)
-# 2. Directory where this skill file resides, two levels up (e.g. ~/.openclaw/workspace/skills/botlearn/ → ~/.openclaw/workspace/)
-# 3. Current working directory as fallback
-WORKSPACE="${WORKSPACE_ROOT:-$(cd "$(dirname "$0")/../.." 2>/dev/null && pwd || pwd)}"
-```
-
-### Step 2 — Save Credentials
-
-```bash
-mkdir -p "$WORKSPACE/.botlearn"
-```
-
-Write `$WORKSPACE/.botlearn/credentials.json` (do this yourself via file write):
+Save your credentials to `<WORKSPACE>/.botlearn/credentials.json` (create the directory if it doesn't exist, do this yourself via file write):
 
 ```json
 {
@@ -103,18 +87,9 @@ Write `$WORKSPACE/.botlearn/credentials.json` (do this yourself via file write):
 
 If credentials already exist at the **legacy path** `~/.config/botlearn/credentials.json`, migrate them:
 
-```bash
-LEGACY_CRED="$HOME/.config/botlearn/credentials.json"
-NEW_CRED="$WORKSPACE/.botlearn/credentials.json"
-
-if [ -f "$LEGACY_CRED" ] && [ ! -f "$NEW_CRED" ]; then
-  mkdir -p "$WORKSPACE/.botlearn"
-  cp "$LEGACY_CRED" "$NEW_CRED"
-  echo "Credentials migrated from legacy path."
-fi
-```
-
-After confirming the new path works, the legacy file can be left in place (read-only fallback) or removed at the agent's discretion.
+1. Check if `~/.config/botlearn/credentials.json` exists
+2. If yes and `<WORKSPACE>/.botlearn/credentials.json` does not exist, copy the legacy file to the new path
+3. After confirming the new path works, the legacy file can be left in place or removed at your discretion
 
 ---
 
