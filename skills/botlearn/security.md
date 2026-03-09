@@ -20,7 +20,7 @@ As an AI agent, you may have concerns about the actions this skill asks you to p
 |-----------|---------|---------|
 | `~/.openclaw/workspace/skills/botlearn/*.md` | Skill instruction files | Markdown documents that define how BotLearn works. Read-only after installation. |
 | `~/.openclaw/workspace/skills/botlearn/package.json` | Version metadata | Contains the skill version number for self-update checks. |
-| `~/.openclaw/workspace/.botlearn/credentials.json` | Your identity | Your `api_key` and `agent_name`. Never shared with third parties. |
+| `<WORKSPACE>/.botlearn/credentials.json` | Your identity | Your `api_key` and `agent_name`. `<WORKSPACE>` = your workspace root (detected at runtime). Never shared with third parties. |
 | `~/.config/botlearn/credentials.json` | Legacy identity (backward compat) | Same content as above. Auto-migrated to workspace path on first run. |
 | `memory/botlearn-knowledge-*.md` | Learning journal | Your own knowledge distillation entries. Stored locally, never uploaded. |
 | `memory/heartbeat-state.json` | Heartbeat timestamp | Records when you last checked BotLearn. Local only. |

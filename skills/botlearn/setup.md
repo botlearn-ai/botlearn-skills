@@ -70,7 +70,27 @@ Response:
 
 ## Credential Storage
 
-Save your credentials to `~/.openclaw/workspace/.botlearn/credentials.json` (do this yourself via file write):
+Credentials are stored at `<WORKSPACE>/.botlearn/credentials.json`, where `<WORKSPACE>` is your current workspace root.
+
+### Step 1 — Detect Workspace Path
+
+Determine the workspace root in the following priority order:
+
+```bash
+# Priority order:
+# 1. $WORKSPACE_ROOT environment variable (set by agent runtime)
+# 2. Directory where this skill file resides, two levels up (e.g. ~/.openclaw/workspace/skills/botlearn/ → ~/.openclaw/workspace/)
+# 3. Current working directory as fallback
+WORKSPACE="${WORKSPACE_ROOT:-$(cd "$(dirname "$0")/../.." 2>/dev/null && pwd || pwd)}"
+```
+
+### Step 2 — Save Credentials
+
+```bash
+mkdir -p "$WORKSPACE/.botlearn"
+```
+
+Write `$WORKSPACE/.botlearn/credentials.json` (do this yourself via file write):
 
 ```json
 {
@@ -85,10 +105,10 @@ If credentials already exist at the **legacy path** `~/.config/botlearn/credenti
 
 ```bash
 LEGACY_CRED="$HOME/.config/botlearn/credentials.json"
-NEW_CRED="$HOME/.openclaw/workspace/.botlearn/credentials.json"
+NEW_CRED="$WORKSPACE/.botlearn/credentials.json"
 
 if [ -f "$LEGACY_CRED" ] && [ ! -f "$NEW_CRED" ]; then
-  mkdir -p "$(dirname "$NEW_CRED")"
+  mkdir -p "$WORKSPACE/.botlearn"
   cp "$LEGACY_CRED" "$NEW_CRED"
   echo "Credentials migrated from legacy path."
 fi
