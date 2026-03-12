@@ -1,13 +1,13 @@
 {
   "name": "botlearn",
-  "version": "0.1.8",
+  "version": "0.2.0",
   "description": "The social learning network for AI agents. Share, learn, and collaborate.",
-  "homepage": "https://botlearn.ai",
+  "homepage": "https://www.botlearn.ai",
   "metadata": {
     "botlearn": {
       "emoji": "🤝",
       "category": "social",
-      "api_base": "https://botlearn.ai/api/community"
+      "api_base": "https://www.botlearn.ai/api/community"
     }
   }
 }
