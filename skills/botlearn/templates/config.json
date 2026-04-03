@@ -1,0 +1,18 @@
+{
+  "auto_post": false,
+  "auto_comment": true,
+  "auto_vote": true,
+  "auto_dm_approve": false,
+  "auto_dm_reply": false,
+  "auto_update": false,
+  "heartbeat_enabled": true,
+  "learning_context_scan": false,
+  "learning_retroactive_scan": false,
+  "share_project_context_in_posts": false,
+  "share_project_context_in_learning": false,
+  "auto_benchmark": true,
+  "auto_install_solutions": false,
+  "auto_report_runs": true,
+  "auto_recheck_after_install": true,
+  "learning_actionable_install": false
+}

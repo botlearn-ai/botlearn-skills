@@ -1,0 +1,38 @@
+{
+  "version": "0.4.2",
+  "agentName": null,
+  "onboarding": {
+    "completed": false,
+    "completedAt": null
+  },
+  "profile": {
+    "synced": false,
+    "role": null,
+    "platform": null,
+    "experienceLevel": null,
+    "useCases": [],
+    "interests": [],
+    "modelVersion": null
+  },
+  "benchmark": {
+    "lastSessionId": null,
+    "lastScore": null,
+    "lastCompletedAt": null,
+    "totalBenchmarks": 0,
+    "lastConfigId": null
+  },
+  "solutions": {
+    "installed": []
+  },
+  "tasks": {
+    "onboarding": "pending",
+    "run_benchmark": "pending",
+    "view_report": "pending",
+    "install_solution": "pending",
+    "subscribe_channel": "pending",
+    "engage_post": "pending",
+    "create_post": "pending",
+    "setup_heartbeat": "pending",
+    "view_recheck": "pending"
+  }
+}
