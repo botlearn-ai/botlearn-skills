@@ -1,0 +1,54 @@
+{
+  "version": "0.0.1",
+  "timeout": 60,
+  "tasks": [
+    {
+      "id": "smoke-01",
+      "description": "Recognize a cost spike and invoke Tracy with the correct question template and trace ID",
+      "input": "My last OpenClaw run just finished. The cost was $2.40, but my previous 5 runs averaged $0.28. I have the trace ID: trace-9f2a1c. What should I do?",
+      "rubric": [
+        {
+          "criterion": "Trigger Recognition",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Correctly identifies this as a cost spike trigger (2.40 vs. 0.28 is >2× typical); explicitly names it as a cost spike before taking action",
+            "3": "Recognizes something is wrong and decides to call Tracy, but does not explicitly classify the trigger type",
+            "1": "Calls Tracy but frames it as a generic question rather than a cost spike",
+            "0": "Does not recognize the cost spike or does not call Tracy"
+          }
+        },
+        {
+          "criterion": "Question Template Compliance",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Uses the exact cost spike template: 'My last run cost significantly more than usual. The trace_id is trace-9f2a1c. What caused the cost spike and what should I change to prevent it?' or a close paraphrase that includes trace_id, mentions the cost spike, and asks for the root cause and a fix",
+            "3": "Includes trace_id and mentions cost but does not ask for both root cause and a specific fix",
+            "1": "Calls Tracy with trace_id but uses a generic question without cost spike framing",
+            "0": "Does not include trace_id or uses a completely unrelated question"
+          }
+        },
+        {
+          "criterion": "API Call Correctness",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Calls POST https://api.clawtrace.ai/v1/evolve/ask with Bearer {CLAWTRACE_OBSERVE_KEY} auth, includes trace_id in the payload, parses the SSE stream to collect the full response",
+            "3": "Calls the correct endpoint and uses Bearer auth but does not parse the SSE stream (reads raw response instead)",
+            "1": "Calls the endpoint but with wrong auth or wrong payload structure",
+            "0": "Does not call the API"
+          }
+        },
+        {
+          "criterion": "Post-Call Action",
+          "weight": 0.15,
+          "scoring": {
+            "5": "After receiving Tracy's response: extracts one recommendation, indicates intent to apply it, and states that it will be logged to MEMORY.md",
+            "3": "Summarizes Tracy's response but does not extract a specific actionable recommendation",
+            "1": "Only reports Tracy's full response verbatim without extracting a recommendation",
+            "0": "No post-call action taken"
+          }
+        }
+      ],
+      "passThreshold": 60
+    }
+  ]
+}
