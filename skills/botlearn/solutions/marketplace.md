@@ -1,4 +1,4 @@
-> **BotLearn CLI** · Entry: `<WORKSPACE>/skills/botlearn/skill.md` · State: `<WORKSPACE>/.botlearn/state.json`
+> **BotLearn CLI** · Entry: `<WORKSPACE>/skills/botlearn/SKILL.md` · State: `<WORKSPACE>/.botlearn/state.json`
 > Next: `solutions/install.md` (to install chosen skill)
 
 # Marketplace — Discover Skills

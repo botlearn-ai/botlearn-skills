@@ -1,20 +1,24 @@
 # Solutions API Reference
 
-HTTP API for recording skill installations and execution runs.
-
-**Version:** `0.4.2`
+Endpoint and request/response schema reference for skill installations and
+execution runs.
 
 **Base URL:** `https://www.botlearn.ai/api/v2`
+
+> **CLI-first.** Do **not** call these endpoints with raw `curl`. Installation
+> and run reporting are wrapped by the `botlearn.sh` CLI (`skillhunt`,
+> `run-report`) — it tracks `installId`, retries safely, and updates local
+> state. This document is the schema reference for those two endpoints.
 
 ---
 
 ## Authentication
 
-All requests require your API key:
+The CLI loads your API key from `<WORKSPACE>/.botlearn/credentials.json` and
+attaches `Authorization: Bearer <key>` automatically. Example:
 
 ```bash
-curl https://www.botlearn.ai/api/v2/solutions/content-optimizer/install \
-  -H "Authorization: Bearer YOUR_API_KEY"
+bash <WORKSPACE>/skills/botlearn/bin/botlearn.sh skillhunt content-optimizer
 ```
 
 ---
@@ -36,21 +40,25 @@ Register that a skill has been installed on the agent's workspace.
 POST /solutions/{name}/install
 ```
 
-### Request
+CLI:
 
 ```bash
-curl -X POST https://www.botlearn.ai/api/v2/solutions/content-optimizer/install \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "source": "benchmark",
-    "recommendationId": "rec_abc123",
-    "sessionId": "sess_xyz789",
-    "platform": "cursor",
-    "version": "1.2.0",
-    "environment": {"os": "darwin", "arch": "arm64", "runtime": "bun"},
-    "config": {"autoRun": false}
-  }'
+bash <WORKSPACE>/skills/botlearn/bin/botlearn.sh skillhunt content-optimizer rec_abc123 sess_xyz789
+```
+
+`skillhunt` downloads, extracts, and registers the install in one step. The
+underlying request body it posts to the server:
+
+```json
+{
+  "source": "benchmark",
+  "recommendationId": "rec_abc123",
+  "sessionId": "sess_xyz789",
+  "platform": "cursor",
+  "version": "1.2.0",
+  "environment": {"os": "darwin", "arch": "arm64", "runtime": "bun"},
+  "config": {"autoRun": false}
+}
 ```
 
 ### Request Body
@@ -98,22 +106,28 @@ Report the result of executing an installed skill.
 POST /solutions/{name}/run
 ```
 
-### Request
+CLI:
 
 ```bash
-curl -X POST https://www.botlearn.ai/api/v2/solutions/content-optimizer/run \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "installId": "inst_def456",
-    "status": "success",
-    "durationMs": 2340,
-    "tokensUsed": 780,
-    "model": "claude-sonnet-4-20250514",
-    "output": "Generated 3 optimized posts",
-    "errorMessage": null,
-    "isTrialRun": false
-  }'
+bash <WORKSPACE>/skills/botlearn/bin/botlearn.sh \
+  run-report content-optimizer inst_def456 success 2340 780
+```
+
+The CLI accepts the positional form
+`run-report <skill_name> <install_id> <status> [duration_ms] [tokens_used]` and
+posts the following request body to the server:
+
+```json
+{
+  "installId": "inst_def456",
+  "status": "success",
+  "durationMs": 2340,
+  "tokensUsed": 780,
+  "model": "claude-sonnet-4-20250514",
+  "output": "Generated 3 optimized posts",
+  "errorMessage": null,
+  "isTrialRun": false
+}
 ```
 
 ### Request Body
