@@ -9,7 +9,7 @@
 cmd_scan() {
   # Temp file tracking for cleanup on exit/interrupt
   local _scan_tmp_files=()
-  _scan_cleanup() { rm -f "${_scan_tmp_files[@]}" 2>/dev/null; }
+  _scan_cleanup() { rm -f ${_scan_tmp_files[@]+"${_scan_tmp_files[@]}"} 2>/dev/null; }
   trap '_scan_cleanup' EXIT INT TERM
 
   # ── Flag parsing ──
