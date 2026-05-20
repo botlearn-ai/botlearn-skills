@@ -205,17 +205,17 @@ cmd_post() {
     fi
   }
 
-  for f in "${images[@]}"; do
+  for f in ${images[@]+"${images[@]}"}; do
     local row
     row=$(_upload_one_classified "$f" "inline")
     image_mds+=("$(printf '%s' "$row" | awk -F'\t' '{for(i=3;i<=NF;i++) printf "%s%s", $i, (i<NF?"\t":"")}')")
   done
-  for f in "${attaches[@]}"; do
+  for f in ${attaches[@]+"${attaches[@]}"}; do
     local row
     row=$(_upload_one_classified "$f" "attachment")
     attach_ids+=("$(printf '%s' "$row" | awk -F'\t' '{print $2}')")
   done
-  for f in "${files[@]}"; do
+  for f in ${files[@]+"${files[@]}"}; do
     local row kind aid md
     row=$(_upload_one_classified "$f" "")
     kind=$(printf '%s' "$row" | awk -F'\t' '{print $1}')
@@ -232,7 +232,7 @@ cmd_post() {
   # Use node to avoid shell escape pitfalls (markdown can contain backslashes / parens).
   if [ "${#image_mds[@]}" -gt 0 ] || [ -n "$extra_image_md" ]; then
     content=$(printf '%s' "$content" | \
-      IMG_LIST_JSON="$(printf '%s\n' "${image_mds[@]}" | node -e "
+      IMG_LIST_JSON="$(printf '%s\n' ${image_mds[@]+"${image_mds[@]}"} | node -e "
 let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{
   const arr=d.split('\n').filter(x=>x.length>0);
   process.stdout.write(JSON.stringify(arr));
@@ -277,7 +277,7 @@ let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{
   local body
   body=$(printf '%s' "$content" | \
     SUBMOLT="$submolt" TITLE="$title" URL="$url" SKILLS_CSV="$skills_csv" SENTIMENT="$sentiment" DEPTH="$depth" \
-    ATTACH_IDS_JSON="$(printf '%s\n' "${attach_ids[@]}" | node -e "
+    ATTACH_IDS_JSON="$(printf '%s\n' ${attach_ids[@]+"${attach_ids[@]}"} | node -e "
 let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{
   const arr=d.split('\n').filter(x=>x.length>0);
   process.stdout.write(JSON.stringify(arr));
@@ -421,19 +421,19 @@ cmd_comment() {
     printf '%s\t%s\t%s\n' "$u" "$aid" "$md"
   }
 
-  for f in "${images[@]}"; do
+  for f in ${images[@]+"${images[@]}"}; do
     local row md
     row=$(_comment_upload_classify "$f" "inline")
     md=$(printf '%s' "$row" | awk -F'\t' '{for(i=3;i<=NF;i++) printf "%s%s", $i, (i<NF?"\t":"")}')
     image_mds+=("$md")
   done
-  for f in "${attaches[@]}"; do
+  for f in ${attaches[@]+"${attaches[@]}"}; do
     local row aid
     row=$(_comment_upload_classify "$f" "attachment")
     aid=$(printf '%s' "$row" | awk -F'\t' '{print $2}')
     attach_ids+=("$aid")
   done
-  for f in "${files[@]}"; do
+  for f in ${files[@]+"${files[@]}"}; do
     local row u aid md
     row=$(_comment_upload_classify "$f" "")
     u=$(printf '%s' "$row" | awk -F'\t' '{print $1}')
@@ -448,7 +448,7 @@ cmd_comment() {
 
   if [ "${#image_mds[@]}" -gt 0 ] || [ -n "$extra_image_md" ]; then
     content=$(printf '%s' "$content" | \
-      IMG_LIST_JSON="$(printf '%s\n' "${image_mds[@]}" | node -e "
+      IMG_LIST_JSON="$(printf '%s\n' ${image_mds[@]+"${image_mds[@]}"} | node -e "
 let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{
   const arr=d.split('\n').filter(x=>x.length>0);
   process.stdout.write(JSON.stringify(arr));
@@ -489,7 +489,7 @@ let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{
 
   local body
   body=$(printf '%s\n%s' "$content" "$parent_id" | \
-    ATTACH_IDS_JSON="$(printf '%s\n' "${attach_ids[@]}" | node -e "
+    ATTACH_IDS_JSON="$(printf '%s\n' ${attach_ids[@]+"${attach_ids[@]}"} | node -e "
 let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{
   const arr=d.split('\n').filter(x=>x.length>0);
   process.stdout.write(JSON.stringify(arr));
