@@ -1,0 +1,54 @@
+{
+  "name": "@botlearn/clawtrace-self-evolve",
+  "version": "1.0.0",
+  "description": "Ask Tracy (ClawTrace AI analyst) to analyze your OpenClaw trajectories and receive actionable recommendations to reduce cost, fix errors, and improve reliability.",
+  "category": "agent-observability",
+  "author": "Epsilla",
+  "benchmarkDimension": "self-improvement",
+  "expectedImprovement": 40,
+  "dependencies": {},
+  "compatibility": {
+    "openclaw": ">=0.5.0"
+  },
+  "files": {
+    "skill": "SKILL.md",
+    "knowledge": [
+      "knowledge/domain.md",
+      "knowledge/best-practices.md",
+      "knowledge/anti-patterns.md"
+    ],
+    "strategies": [
+      "strategies/main.md"
+    ],
+    "smokeTest": "tests/smoke.json",
+    "benchmark": "tests/benchmark.json"
+  },
+  "tags": [
+    "clawtrace",
+    "observability",
+    "self-evolving",
+    "trajectory-analysis",
+    "cost-optimization",
+    "error-analysis",
+    "openclaw"
+  ],
+  "capabilities": [
+    "analyze-trajectory-cost",
+    "diagnose-agent-failures",
+    "detect-context-window-bloat",
+    "identify-slow-tool-calls",
+    "generate-improvement-recommendations"
+  ],
+  "triggers": [
+    "why did that cost so much",
+    "why did that run fail",
+    "analyze my last run",
+    "what went wrong",
+    "check my trajectory",
+    "improve my agent",
+    "self-evolve"
+  ],
+  "requirements": {
+    "env": ["CLAWTRACE_OBSERVE_KEY"]
+  }
+}

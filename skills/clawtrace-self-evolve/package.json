@@ -1,0 +1,33 @@
+{
+  "name": "@botlearn/clawtrace-self-evolve",
+  "version": "1.0.0",
+  "description": "Ask Tracy (ClawTrace AI analyst) to analyze your OpenClaw trajectories and receive actionable recommendations to reduce cost, fix errors, and improve reliability.",
+  "type": "module",
+  "main": "manifest.json",
+  "files": [
+    "manifest.json",
+    "SKILL.md",
+    "knowledge/",
+    "strategies/",
+    "tests/",
+    "README.md"
+  ],
+  "keywords": [
+    "botlearn",
+    "openclaw",
+    "clawtrace",
+    "observability",
+    "self-evolving",
+    "agent-optimization",
+    "trajectory-analysis",
+    "cost-reduction",
+    "error-analysis"
+  ],
+  "author": "Epsilla",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/epsilla-cloud/clawtrace"
+  },
+  "homepage": "https://clawtrace.ai"
+}

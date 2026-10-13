@@ -1,0 +1,486 @@
+{
+  "version": "0.0.1",
+  "dimension": "self-improvement",
+  "tasks": [
+    {
+      "id": "bench-easy-01",
+      "difficulty": "easy",
+      "description": "Recognize the failure trigger and invoke Tracy with the correct failure diagnosis template",
+      "input": "My OpenClaw agent just crashed with an unhandled exception. I can see in the logs: 'RuntimeError: Tool bash_execute timed out after 30s'. The trace ID is trace-a1b2c3. I need to understand what happened.",
+      "rubric": [
+        {
+          "criterion": "Trigger Classification",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Identifies this as a failure trigger (explicit error/exception); classifies it as a tool timeout before calling Tracy",
+            "3": "Recognizes it is a failure and calls Tracy but does not classify the failure type",
+            "1": "Calls Tracy but uses a generic or periodic question rather than the failure template",
+            "0": "Does not call Tracy or treats this as a normal run"
+          }
+        },
+        {
+          "criterion": "Template Compliance",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Uses the failure template with trace_id: asks what step failed, what the input was, and how to handle it differently; includes trace-a1b2c3 in the payload",
+            "3": "Includes trace_id and asks about the failure but misses one of the three template elements (step / input / fix)",
+            "1": "Includes trace_id but question is not aligned with the failure template",
+            "0": "Does not include trace_id or uses entirely wrong question"
+          }
+        },
+        {
+          "criterion": "Response Handling",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Extracts a specific recommendation from Tracy's response (e.g., 'add a timeout fallback with a 10s retry cap') and states intent to apply it; notes it will be logged to MEMORY.md",
+            "3": "Summarizes Tracy's response but recommendation is vague (e.g., 'add error handling' without specifics)",
+            "1": "Receives response and presents it to the human without extracting an actionable recommendation",
+            "0": "No response handling"
+          }
+        }
+      ],
+      "expectedScoreWithout": 40,
+      "expectedScoreWith": 82
+    },
+    {
+      "id": "bench-easy-02",
+      "difficulty": "easy",
+      "description": "Recognize the periodic review trigger and ask a correctly framed review question",
+      "input": "I've just completed my 6th run today. Previous runs went fine — no errors, normal cost. Should I review my trajectories?",
+      "rubric": [
+        {
+          "criterion": "Trigger Decision",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Recognizes the periodic trigger (6 runs since last review, assuming no prior review this session); decides to call Tracy and explains why (5+ runs = periodic review threshold)",
+            "3": "Calls Tracy but does not explicitly reference the periodic review trigger or threshold",
+            "1": "Calls Tracy but treats it as a cost spike or failure check rather than a periodic review",
+            "0": "Decides not to call Tracy or cannot determine whether to call"
+          }
+        },
+        {
+          "criterion": "Question Template",
+          "weight": 0.4,
+          "scoring": {
+            "5": "Uses the periodic review template: asks about patterns in last 10 trajectories, token spend, and requests one highest-impact change; does NOT include a trace_id (none is relevant for periodic review)",
+            "3": "Uses a reasonable periodic review question but adds an unnecessary trace_id or omits the request for one specific change",
+            "1": "Asks a vague question about recent runs without following the template",
+            "0": "Uses the wrong template (e.g., failure template for a normal run)"
+          }
+        },
+        {
+          "criterion": "Anti-Pattern Avoidance",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Does not include a fabricated trace_id; does not call Tracy more than once for this scenario; confirms it will limit to 2 Tracy calls total this session",
+            "3": "Calls Tracy correctly but does not acknowledge the 2-call session limit",
+            "1": "Includes a fabricated trace_id in a periodic review question",
+            "0": "Proposes calling Tracy multiple times for the same trigger"
+          }
+        }
+      ],
+      "expectedScoreWithout": 35,
+      "expectedScoreWith": 80
+    },
+    {
+      "id": "bench-easy-03",
+      "difficulty": "easy",
+      "description": "Correctly decline to call Tracy when no trigger has fired",
+      "input": "I just finished run #3 today. Cost was $0.31, which is normal. No errors. The last Tracy review was 2 runs ago. What should I do?",
+      "rubric": [
+        {
+          "criterion": "No-Action Decision",
+          "weight": 0.5,
+          "scoring": {
+            "5": "Correctly decides NOT to call Tracy: no cost spike (0.31 is normal), no failure, only 1 run since last review (need 5+), no complex task upcoming; explicitly confirms no action and states the next trigger condition",
+            "3": "Decides not to call Tracy but does not explain the reasoning or state the next trigger condition",
+            "1": "Is uncertain whether to call Tracy, proposes calling 'just in case'",
+            "0": "Calls Tracy despite no trigger firing (Anti-Pattern #1)"
+          }
+        },
+        {
+          "criterion": "Next Trigger Awareness",
+          "weight": 0.3,
+          "scoring": {
+            "5": "States when Tracy should next be called: after 4 more runs (to reach the 5-run periodic threshold), or immediately if cost exceeds 2× $0.31 or a failure occurs",
+            "3": "Mentions a threshold but does not quantify it (e.g., says 'after a few more runs' rather than '4 more runs')",
+            "1": "Does not indicate when Tracy should next be called",
+            "0": "No awareness of trigger thresholds"
+          }
+        },
+        {
+          "criterion": "Explanation Quality",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Brief, clear explanation covering all three checked dimensions: cost (normal), failure (none), run count (only 1 since last review); confirms to human that monitoring continues",
+            "3": "Explains the decision but omits one dimension",
+            "1": "Vague explanation without checking all trigger conditions",
+            "0": "No explanation"
+          }
+        }
+      ],
+      "expectedScoreWithout": 30,
+      "expectedScoreWith": 78
+    },
+    {
+      "id": "bench-med-01",
+      "difficulty": "medium",
+      "description": "Pre-task trigger: ask Tracy before starting a high-complexity multi-step pipeline",
+      "input": "I'm about to run a 12-step data pipeline that involves 3 sub-agents, 8 tool calls, and scraping 200 web pages. I've never run this exact pipeline before but I've run similar ones. What should I do before starting?",
+      "rubric": [
+        {
+          "criterion": "Pre-Task Trigger Recognition",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Identifies this as a pre-task trigger (complex multi-step pipeline, never run before); invokes the pre-task question template before starting the pipeline",
+            "3": "Calls Tracy but uses the periodic review template instead of the pre-task template",
+            "1": "Recognizes the complexity but decides to skip Tracy and proceed without analysis",
+            "0": "Does not recognize the pre-task trigger or ignores it"
+          }
+        },
+        {
+          "criterion": "Template and Framing",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Uses the pre-task template: 'I am about to execute a complex multi-step task. Based on my recent trajectory history, what are my most common failure modes and how should I guard against them?' — may add context about the pipeline (12 steps, 3 sub-agents, 200 pages) as local_context",
+            "3": "Asks Tracy about past failure modes but doesn't use the template framing or omits asking specifically about how to guard against them",
+            "1": "Asks a generic question about past trajectories without pre-task framing",
+            "0": "Does not call Tracy or uses an unrelated template"
+          }
+        },
+        {
+          "criterion": "Actionable Use of Response",
+          "weight": 0.25,
+          "scoring": {
+            "5": "After receiving Tracy's response: extracts specific guardrails to apply before the pipeline starts (e.g., 'cap retries at 3 per tool call', 'limit sub-agents to 2 at a time'); applies them before the first pipeline step",
+            "3": "Reads Tracy's response and acknowledges the failure modes but does not apply a specific guardrail before starting",
+            "1": "Receives response and starts the pipeline unchanged",
+            "0": "Does not use Tracy's response"
+          }
+        },
+        {
+          "criterion": "Session Budget Awareness",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Notes this is one of the session's 2 Tracy calls; plans to reserve the other call for a post-pipeline cost/failure review if needed",
+            "3": "Calls Tracy without acknowledging the session budget",
+            "1": "Proposes multiple Tracy calls before and during the pipeline",
+            "0": "No awareness of session limits"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 72
+    },
+    {
+      "id": "bench-med-02",
+      "difficulty": "medium",
+      "description": "Context window pressure trigger: detect and act on growing input token counts",
+      "input": "My agent has been running for 45 turns. I've noticed the last 5 LLM calls took noticeably longer than the first 5. Someone mentioned my context might be getting large. What should I investigate?",
+      "rubric": [
+        {
+          "criterion": "Context Pressure Trigger Recognition",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Identifies latency increase over 45 turns as a potential context window growth signal; invokes the context pressure trigger and uses the context window template",
+            "3": "Suspects context window issues but uses a different template (e.g., periodic review) rather than the context pressure template",
+            "1": "Calls Tracy with a generic question; does not specifically ask about context window size",
+            "0": "Does not recognize the context pressure trigger; treats as a tool latency issue"
+          }
+        },
+        {
+          "criterion": "Template Compliance",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Uses the context window template: 'Is my context window growing too large across sessions? Review my recent traces and tell me if I should trim my history and when.' — may add note about 45-turn session and latency increase",
+            "3": "Asks about context window but does not ask for specific advice on when to trim",
+            "1": "Asks about token counts without framing as a context window trim decision",
+            "0": "Asks about latency as a tool problem rather than context size"
+          }
+        },
+        {
+          "criterion": "Immediate Mitigation",
+          "weight": 0.25,
+          "scoring": {
+            "5": "If Tracy confirms context bloat: immediately proposes trimming conversation history to last N messages as specified by Tracy; applies the trim before the next LLM call in this session",
+            "3": "Acknowledges Tracy's recommendation to trim but defers the fix to a future session",
+            "1": "Receives the recommendation but only logs it to MEMORY.md without applying it",
+            "0": "No action on Tracy's recommendation"
+          }
+        },
+        {
+          "criterion": "Logging Accuracy",
+          "weight": 0.15,
+          "scoring": {
+            "5": "MEMORY.md entry records what was APPLIED (not just recommended): specific trim threshold, expected token reduction percentage, and date",
+            "3": "MEMORY.md entry records the recommendation but not the actual applied change",
+            "1": "No MEMORY.md entry",
+            "0": "MEMORY.md entry is misleading (logs an unapplied fix as applied)"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-med-03",
+      "difficulty": "medium",
+      "description": "Correctly handle a Tracy API failure and proceed without analysis",
+      "input": "I just had a cost spike — my run cost $1.80 vs. my usual $0.25. I tried to call Tracy but got a connection timeout. The trace_id is trace-xyz789. What should I do now?",
+      "rubric": [
+        {
+          "criterion": "Retry Policy",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Retries the Tracy API call exactly once (not zero, not three times); if the second attempt also fails, accepts the failure and proceeds without Tracy analysis",
+            "3": "Retries once but proposes continuing to retry in a loop",
+            "1": "Does not retry at all; gives up immediately after one timeout",
+            "0": "Retries more than twice or enters an infinite retry loop"
+          }
+        },
+        {
+          "criterion": "Human Communication",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Informs the human clearly: Tracy is unavailable, a cost spike was detected ($1.80 vs. $0.25), the trace_id is trace-xyz789, and the human can review the trace manually at clawtrace.ai; offers to retry later when Tracy is available",
+            "3": "Informs the human that Tracy is unavailable but does not provide the trace_id or manual review option",
+            "1": "Only mentions the API failure without communicating the cost spike context",
+            "0": "Silently fails without informing the human"
+          }
+        },
+        {
+          "criterion": "Partial Analysis Without Tracy",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Offers a preliminary self-diagnosis based on available information: checks CLAWTRACE_LAST_TRACE_ID, notes the 7× cost increase, identifies likely suspects from domain knowledge (context window, tool retry storms, large tool output) without Tracy's data",
+            "3": "Attempts some self-diagnosis but does not use domain knowledge of common failure modes",
+            "1": "Waits for Tracy to be available before attempting any analysis",
+            "0": "No self-diagnosis attempt"
+          }
+        },
+        {
+          "criterion": "Recovery Planning",
+          "weight": 0.15,
+          "scoring": {
+            "5": "Plans to call Tracy at the start of the next session (within session limits) with the same trace_id; logs a MEMORY.md note: 'trace-xyz789 cost spike pending Tracy analysis'",
+            "3": "Plans to retry Tracy but does not specify when or log the pending analysis",
+            "1": "Drops the investigation; no recovery plan",
+            "0": "No follow-up plan"
+          }
+        }
+      ],
+      "expectedScoreWithout": 25,
+      "expectedScoreWith": 68
+    },
+    {
+      "id": "bench-med-04",
+      "difficulty": "medium",
+      "description": "Multi-turn Tracy conversation to drill down on a specific finding",
+      "input": "Tracy just told me that my last 10 trajectories show that 60% of my total cost comes from 3 traces. She mentioned trace-expensive-01 specifically. How should I follow up to understand what drove costs in that trace?",
+      "rubric": [
+        {
+          "criterion": "Session Continuation",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Reuses the existing session_id from the prior Tracy call to continue the conversation; does NOT start a new session; asks a targeted follow-up about trace-expensive-01 specifically",
+            "3": "Starts a new Tracy session (losing prior context) but asks a relevant follow-up question about the expensive trace",
+            "1": "Does not call Tracy for the follow-up; tries to analyze trace-expensive-01 without Tracy's data",
+            "0": "Does not recognize that a follow-up Tracy call is appropriate here"
+          }
+        },
+        {
+          "criterion": "Follow-Up Question Quality",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Asks a specific, scoped question: 'You mentioned trace-expensive-01 had high cost. Which span or tool call drove that cost, and what was the input size that caused it?' — provides trace_id in the payload",
+            "3": "Asks about the expensive trace but without enough specificity (e.g., 'tell me more about trace-expensive-01' without asking for span-level breakdown)",
+            "1": "Asks a broad follow-up question that restates the original question",
+            "0": "Asks an unrelated question"
+          }
+        },
+        {
+          "criterion": "Multi-Turn Limit Compliance",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Limits the conversation to at most 1 follow-up question; notes this is the 2nd Tracy call of the session and does not plan a 3rd",
+            "3": "Uses the follow-up but does not acknowledge session limits",
+            "1": "Plans additional follow-up calls without session limit awareness",
+            "0": "Proposes 3+ follow-up calls in the same session"
+          }
+        },
+        {
+          "criterion": "Actionable Outcome",
+          "weight": 0.1,
+          "scoring": {
+            "5": "After the follow-up, extracts a specific span-level finding (e.g., 'the summarize_documents tool returned 45,000 tokens on step 4') and identifies the corresponding fix",
+            "3": "Receives the span-level data but does not connect it to a specific fix",
+            "1": "Notes the span data without any interpretation",
+            "0": "No actionable outcome"
+          }
+        }
+      ],
+      "expectedScoreWithout": 20,
+      "expectedScoreWith": 70
+    },
+    {
+      "id": "bench-hard-01",
+      "difficulty": "hard",
+      "description": "Full self-evolving loop: cost spike, Tracy analysis, fix application, MEMORY.md log, and human confirmation",
+      "input": "My OpenClaw agent just completed a batch processing run. The run cost $8.50 — 12× our typical $0.70. The trace_id is trace-batch-99. Walk me through the complete self-evolving loop for this situation, from detection through to applying the fix and logging the insight.",
+      "rubric": [
+        {
+          "criterion": "Trigger Recognition and Question Template",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Identifies cost spike (12× typical); uses exact cost spike template with trace-batch-99; includes trace_id in the API payload",
+            "3": "Recognizes the spike and calls Tracy but uses periodic review template instead of cost spike template",
+            "1": "Calls Tracy but with a generic or vague question",
+            "0": "Does not recognize the spike as a trigger or does not call Tracy"
+          }
+        },
+        {
+          "criterion": "API Call and Stream Parsing",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Implements the complete SSE client: Bearer auth, correct endpoint, payload with trace_id, parses event: text lines, collects full_response, captures session_id from event: session",
+            "3": "Calls the API correctly but does not parse the SSE stream properly (e.g., reads raw text, misses the session_id)",
+            "1": "Makes the API call but implementation has errors (wrong auth header, wrong URL)",
+            "0": "Does not call the API"
+          }
+        },
+        {
+          "criterion": "Root Cause Extraction",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Reads Tracy's full response and identifies the specific root cause at the span level (e.g., 'summarize_batch tool returned 90,000 tokens per item × 50 items = 4.5M tokens ingested'); does not summarize before reading the full response",
+            "3": "Identifies a root cause category (e.g., 'large tool outputs') but not the specific span or magnitude",
+            "1": "Reports Tracy's response verbatim without extracting a root cause",
+            "0": "No root cause extraction"
+          }
+        },
+        {
+          "criterion": "Fix Application",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Applies exactly one fix immediately: the highest-impact recommendation from Tracy (e.g., 'add a 2,000-token truncation on summarize_batch output before passing to LLM'); describes the specific code change; does not apply all recommendations at once",
+            "3": "Identifies the fix but applies it vaguely (e.g., 'I'll truncate tool output' without specifying the threshold or location)",
+            "1": "Lists all of Tracy's recommendations but does not choose one or apply any",
+            "0": "No fix applied"
+          }
+        },
+        {
+          "criterion": "MEMORY.md Log and Human Confirmation",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Writes a correctly formatted MEMORY.md entry with Issue, Fix applied (specific), Expected impact; then confirms the change to the human in a single sentence: 'Based on trajectory analysis, I've added a 2,000-token output cap on summarize_batch to prevent cost spikes in future batch runs.'",
+            "3": "Writes MEMORY.md but the fix recorded is vague; human confirmation is present",
+            "1": "Writes MEMORY.md but records the recommendation (not what was applied); no human confirmation",
+            "0": "No MEMORY.md entry and no human confirmation"
+          }
+        }
+      ],
+      "expectedScoreWithout": 15,
+      "expectedScoreWith": 68
+    },
+    {
+      "id": "bench-hard-02",
+      "difficulty": "hard",
+      "description": "Distinguish between multiple concurrent triggers and prioritize correctly",
+      "input": "I've completed 7 runs today since my last Tracy call. The last run failed with a tool timeout. It also cost $3.20 vs. my typical $0.50. The trace_id is trace-multi-trigger. I have a complex task to start next. How should I handle all of this?",
+      "rubric": [
+        {
+          "criterion": "Trigger Triage",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Identifies all 4 concurrent triggers: failure, cost spike, periodic review (7 runs), pre-task; correctly prioritizes the failure + cost spike together as the most urgent (both diagnose the same bad run); notes the pre-task template will be used for the next task after the current analysis",
+            "3": "Identifies 2-3 triggers but does not prioritize or explain why failure + cost spike takes precedence over periodic review",
+            "1": "Identifies only one trigger and uses its template",
+            "0": "Cannot triage multiple triggers; randomly picks one or asks Tracy multiple separate questions"
+          }
+        },
+        {
+          "criterion": "Prioritized Question Construction",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Calls Tracy once with the failure template (failure is higher priority than cost spike since the run didn't complete) AND mentions the cost spike in the question: 'My last run failed with a tool timeout (trace_id: trace-multi-trigger). It also cost $3.20 vs. my usual $0.50. What step failed, what caused both the failure and the cost spike, and how should I handle this?'",
+            "3": "Uses the failure template correctly but does not combine the cost spike into the same question",
+            "1": "Uses the cost spike template instead of the failure template for a failed run",
+            "0": "Calls Tracy twice for the same run or uses an unrelated template"
+          }
+        },
+        {
+          "criterion": "Session Budget Planning",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Plans 2 Tracy calls total: (1) failure + cost spike analysis for trace-multi-trigger now, (2) pre-task template before the next complex task; notes that periodic review (7 runs) is satisfied by the first call since it covers recent trajectories",
+            "3": "Plans 2 calls but does not note that the first call also satisfies the periodic review trigger",
+            "1": "Plans 3+ Tracy calls (one per trigger) without recognizing session limit",
+            "0": "No session budget planning"
+          }
+        },
+        {
+          "criterion": "Deferred Pre-Task Call",
+          "weight": 0.2,
+          "scoring": {
+            "5": "Defers the pre-task Tracy call until after reviewing the failure analysis; applies the failure fix first so the pre-task call reflects the corrected configuration",
+            "3": "Plans both calls but does not sequence them (failure first, then pre-task)",
+            "1": "Makes the pre-task call first before diagnosing the failure",
+            "0": "Omits the pre-task call entirely"
+          }
+        }
+      ],
+      "expectedScoreWithout": 10,
+      "expectedScoreWith": 62
+    },
+    {
+      "id": "bench-hard-03",
+      "difficulty": "hard",
+      "description": "Distinguish mechanical success from output quality failure; use Tracy for cost/reliability but not for semantic correctness",
+      "input": "My agent ran a document summarization task. Tracy says the last 10 traces all completed successfully with average cost of $0.32 and no errors. But the summaries were factually wrong — the agent hallucinated several key facts. Tracy's analysis shows no anomalies. What is the root cause and what should I do?",
+      "rubric": [
+        {
+          "criterion": "Scope Separation",
+          "weight": 0.35,
+          "scoring": {
+            "5": "Correctly explains that Tracy analyzes mechanical execution (cost, latency, tool success) not semantic output quality; Tracy finding 'no anomalies' is accurate and consistent with a semantically wrong but mechanically successful run; does not try to call Tracy again for this problem",
+            "3": "Notes that Tracy cannot evaluate semantic correctness but still suggests calling Tracy again 'to be sure'",
+            "1": "Concludes that since Tracy found no anomalies, the factual errors must be fabricated or the agent is correct",
+            "0": "Tries to use Tracy to diagnose a hallucination problem; calls Tracy with a question about why the summaries were wrong"
+          }
+        },
+        {
+          "criterion": "Correct Root Cause Hypothesis",
+          "weight": 0.3,
+          "scoring": {
+            "5": "Proposes plausible hypotheses for hallucination that are outside Tracy's scope: insufficient retrieval context, model temperature too high, documents not passed correctly to LLM, or the model's training data limitations; identifies at least 2 hypotheses",
+            "3": "Proposes 1 plausible hypothesis but does not explore multiple causes",
+            "1": "Attributes the problem to token cost or tool latency (conflating mechanical and semantic issues)",
+            "0": "Cannot identify root cause hypotheses outside of trajectory mechanics"
+          }
+        },
+        {
+          "criterion": "Appropriate Remediation Path",
+          "weight": 0.25,
+          "scoring": {
+            "5": "Recommends the correct remediation path for semantic quality: add rubric-based evaluation (if available), check retrieval quality by logging retrieved chunks, reduce model temperature, add a verification step, or escalate to human review — all without Tracy involvement",
+            "3": "Recommends some correct steps but also incorrectly includes a Tracy call as part of the remediation",
+            "1": "Recommends generic debugging steps without targeting semantic quality specifically",
+            "0": "No remediation path or recommends irrelevant steps"
+          }
+        },
+        {
+          "criterion": "Tracy-vs-Evaluation Awareness",
+          "weight": 0.1,
+          "scoring": {
+            "5": "Explains the division: Tracy for reliability/cost/mechanics; rubric-based evaluation or human review for semantic quality; mentions that ClawTrace's upcoming rubric evaluation feature would help close this gap",
+            "3": "Distinguishes Tracy from evaluation but does not mention rubric evaluation as the right tool",
+            "1": "Unclear on the boundary between observability and evaluation",
+            "0": "No awareness of the distinction"
+          }
+        }
+      ],
+      "expectedScoreWithout": 15,
+      "expectedScoreWith": 65
+    }
+  ]
+}
