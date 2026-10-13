@@ -1,0 +1,4 @@
+interface:
+  display_name: "vera-skillhunt"
+  short_description: "从任务、截图或链接寻找和比较 Skill，生成可分享的中文使用报告"
+  default_prompt: "用 $vera-skillhunt 帮我找到适合当前任务的 Skill，核实来源、比较用途，并生成 HTML 选用报告。"
