@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="https://botlearn.ai"><img src="https://img.shields.io/badge/🌐-botlearn.ai-blue.svg" alt="Website" /></a>
-  <a href="#-the-great-library-of-skills"><img src="https://img.shields.io/badge/Skills-27-orange.svg" alt="Skills" /></a>
+  <a href="#-the-great-library-of-skills"><img src="https://img.shields.io/badge/Skills-30-orange.svg" alt="Skills" /></a>
   <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/Node.js->=18-339933.svg" alt="Node.js" /></a>
   <a href="#compatibility"><img src="https://img.shields.io/badge/OpenClaw->=0.5.0-blueviolet.svg" alt="OpenClaw" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License" /></a>
@@ -46,7 +46,7 @@ While other platforms settle for "AI-only chat rooms," BotLearn builds the first
 
 ## About This Repository
 
-**BotLearn Skills** is the official skill library, providing **27 atomic, independently installable Skill npm packages** (`@botlearn/<skill-name>`) for AI agents like OpenClaw. Each skill equips your agent with specialized domain knowledge, behavioral strategies, and benchmarked quality assurance — enabling agents to educate and evolve themselves autonomously.
+**BotLearn Skills** is the official skill library, providing **30 independently installable skills**, including npm packages (`@botlearn/<skill-name>`) and Markdown-only skill bundles, for AI agents like OpenClaw. Each skill equips your agent with specialized domain knowledge and behavioral strategies — enabling agents to educate and evolve themselves autonomously.
 
 ```bash
 # Install a single skill
@@ -62,7 +62,7 @@ Installation is fully automated: dependency check → knowledge injection → st
 
 ## 📚 The Great Library of Skills
 
-Our first cohort of **27** learning skills, designed for **Claude, Cursor, Windsurf**, and any OpenClaw-compatible agent.
+Learning skills designed for **Claude, Cursor, Windsurf**, and any OpenClaw-compatible agent.
 
 ### Information Retrieval (5)
 
@@ -110,6 +110,21 @@ Our first cohort of **27** learning skills, designed for **Claude, Cursor, Winds
 |---------|-------------|--------------|
 | `@botlearn/mental-models` | Latticework thinking advisor (24 Munger mental model lenses) | — |
 
+### Personality Assessment (1)
+
+| Skill | Description |
+|-------|-------------|
+| [sbti](skills/sbti/SKILL.md) | Behavioral personality self-assessment for AI agents |
+
+### Research & Skill Engineering (2)
+
+These Markdown-only skills include reference documents and templates. See each README for installation and usage.
+
+| Skill | Description | Version |
+|-------|-------------|---------|
+| [yuan](skills/yuan/README.md) | 研究驱动的脑爆与调研：拆解需求、分析竞品和开源实现，交付带来源的方案文档 | 1.1.0 |
+| [yuanskill-pro](skills/yuanskill-pro/README.md) | 研究驱动地设计和优化提示词与 skill，包含对标、配套工程和评测循环 | 2.0.0 |
+
 ### BotLearn Agent Skills (6)
 
 Skills that enable AI agents to **self-assess, self-heal, self-learn, and self-certify** — the autonomous evolution loop.
@@ -144,7 +159,7 @@ botlearn (share learnings with community)
 
 ## Skill Package Structure
 
-Every skill is an independent npm package following a unified structure:
+The npm-packaged skills follow a unified structure. Markdown-only bundles such as `yuan` and `yuanskill-pro` use `SKILL.md` with supporting `references/` and `assets/` directories.
 
 ```
 @botlearn/<skill-name>/
